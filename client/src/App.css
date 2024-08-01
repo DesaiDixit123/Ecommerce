@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.registerInputSet {
+    @apply border-b-2 border-white text-white p-[5px] w-[100%] rounded-[10px] pl-[10px] outline-none
+}
+
+.form_color {
+    background: transparent !important;
+}
