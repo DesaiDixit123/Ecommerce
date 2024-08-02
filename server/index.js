@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import { db_con } from "./configs/db_con.js";
 import { userRouter } from "./routers/userRouter.js";
 import cors from "cors"
+import cookieParser from "cookie-parser";
 dotenv.config()
 const app = express()
 
@@ -11,6 +12,7 @@ const app = express()
 db_con(process.env.dbURL)
 app.use(cors())
 app.use(json())
+app.use(cookieParser())
 app.use(urlencoded({ extends: true }))
 app.use("/api", userRouter)
 

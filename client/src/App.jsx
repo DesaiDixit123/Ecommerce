@@ -3,6 +3,11 @@ import './App.css'
 import Index from "./Index"
 import IndexUser from "./Index"
 import Register from "./User/components/Register"
+import Login from "./User/components/Login"
+import ForgetPassword from "./User/components/ForgetPassword"
+import VerifyOtp from "./User/components/VerifyOtp"
+import ResetPassword from "./User/components/ResetPassword"
+import UpdatePassword from "./User/components/UpdatePassword"
 
 
 const Router=createBrowserRouter([
@@ -14,7 +19,12 @@ const Router=createBrowserRouter([
       path:"/",
       element:<IndexUser/>,
       children:[
-        {path:"/",element:<Register/>}
+        {path:"/register",element:<Register/>},
+        {path:"/login",element:<Login/>},
+        {path:"/forget-password",element:<ForgetPassword/>},
+        {path:"/verifyOtp",element:<VerifyOtp/>},
+        {path:"/resetPassword",element:<ResetPassword/>},
+        {path:"/updatePassword",element:<UpdatePassword/>},
       ]
     }
   ]

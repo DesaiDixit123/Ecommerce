@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -21,13 +22,10 @@ export default function Register() {
   const { countrieswithphonecode } = useSelector(
     (state) => state.UserSliceProvider
   );
-  console.log("Countries from Redux State:", countrieswithphonecode);
 
   useEffect(() => {
-    dispatch(getAllCountriesWithPhoneCodes()).then((result) => {
-      console.log("API Response:", result.payload); // Check the data here
-    });
-  }, [dispatch]);
+    dispatch(getAllCountriesWithPhoneCodes());
+  }, []);
 
   const formHandler = async (e) => {
     e.preventDefault();
@@ -39,6 +37,7 @@ export default function Register() {
 
     try {
       dispatch(RegisterUser(form));
+   
     } catch (error) {
       console.error("Error:", error);
     }
@@ -80,6 +79,7 @@ export default function Register() {
               <input
                 type="text"
                 name="fname"
+                value={formData.fname}
                 placeholder="First Name :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -87,6 +87,7 @@ export default function Register() {
               <input
                 type="text"
                 name="lname"
+                value={formData.lname}
                 placeholder="Last Name :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -97,6 +98,7 @@ export default function Register() {
               <input
                 type="text"
                 name="username"
+                value={formData.username}
                 placeholder="Username :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -107,6 +109,7 @@ export default function Register() {
               <input
                 type="email"
                 name="email"
+                value={formData.email}
                 placeholder="Email :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -116,25 +119,34 @@ export default function Register() {
               <select
                 name="phonecode"
                 id="phonecode"
-                className="registerInputSet form_color bg-black"
+                value={formData.phonecode}
+                className="registerInputSet form_color bg-black "
                 onChange={inputHandler}
-                defaultValue=""
+              
               >
-                <option value="">Select Phone Code</option>
-                {countrieswithphonecode && countrieswithphonecode.length > 0 ? (
-                  countrieswithphonecode.map((country) => (
-                    <option key={country.code} value={country.phonecode}>
-                      {country.name} {country.phonecode}
-                    </option>
-                  ))
-                ) : (
-                  <option value="">No phone codes available</option>
-                )}
+                <option
+                  value=""
+                  className="bg-registerBg-400 p-[10px]"
+              
+                >
+                  Select Phone Code
+                </option>
+                {countrieswithphonecode.map((country) => (
+                  <option
+                    key={country.isoCode}
+                    value={country.phoneCode}
+                    className="bg-registerBg-400 p-[10px] h-[200px]"
+                    
+                  >
+                    {country.phoneCode}
+                  </option>
+                ))}
               </select>
 
               <input
                 type="number"
                 name="contactno"
+                value={formData.contactno}
                 placeholder="Contact No. :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -144,6 +156,7 @@ export default function Register() {
               <input
                 type="password"
                 name="password"
+                value={formData.password}
                 placeholder="Password :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -153,6 +166,7 @@ export default function Register() {
               <input
                 type="text"
                 name="confirmPassword"
+                value={formData.confirmPassword}
                 placeholder="Confirm Password :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -161,7 +175,7 @@ export default function Register() {
 
             <div className="pt-[15px] flex justify-center">
               <button className="w-[50%] flex justify-center p-[10px] bg-slate-800 text-[20px] text-white font-bold rounded-[20px] shadow-sm shadow-slate-600">
-                Submit
+                Register
               </button>
             </div>
           </form>
