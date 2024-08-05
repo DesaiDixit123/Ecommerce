@@ -1,12 +1,19 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createSlice } from "@reduxjs/toolkit";
-import { ForgetPasswords, getAllCountriesWithPhoneCodes } from "./UserThunk";
+import {
+  ForgetPasswords,
+  getAllCountriesWithPhoneCodes,
+  UserValidation,
+} from "./UserThunk";
 
 const initialState = {
   countrieswithphonecode: [],
-  loading: true,
+  loading: false,
   error: null,
   forgetPasswordProcess: null,
+  userData: [],
+  message: "",
+  process: false,
 };
 
 const UserSlice = createSlice({
@@ -15,6 +22,23 @@ const UserSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+
+      .addCase(UserValidation.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(UserValidation.fulfilled, (state, action) => {
+        const { message, process, userData } = action.payload;
+        state.loading = false;
+        state.message = message;
+        state.process = process;
+state.userData =userData;
+      })
+
+      .addCase(UserValidation.rejected, (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+        state.process = false;
+      })
       .addCase(getAllCountriesWithPhoneCodes.pending, (state) => {
         state.loading = true;
       })

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { resetPasswordApi} from "../../redux/user/UserThunk";
+import { resetPasswordApi } from "../../redux/user/UserThunk";
 import { useDispatch } from "react-redux";
-
-
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 export default function ResetPassword() {
   const [formData, setFormData] = useState({
     email: "",
@@ -10,14 +11,14 @@ export default function ResetPassword() {
     confirmPassword: "",
   });
   const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
   const formHandler = async (e) => {
     e.preventDefault();
 
-    console.log("Form Data:", formData); // Add this line to debug the form data
-
     try {
-      dispatch(resetPasswordApi(formData));
+      dispatch(resetPasswordApi({ formData, toast, navigate, setFormData }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -26,49 +27,59 @@ export default function ResetPassword() {
   const inputHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  const togglePass = () => {
+    setShowPassword(!showPassword);
+  };
   return (
-    <div className="justify-center flex items-center mt-[80px]">
-      <div className="bg-registerBg-400 w-[50%] flex p-[30px] rounded-[50px]">
-        <form className="pl-[25px] w-[100%]" onSubmit={formHandler}>
-          <div className="flex justify-center text-white text-[20px]">
-            Reset Password
-          </div>
-          <div className="w-[100%] ">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email :"
-              className="registerInputSet form_color"
-              onChange={inputHandler}
-            />
-          </div>
-          <div className="w-[100%]">
-            <input
-              type="password"
-              name="newPassword"
-              placeholder="New Password :"
-              className="registerInputSet form_color"
-              onChange={inputHandler}
-            />
-          </div>
-          <div className="w-[100%]">
-            <input
-              type="text"
-              name="confirmPassword"
-              placeholder="Confirm Password :"
-              className="registerInputSet form_color"
-              onChange={inputHandler}
-            />
-          </div>
-          <div className="pt-[15px] flex justify-center">
-            <button className="w-[50%] flex justify-center p-[10px] bg-slate-800 text-[20px] text-white font-bold rounded-[20px] shadow-sm shadow-slate-600">
-             Reset Password
-            </button>
-          </div>
+    <div className="linear-color">
+      <div className="form_css">
+        <div className=" w-[50%] flex p-[30px] rounded-[50px] backImage">
+          <form className="pl-[25px] w-[100%]" onSubmit={formHandler}>
+            <div className="flex justify-center text-black text-[20px]">
+              Reset Password
+            </div>
+            <div className="w-[100%] ">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email :"
+                className="registerInputSet form_color"
+                onChange={inputHandler}
+              />
+            </div>
+            <div className="w-[100%]">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                placeholder="Password :"
+                className="registerInputSet form_color"
+                onChange={inputHandler}
+              />
 
-          
-        </form>
+              <span
+                className="absolute bottom-[10px] right-4 text-[20px]"
+                onClick={togglePass}
+              >
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </span>
+            </div>
+            <div className="w-[100%]">
+              <input
+                type="text"
+                name="confirmPassword"
+                placeholder="Confirm Password :"
+                className="registerInputSet form_color"
+                onChange={inputHandler}
+              />
+            </div>
+            <div className="pt-[15px] flex justify-center">
+              <button className="w-[50%] flex justify-center p-[10px] bg-yellow-400 text-[20px] text-black font-bold rounded-[20px] shadow-sm shadow-slate-600">
+                Reset Password
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -2,9 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 .registerInputSet {
-    @apply border-b-2 border-white text-white p-[5px] w-[100%] rounded-[10px] pl-[10px] outline-none
+    @apply border-b-2 border-black text-black p-[5px] w-[100%] rounded-[10px] pl-[10px] font-semibold outline-none;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
 }
 
 .form_color {
     background: transparent !important;
+}
+
+.toastBody {
+    font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
+    /* #10171D */
+    font-size: 1.2rem;
+}
+
+.Overlay {
+    /* background: rgba(0, 0, 0, 0.75); */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+}
+
+.backImage {
+    background-image: url("./assets/background,jpg.jpg");
+    background-size: 100% 45vh;
+    color: black !important;
+}
+
+.linear-color {
+    background-image: linear-gradient( to left, #99dde7, #2ec7c0, #87dfe9, #b2e5ed, #00abc5);
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.form_css {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 100%;
+}
+
+.form_css1 {
+    position: absolute;
+    top: 1%;
+    left: 25%;
+    width: 100%;
+}
+
+::placeholder {
+    font-weight: bold;
+}
+
+.topNavBorderBottom {
+    border-bottom: 4px solid #39B4AC;
+}
+
+.secondTopNavInputChange {
+    background: transparent !important;
+}
+
+.logo_img {
+    width: 300px;
+    height: 150px;
+}
+
+.cross_button {
+    height: 100px;
+}
+
+
+/* .active {
+    color: orange;
+} */
+
+
+/* Add these styles in your CSS file */
+
+.dropdown-menu {
+    transform: translateX(100%);
+    transition: transform 0.5s ease-in-out;
+}
+
+.dropdown-menu.show {
+    transform: translateX(0);
+}
+
+.textColor {
+    color: #00abc5;
+    font-weight: bold;
+}
+
+.navSearchBorder {
+    border: 2px solid #00abc5;
+}
+
+.navigationBorder {
+    border-bottom: 2px solid rgba(128, 128, 128, 0.5);
 }
