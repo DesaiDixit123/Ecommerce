@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const RegisterUser = createAsyncThunk("RegisterUser", async (form) => {
+export const RegisterUser = createAsyncThunk("RegisterUser", async ({form,toast,navigate}) => {
   try {
     const response = await axios.post("/api/register", form, {
       headers: {
@@ -10,9 +10,25 @@ export const RegisterUser = createAsyncThunk("RegisterUser", async (form) => {
       },
     });
 
+    const {process,message}=response.data
+
+    if(process){
+      toast.success(message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }else{
+      toast.error(message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }
     return response.data;
   } catch (error) {
-    return error.response.data;
+    toast.error(error.response?.data?.message || error.message, {
+      position: "top-right",
+      style: { marginTop: "50px", marginRight: "10px" },
+    });
   }
 });
 export const UserValidation = createAsyncThunk("UserValidation", async () => {
@@ -155,9 +171,24 @@ export const updatePasswordApi = createAsyncThunk(
 
 export const userLogoutFecthApi = createAsyncThunk(
   "logoutUser",
-  async ({ dispatch }) => {
+  async ({ dispatch,toast }) => {
     const response = await axios.post("/api/logout");
     dispatch(UserValidation());
+
+    const { process, message } = response.data;
+    if (process) {
+     
+      toast.success(message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    
+    } else {
+      toast.error(message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }
     return response.data;
   }
 );

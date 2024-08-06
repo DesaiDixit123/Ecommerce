@@ -18,6 +18,7 @@ import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 import { UserProvider } from "../context/UserProvider";
 import { useDispatch } from "react-redux";
 import { userLogoutFecthApi, UserValidation } from "../../redux/user/UserThunk";
+import { toast } from "react-toastify";
 const texts = [
   "Great deals 50% off",
   "Unbeatable offers",
@@ -55,7 +56,7 @@ const TopNav = () => {
     }
   }, [userData, navigate]);
   const logoutButton = () => {
-    dispatch(userLogoutFecthApi({ dispatch }));
+    dispatch(userLogoutFecthApi({ dispatch,toast,navigate }));
   };
   return (
     <>

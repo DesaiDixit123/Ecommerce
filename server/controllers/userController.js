@@ -234,7 +234,7 @@ export const userLogout = (req, res) => {
     res.clearCookie("userCookie");
     res.status(200).send({
         process: true,
-        message: "Logouut Successfully.",
+        message: "Logout Successfully.",
     });
 };
 

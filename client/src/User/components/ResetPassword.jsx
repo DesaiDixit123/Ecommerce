@@ -50,7 +50,7 @@ export default function ResetPassword() {
             <div className="w-[100%]">
               <input
                 type={showPassword ? "text" : "password"}
-                name="password"
+                name="newPassword"
                 value={formData.password}
                 placeholder="Password :"
                 className="registerInputSet form_color"

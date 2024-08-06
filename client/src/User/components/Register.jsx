@@ -6,6 +6,8 @@ import {
   RegisterUser,
 } from "../../redux/user/UserThunk";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [profileImg, setProfileImg] = useState(null);
   const [formData, setFormData] = useState({
@@ -19,6 +21,7 @@ export default function Register() {
     contactno: "",
   });
 
+  const navigate=useNavigate()
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const { countrieswithphonecode } = useSelector(
@@ -38,7 +41,7 @@ export default function Register() {
     }
 
     try {
-      dispatch(RegisterUser(form));
+      dispatch(RegisterUser({form,toast,navigate}));
     } catch (error) {
       console.error("Error:", error);
     }
