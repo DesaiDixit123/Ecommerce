@@ -106,3 +106,114 @@ body {
 .navigationBorder {
     border-bottom: 2px solid rgba(128, 128, 128, 0.5);
 }
+
+
+/* Slideshow container */
+
+.slideshow-container {
+    position: relative;
+    margin: auto;
+    height: 100%;
+}
+
+.slides-div {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 50px 90px;
+}
+
+.slides-text {
+    width: 50%;
+}
+
+.btn1 button {
+    width: 150px;
+    height: 40px;
+    font-size: 18px;
+    background-color: var(--color2);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid var(--color2);
+}
+
+.btn2 button {
+    width: 150px;
+    height: 40px;
+    font-size: 18px;
+    background-color: #d77f7a;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid #d77f7a;
+}
+
+.btn3 button {
+    width: 150px;
+    height: 40px;
+    font-size: 18px;
+    background-color: #63a2c1;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid #63a2c1;
+}
+
+.slide-images {
+    width: 70%;
+}
+
+.slide-images img {
+    width: 100%;
+}
+
+
+/* Hide the images by default */
+
+.mySlides {
+    display: none;
+}
+
+.mySlides.active {
+    display: block;
+}
+
+
+/* Fading animation */
+
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0.4;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* Add this to your main CSS file */
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}

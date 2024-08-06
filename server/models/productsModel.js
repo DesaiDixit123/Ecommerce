@@ -1,0 +1,21 @@
+import { model, Schema } from "mongoose";
+
+const productSchema = Schema({
+    category: { type: String },
+    fields: { type: String },
+    img1: { type: String },
+    img2: { type: String },
+    img3: { type: String },
+    img4: { type: String },
+    img5: { type: String },
+    title: { type: String },
+    price: { type: Number },
+    ratings: { type: String },
+    discount: { type: Number, default: 0 },
+    qnt: { type: Number },
+    discription: { type: String }
+
+})
+
+
+export const $ProductModel = model("product", productSchema)

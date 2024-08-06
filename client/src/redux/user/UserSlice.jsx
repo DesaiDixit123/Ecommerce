@@ -3,6 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   ForgetPasswords,
   getAllCountriesWithPhoneCodes,
+  getAllProductsFecthApi,
+  LoginUser,
+  userLogoutFecthApi,
   UserValidation,
 } from "./UserThunk";
 
@@ -11,9 +14,10 @@ const initialState = {
   loading: false,
   error: null,
   forgetPasswordProcess: null,
-  userData: [],
+  userData:null,
   message: "",
   process: false,
+  allProducts:[]
 };
 
 const UserSlice = createSlice({
@@ -23,22 +27,25 @@ const UserSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      .addCase(UserValidation.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(UserValidation.fulfilled, (state, action) => {
-        const { message, process, userData } = action.payload;
-        state.loading = false;
-        state.message = message;
-        state.process = process;
-state.userData =userData;
-      })
+    .addCase(UserValidation.pending, (state) => {
+      state.loading = true;
+    })
 
-      .addCase(UserValidation.rejected, (state, action) => {
-        state.loading = false;
-        state.message = action.payload;
-        state.process = false;
-      })
+    .addCase(UserValidation.fulfilled, (state, action) => {
+      console.log(action.payload.data)
+      const { message, process, userData } = action.payload;
+      state.loading = false;
+      state.message = message;
+      state.process = process;
+      if (process) state.userData = userData;
+    })
+
+    .addCase(UserValidation.rejected, (state, action) => {
+      state.loading = false;
+      state.message = action.payload;
+      state.process = false;
+    })
+
       .addCase(getAllCountriesWithPhoneCodes.pending, (state) => {
         state.loading = true;
       })
@@ -60,7 +67,47 @@ state.userData =userData;
       .addCase(ForgetPasswords.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      });
+      })
+
+      .addCase(LoginUser.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(LoginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+        state.userData = action.payload.data;
+        state.process = true;
+      })
+
+      .addCase(LoginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+        state.process = false;
+      })
+      .addCase(userLogoutFecthApi.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(userLogoutFecthApi.fulfilled, (state) => {
+        state.loading = false;
+        state.userData = null;
+      })
+
+      .addCase(getAllProductsFecthApi.pending,(state)=>{
+        state.loading=true
+      })
+
+      .addCase(getAllProductsFecthApi.fulfilled,(state,action)=>{
+        console.log(action.payload)
+        state.loading=false
+        state.allProducts=action.payload
+      })
+
+      .addCase(getAllProductsFecthApi.rejected,(state,action)=>{
+        state.loading=false,
+        state.error=action.payload
+      })
   },
 });
 

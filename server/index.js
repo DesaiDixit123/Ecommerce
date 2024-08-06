@@ -4,6 +4,8 @@ import { db_con } from "./configs/db_con.js";
 import { userRouter } from "./routers/userRouter.js";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import { productRouter } from "./routers/products.Router.js";
+import { adminRouter } from "./routers/AdminRouter/adminRouter.js";
 dotenv.config()
 const app = express()
 
@@ -15,6 +17,8 @@ app.use(json())
 app.use(cookieParser())
 app.use(urlencoded({ extends: true }))
 app.use("/api", userRouter)
+app.use("/api", productRouter)
+app.use("/api", adminRouter)
 
 const PORT = process.env.port
 
