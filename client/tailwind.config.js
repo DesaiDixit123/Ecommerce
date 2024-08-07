@@ -12,6 +12,15 @@ export default {
                 },
                 topnavBorderBottom: {
                     400: "#39B4AC"
+                },
+                Adminnav: {
+                    400: "#322738"
+                },
+                Adminnav2: {
+                    400: "#100217",
+                },
+                AdminForm: {
+                    400: "#A797BD"
                 }
             },
 

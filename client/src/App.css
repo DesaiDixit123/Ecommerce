@@ -167,6 +167,11 @@ body {
     width: 70%;
 }
 
+.roundedsform {
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
 .slide-images img {
     width: 100%;
 }
@@ -180,6 +185,18 @@ body {
 
 .mySlides.active {
     display: block;
+}
+
+.admin_nav .admin_nav_link {
+    display: block;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 20px;
+}
+
+.admin_nav .admin_nav_link:hover {
+    color: black;
+    background-color: lightblue;
 }
 
 

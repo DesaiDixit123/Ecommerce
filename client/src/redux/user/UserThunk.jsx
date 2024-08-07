@@ -2,35 +2,38 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const RegisterUser = createAsyncThunk("RegisterUser", async ({form,toast,navigate}) => {
-  try {
-    const response = await axios.post("/api/register", form, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    const {process,message}=response.data
-
-    if(process){
-      toast.success(message, {
-        position: "top-right",
-        style: { marginTop: "50px", marginRight: "10px" },
+export const RegisterUser = createAsyncThunk(
+  "RegisterUser",
+  async ({ form, toast }) => {
+    try {
+      const response = await axios.post("/api/register", form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-    }else{
-      toast.error(message, {
+
+      const { process, message } = response.data;
+
+      if (process) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
         position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
       });
     }
-    return response.data;
-  } catch (error) {
-    toast.error(error.response?.data?.message || error.message, {
-      position: "top-right",
-      style: { marginTop: "50px", marginRight: "10px" },
-    });
   }
-});
+);
 export const UserValidation = createAsyncThunk("UserValidation", async () => {
   const response = await axios.get("/api");
   return response.data;
@@ -56,7 +59,6 @@ export const LoginUser = createAsyncThunk(
       dispatch(UserValidation());
       const { process, message } = response.data;
       if (process) {
-       
         toast.success(message, {
           position: "top-right",
           style: { marginTop: "50px", marginRight: "10px" },
@@ -84,26 +86,34 @@ export const ForgetPasswords = createAsyncThunk(
   async ({ formData, toast, navigate, setFormData }) => {
     try {
       const response = await axios.post("/api/forget-password", formData);
-      if (response.data.process) {
+      const { process, message } = response.data;
+      if (process) {
         setFormData({
           email: "",
         });
-        toast.success(response.data.message, {
+        toast.success(message, {
+          position: "top-right",
           style: { marginTop: "50px", marginRight: "10px" },
         });
         setTimeout(() => {
           navigate("/verifyOtp");
         }, 2000);
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
       }
       return response.data;
     } catch (error) {
-      toast.error(error.message, {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
       });
+      throw error; // Ensure error is rethrown for further handling
     }
   }
 );
-
 export const verifyOtpApi = createAsyncThunk(
   "user/verifyOtp",
   async ({ formData, setFormData, toast, navigate }) => {
@@ -121,11 +131,18 @@ export const verifyOtpApi = createAsyncThunk(
         setTimeout(() => {
           navigate("/resetPassword");
         }, 2000);
+      } else {
+        toast.error(response.data.message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
       }
     } catch (error) {
-      toast.error(error.message, {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
       });
+      throw error; // Ensure error is rethrown for further handling
     }
   }
 );
@@ -148,9 +165,15 @@ export const resetPasswordApi = createAsyncThunk(
         setTimeout(() => {
           navigate("/login");
         }, 2000);
+      } else {
+        toast.error(response.data.message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
       }
     } catch (error) {
-      toast.error(error.message, {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
       });
     }
@@ -171,18 +194,16 @@ export const updatePasswordApi = createAsyncThunk(
 
 export const userLogoutFecthApi = createAsyncThunk(
   "logoutUser",
-  async ({ dispatch,toast }) => {
+  async ({ dispatch, toast }) => {
     const response = await axios.post("/api/logout");
     dispatch(UserValidation());
 
     const { process, message } = response.data;
     if (process) {
-     
       toast.success(message, {
         position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
       });
-    
     } else {
       toast.error(message, {
         position: "top-right",
@@ -195,5 +216,10 @@ export const userLogoutFecthApi = createAsyncThunk(
 
 export const getAllProductsFecthApi = createAsyncThunk("products", async () => {
   const response = await axios.get("/api/products");
+  return response.data;
+});
+
+export const getAllCategories2 = createAsyncThunk("categories", async () => {
+  const response = await axios.get("/api/admin/get/category");
   return response.data;
 });

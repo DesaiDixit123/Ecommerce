@@ -20,14 +20,14 @@ export const adminLogin = async(req, res) => {
 
         if (checkPassword) {
             const createToken = jwt.sign({ id: findAdmin._id },
-                process.env.secureToken, { expiresIn: "2m" }
+                process.env.secureToken, { expiresIn: "30m" }
             );
 
             await User.findByIdAndUpdate(findAdmin._id, {
                 token: createToken,
             });
 
-            const cookieExpireTime = 2 * 60 * 1000;
+            const cookieExpireTime = 30 * 60 * 1000;
             res
                 .cookie("adminCookie", createToken, {
                     maxAge: cookieExpireTime,

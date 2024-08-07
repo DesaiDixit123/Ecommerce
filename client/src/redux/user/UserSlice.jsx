@@ -2,6 +2,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   ForgetPasswords,
+  getAllCategories2,
+  // getAllCategories,
   getAllCountriesWithPhoneCodes,
   getAllProductsFecthApi,
   LoginUser,
@@ -17,7 +19,8 @@ const initialState = {
   userData:null,
   message: "",
   process: false,
-  allProducts:[]
+  allProducts:[],
+  categoriesData:[]
 };
 
 const UserSlice = createSlice({
@@ -108,6 +111,36 @@ const UserSlice = createSlice({
         state.loading=false,
         state.error=action.payload
       })
+
+      .addCase(getAllCategories2.pending,(state)=>{
+        state.loading=true
+      })
+
+      .addCase(getAllCategories2.fulfilled,(state,action)=>{
+        console.log("payload:",action.payload)
+        state.loading=false
+        state.categoriesData=action.payload
+      })
+
+      .addCase(getAllCategories2.rejected,(state,action)=>{
+        state.loading=false,
+        state.error=action.payload
+      })
+
+      // .addCase(getAllCategories.pending,(state)=>{
+      //   state.loading=true
+      // })
+
+      // .addCase(getAllCategories.fulfilled,(state,action)=>{
+      //   console.log(action.payload)
+      //   state.loading=false
+      //   state.categoriesData=action.payload
+      // })
+
+      // .addCase(getAllCategories.rejected,(state,action)=>{
+      //   state.loading=false,
+      //   state.error=action.payload
+      // })
   },
 });
 

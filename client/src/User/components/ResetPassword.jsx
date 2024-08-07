@@ -8,7 +8,7 @@ export default function ResetPassword() {
   const [formData, setFormData] = useState({
     email: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmPassworrrd: "",
   });
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +42,7 @@ export default function ResetPassword() {
               <input
                 type="email"
                 name="email"
+                value={formData.email}
                 placeholder="Email :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
@@ -51,8 +52,8 @@ export default function ResetPassword() {
               <input
                 type={showPassword ? "text" : "password"}
                 name="newPassword"
-                value={formData.password}
-                placeholder="Password :"
+                value={formData.newPassword}
+                placeholder="New Password :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}
               />
@@ -68,6 +69,7 @@ export default function ResetPassword() {
               <input
                 type="text"
                 name="confirmPassword"
+                value={formData.confirmPassword}
                 placeholder="Confirm Password :"
                 className="registerInputSet form_color"
                 onChange={inputHandler}

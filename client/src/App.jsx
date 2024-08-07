@@ -15,6 +15,8 @@ import AdminIndex from "./Admin/Index";
 // import AdminLogin from "./Admin/components/AdminLogin";
 import AdminHome from "./Admin/components/AdminHome";
 import AdminLogin from "./Admin/components/AdminLogin";
+import AdminAddProduct from "./Admin/components/products/AdminAddProduct";
+import AdminAddCategory from "./Admin/components/products/AdminAddCategory";
 
 const Router = createBrowserRouter([
   {
@@ -41,6 +43,8 @@ const Router = createBrowserRouter([
         children: [
           { path: "/admin", element: <AdminHome /> },
           { path: "/admin/login", element: <AdminLogin /> },
+          { path: "/admin/products", element: <AdminAddProduct /> },
+          { path: "/admin/category", element: <AdminAddCategory /> },
         ],
       },
     ],

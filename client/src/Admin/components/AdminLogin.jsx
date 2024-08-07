@@ -8,6 +8,7 @@ import {
   VerifyAdminFetchApi,
 } from "../../redux/admin/AdminThunk";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export default function AdminLogin() {
   const [formData, setFormData] = useState({
     identifiers: "",
@@ -32,7 +33,7 @@ export default function AdminLogin() {
     e.preventDefault();
 
     try {
-      dispatch(AdminLoginFetchApi({ formData, navigate, dispatch }));
+      dispatch(AdminLoginFetchApi({ formData, navigate, dispatch,toast }));
     } catch (error) {
       console.error("Error:", error);
     }

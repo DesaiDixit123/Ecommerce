@@ -23,7 +23,6 @@ export const products = async(req, res) => {
             !img1 ||
             !title ||
             !price ||
-            !ratings ||
             !discount ||
             !qnt ||
             !discription
