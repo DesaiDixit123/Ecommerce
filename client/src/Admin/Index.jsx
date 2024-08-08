@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import AdminContext from "./context/AdminContext";
 import { useSelector } from "react-redux";
 import AdminLogin from "./components/AdminLogin";
-import AdminNavigation from "./modules/AdminNav";
+// import AdminNavigation from "./modules/AdminNav";
 
 export default function AdminIndex() {
   const { loading, isAdmin } = useSelector((state) => state.AdminSliceProvider);
@@ -14,7 +14,7 @@ export default function AdminIndex() {
           "Loading..."
         ) : isAdmin ? (
           <div className="flex">
-            <AdminNavigation />
+            {/* <AdminNavigation /> */}
             <div className="flex-grow  p-1 overflow-auto h-screen">
               <Outlet />
             </div>

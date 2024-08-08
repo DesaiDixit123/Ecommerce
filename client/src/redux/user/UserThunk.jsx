@@ -223,3 +223,14 @@ export const getAllCategories2 = createAsyncThunk("categories", async () => {
   const response = await axios.get("/api/admin/get/category");
   return response.data;
 });
+
+
+export const categoryByFieldsFetchApi=createAsyncThunk(
+  "categoryByFields",
+  async(categoryname)=>{
+  
+      const response=await axios.get(`/api/admin/get/category/fields/${categoryname}`)
+      return response.data
+ 
+  }
+)

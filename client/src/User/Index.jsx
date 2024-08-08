@@ -6,9 +6,9 @@ import UserContext from "./context/UserProvider";
 export default function UserIndex() {
   return (
     <UserContext>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen overflow-auto">
         <Navigation />
-        <div className="flex-grow">
+        <div className="flex-grow bg-red-500">
           <Outlet />
         </div>
         <Footer />

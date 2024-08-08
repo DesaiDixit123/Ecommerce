@@ -5,7 +5,7 @@ import { productAddFetchApi } from "../../../redux/admin/AdminThunk";
 import { toast } from "react-toastify";
 import { categoryByFieldsFetchApi } from "../../../redux/user/UserThunk";
 
-export default function AdminAddProduct() {
+export default function AdminProductUpadted() {
   const [formdata, setFormdata] = useState({
     category: "",
     fields: "",
@@ -59,7 +59,7 @@ export default function AdminAddProduct() {
           onSubmit={formhandeler}
         >
           <div className="text-center text-[22px] roundedsform">
-            Add Product
+             Product Updated
           </div>
 
           <div className="flex justify-center mt-[10px] text-black gap-[35px] px-[20px] pt-[30px]">

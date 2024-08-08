@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  categoryByFieldsFetchApi,
   ForgetPasswords,
   getAllCategories2,
   // getAllCategories,
@@ -20,7 +21,8 @@ const initialState = {
   message: "",
   process: false,
   allProducts:[],
-  categoriesData:[]
+  categoriesData:[],
+  categoryFields:[]
 };
 
 const UserSlice = createSlice({
@@ -126,6 +128,18 @@ const UserSlice = createSlice({
         state.loading=false,
         state.error=action.payload
       })
+
+      .addCase(categoryByFieldsFetchApi.pending,(state)=>{
+        state.loading=true
+       })
+       .addCase(categoryByFieldsFetchApi.fulfilled,(state,action)=>{
+        state.categoryFields=action.payload
+        state.loading=false
+       })
+       .addCase(categoryByFieldsFetchApi.rejected,(state,action)=>{
+        state.loading=false
+        state.action=action.payload
+       })
 
       // .addCase(getAllCategories.pending,(state)=>{
       //   state.loading=true

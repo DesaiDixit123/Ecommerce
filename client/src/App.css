@@ -194,6 +194,11 @@ body {
     font-size: 20px;
 }
 
+.nav-item2 {
+    background-color: #100217;
+    width: 100%;
+}
+
 .admin_nav .admin_nav_link:hover {
     color: black;
     background-color: lightblue;

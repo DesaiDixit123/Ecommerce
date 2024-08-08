@@ -1,6 +1,12 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 export default function AdminNavigation() {
+  const [adminDrop, setAdminDrop] = useState(false);
+
+  const adminDropdown = () => {
+    setAdminDrop(!adminDrop);
+  };
   return (
     <>
       <div className="bg-Adminnav-400 w-[200px]  text-white">
@@ -14,22 +20,48 @@ export default function AdminNavigation() {
               Dashbord
             </NavLink>
             <NavLink className="nav-item text-decoration-none admin_nav_link">
-                Profile
+              Profile
             </NavLink>
             <NavLink className="nav-item text-decoration-none admin_nav_link">
-                Users
+              Users
             </NavLink>
-            <NavLink to={"/admin/products"} className="nav-item text-decoration-none admin_nav_link">
+            <div className="relative">
+              <NavLink
+                to={""}
+                className="nav-item text-decoration-none admin_nav_link"
+                onClick={adminDropdown}
+              >
                 Products
-            </NavLink>
-            <NavLink to="/admin/category" className="nav-item text-decoration-none admin_nav_link">
-                Categories
+              </NavLink>
+
+              {adminDrop && (
+                <ul className=" text-[20px] nav-item2  absolute ">
+                  <NavLink className="nav-item text-decoration-none admin_nav_link">
+                    Product List
+                  </NavLink>
+
+                  <NavLink to={"/admin/products"} className="nav-item text-decoration-none admin_nav_link">
+                    Product Add
+                  </NavLink>
+
+                  <NavLink to={"/admin/updated/products"} className="nav-item text-decoration-none admin_nav_link">
+                    Product Update
+                  </NavLink>
+                </ul>
+              )}
+            </div>
+
+            <NavLink
+              to="/admin/category"
+              className="nav-item text-decoration-none admin_nav_link"
+            >
+              Categories
             </NavLink>
             <NavLink className="nav-item text-decoration-none admin_nav_link">
-                Billing
+              Billing
             </NavLink>
             <NavLink className="nav-item text-decoration-none admin_nav_link">
-                Logout
+              Logout
             </NavLink>
             {/* <li className="mt-[10px] hover:bg-red-400 px-[30px] cursor-pointer">
               <NavLink>Users</NavLink>
