@@ -4,7 +4,6 @@ export const userRouter = Router()
 
 userRouter.route("/").get(veriFicationUser, verifyUser)
 userRouter.route("/").get(getAllUser)
-
 userRouter.route("/countrieswithphonecodes").get(getAllCountryWithPhoneCodes)
 userRouter.post("/register", upload.single("profileImg"), register);
 userRouter.post("/login", login);

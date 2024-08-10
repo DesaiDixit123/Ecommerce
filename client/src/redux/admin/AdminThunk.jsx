@@ -1,13 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
 export const AdminLoginFetchApi = createAsyncThunk(
   "AdminLoginFetchApi",
-  async ({ formData, navigate,toast }, { dispatch }) => {
+  async ({ formData, navigate, toast }, { dispatch }) => {
     try {
       const response = await axios.post("/api/admin/login", formData);
-      dispatch(VerifyAdminFetchApi);
+
+      // Correct the dispatch call here
+      dispatch(VerifyAdminFetchApi());
       const { process, message, data } = response.data;
+
       if (process) {
         toast.success(message, {
           position: "top-right",
@@ -21,13 +23,13 @@ export const AdminLoginFetchApi = createAsyncThunk(
         });
       }
 
-      return { process, message, data };
+      return { process, message, data }; // Important to return data here
     } catch (error) {
       toast.error(error.response?.data?.message || error.message, {
         position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
       });
-    
+      return { process: false, message: error.message }; // Handle error state
     }
   }
 );
@@ -36,9 +38,11 @@ export const VerifyAdminFetchApi = createAsyncThunk(
   "VerifyAdminFetchApi",
   async () => {
     const response = await axios.get("/api/admin");
+    console.log("API Response:", response.data); // Add this line to inspect the API response
     return response.data;
   }
 );
+
 export const categoryFetchApi = createAsyncThunk(
   "categoryFetchApi",
   async ({ formdata, setFormdata, toast }, { rejectWithValue }) => {
@@ -64,7 +68,7 @@ export const categoryFetchApi = createAsyncThunk(
         // Reset formdata
         setFormdata({
           categoryname: "",
-          fields: [""]
+          fields: [""],
         });
       } else {
         toast.error(message, {
@@ -87,16 +91,14 @@ export const categoryFetchApi = createAsyncThunk(
   }
 );
 
-export const productAddFetchApi=createAsyncThunk(
+export const productAddFetchApi = createAsyncThunk(
   "productAddFetchApi",
-  async(formData)=>{
+  async (formData) => {
     try {
-      const response=await axios.post("/api/products",formData)
-      return response.data
+      const response = await axios.post("/api/products", formData);
+      return response.data;
     } catch (error) {
-      return error.message
+      return error.message;
     }
   }
-)
-
-
+);

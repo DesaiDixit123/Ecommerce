@@ -1,11 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {  useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {   useState } from "react";
+import { useDispatch} from "react-redux";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
   AdminLoginFetchApi,
-  VerifyAdminFetchApi,
+  // VerifyAdminFetchApi,
 } from "../../redux/admin/AdminThunk";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,17 +17,17 @@ export default function AdminLogin() {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { adminData ,process} = useSelector(
-    (state) => state.AdminSliceProvider
-  );
-  console.log("adminData:", adminData);
-  useEffect(() => {
-    if (adminData !== undefined) {
-      if (process) {
-        dispatch(VerifyAdminFetchApi());
-      }
-    }
-  }, [adminData, process, dispatch]);
+  // const { adminData ,process} = useSelector(
+  //   (state) => state.AdminSliceProvider
+  // );
+  // console.log("adminData:", adminData);
+  // useEffect(() => {
+  //   if (adminData !== undefined) {
+  //     if (process) {
+  //       dispatch(VerifyAdminFetchApi());
+  //     }
+  //   }
+  // }, [adminData, process, dispatch]);
 
   const formHandler = async (e) => {
     e.preventDefault();

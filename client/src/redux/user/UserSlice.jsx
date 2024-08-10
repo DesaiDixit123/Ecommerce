@@ -119,7 +119,7 @@ const UserSlice = createSlice({
       })
 
       .addCase(getAllCategories2.fulfilled,(state,action)=>{
-        console.log("payload:",action.payload)
+        
         state.loading=false
         state.categoriesData=action.payload
       })

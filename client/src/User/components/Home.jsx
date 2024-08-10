@@ -3,8 +3,13 @@ import slider_2 from "../../assets/slider-2.png";
 import slider_3 from "../../assets/slider-3.png";
 import { useState, useEffect } from "react";
 import Products from "./Products";
+import { useSelector } from "react-redux";
 
 export default function Home() {
+
+  const {adminData}=useSelector((state)=>state.AdminSliceProvider)
+
+  console.log("adminData:",adminData)
   return (
     <>
       <Slider />

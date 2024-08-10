@@ -8,7 +8,7 @@ export default function UserIndex() {
     <UserContext>
       <div className="flex flex-col min-h-screen overflow-auto">
         <Navigation />
-        <div className="flex-grow bg-red-500">
+        <div className="flex-grow ">
           <Outlet />
         </div>
         <Footer />
