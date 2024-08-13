@@ -68,19 +68,27 @@
 
 import { createContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { VerifyAdminFetchApi } from '../../redux/admin/AdminThunk';
+import { adminLogoutFetchApi, VerifyAdminFetchApi } from '../../redux/admin/AdminThunk';
 import { getAllCategories2 } from '../../redux/user/UserThunk';
+import { useNavigate } from 'react-router-dom';
 
+
+import { toast } from "react-toastify";
 export const AdminProvider = createContext();
 
 export default function AdminContext({ children }) {
   const dispatch = useDispatch();
   const [isToggleSidebar, setisToggleSidebar] = useState(false);
-
+  const navigate=useNavigate()
 
   
+  const adminLogout=()=>{
+
+    dispatch(adminLogoutFetchApi({dispatch,navigate,toast}))
+
+  }
   useEffect(() => {
-    console.log('Sidebar toggle state:', isToggleSidebar);
+    // alert(isToggleSidebar)
   }, [isToggleSidebar]);
 
   useEffect(() => {
@@ -93,6 +101,7 @@ export default function AdminContext({ children }) {
       value={{
         isToggleSidebar,
         setisToggleSidebar,
+        adminLogout
       }}
     >
       {children}

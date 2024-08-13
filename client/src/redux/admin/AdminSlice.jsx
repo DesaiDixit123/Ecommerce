@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AdminLoginFetchApi, VerifyAdminFetchApi } from "./AdminThunk";
+import { AdminLoginFetchApi, adminLogoutFetchApi, VerifyAdminFetchApi } from "./AdminThunk";
 
 const initialState = {
   loading: false,
@@ -47,7 +47,17 @@ const AdminSlice = createSlice({
       .addCase(VerifyAdminFetchApi.rejected, (state, action) => {
         state.loading = false;
         state.message = action.payload?.message || "Verification failed";
-      });
+      })
+
+
+      .addCase(adminLogoutFetchApi.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(adminLogoutFetchApi.fulfilled, (state) => {
+        state.loading = false;
+        state.adminData = null;
+      })
   },
 });
 

@@ -15,9 +15,9 @@ import { Chart } from "react-google-charts";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { MdDelete } from "react-icons/md";
-import Pagination from '@mui/material/Pagination';
+import Pagination from "@mui/material/Pagination";
 import { useSelector } from "react-redux";
-
+import { NavLink } from "react-router-dom";
 
 export const data = [
   ["Task", "Hours per Day"],
@@ -45,7 +45,6 @@ export default function AdminDashbord() {
   const [categoryBy, setCategoryBy] = useState("");
   const open = Boolean(anchorEl);
 
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -53,9 +52,9 @@ export default function AdminDashbord() {
     setAnchorEl(null);
   };
 
-  const {allProducts}=useSelector((state)=>state.UserSliceProvider)
-  console.log(allProducts.length)
-  
+  const { allProducts } = useSelector((state) => state.UserSliceProvider);
+  console.log(allProducts);
+
   return (
     <>
       <div className="right-content w-100">
@@ -205,840 +204,82 @@ export default function AdminDashbord() {
                   <th>UID</th>
                   <th>Product</th>
                   <th>Category</th>
-                  <th>Brand</th>
+                  <th>Field</th>
                   <th>Price</th>
                   <th>Stock</th>
                   <th>Rating</th>
-                  <th>Order</th>
-                  <th>Sales</th>
+
                   <th>Action</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
+                {allProducts.map((product,index) => (
+                  <tr key={product._id}>
+                    <td> #{index+1} </td>
+                    <td>
+                      <div className="d-flex align-items-center productBox gap-[20px]">
+                        <div className="imageWrapper">
+                          <div className="img">
+                            <img
+                              src={product.img1}
+                              alt=""
+                              className="w-100"
+                            />
+                          </div>
+                        </div>
+                        <div className="info">
+                          <h6>{product.title}</h6>
+                          <p>{product.discription}</p>
                         </div>
                       </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
+                    </td>
+                    <td>{product.category}</td>
+                    <td>{product.fields}</td>
+                    <td className="">
+                      <div style={{ width: "70px" }}>
+                        <del className="old">{product.price}</del>
+                        <span className="new text-danger">
+                          {" "}
+                          {product.discount}{" "}
+                        </span>
                       </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
+                    </td>
+                    <td> {product.qnt} </td>
+                    <td> {product.ratings} </td>
+
+                    <td>
+                      <div className="actions d-flex align-items-center gap-3">
+                        <NavLink to={"/admin/productsdetails/products"}>
+
+                        <Button color="secondary" className="secondary">
+                          <FaEye />
+                        </Button>
+                        </NavLink>
+                        <Button color="success" className="success">
+                          <FaPencil />
+                        </Button>
+                        <Button color="error" className="error">
+                          <MdDelete />
+                        </Button>
                       </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>{" "}
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>{" "}
-                <tr>
-                  <td>#1</td>
-                  <td>
-                    <div className="d-flex align-items-center productBox gap-[20px]">
-                      <div className="imageWrapper">
-                        <div className="img">
-                          <img
-                            src="https://mironcoder-hotash.netlify.app/images/product/01.webp"
-                            alt=""
-                            className="w-100"
-                          />
-                        </div>
-                      </div>
-                      <div className="info">
-                        <h6>Tops and skirt set for Female</h6>
-                        <p>
-                          Women's exclusive summer Tops and skirt set for Female
-                          Tops and skirt set
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td className="">
-                    <div style={{ width: "70px" }}>
-                      <del className="old">₹ 1200</del>
-                      <span className="new text-danger">₹ 600</span>
-                    </div>
-                  </td>
-                  <td>30</td>
-                  <td>4.9 (12)</td>
-                  <td>380</td>
-                  <td>₹ 48k</td>
-                  <td>
-                    <div className="actions d-flex align-items-center gap-3">
-                      <Button color="secondary" className="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button color="success" className="success">
-                        <FaPencil />
-                      </Button>
-                      <Button color="error" className="error">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
 
-
             <div className="d-flex tableFooter">
-              <p>Showing <b>12</b> of <b>60</b> results</p>
-            <Pagination count={10} color="primary" className="pagination"  showFirstButton showLastButton/>
+              <p>
+                Showing <b>12</b> of <b>60</b> results
+              </p>
+              <Pagination
+                count={10}
+                color="primary"
+                className="pagination"
+                showFirstButton
+                showLastButton
+              />
             </div>
           </div>
         </div>

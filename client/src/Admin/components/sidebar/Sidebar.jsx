@@ -4,15 +4,22 @@ import { FaShoppingCart } from "react-icons/fa";
 import { MdDashboard, MdCategory } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IoMdLogOut } from "react-icons/io";
+import { AdminProvider } from "../../context/AdminContext";
+
+
 export default function Sidebat() {
   const [activeTab, setActiveTab] = useState(0);
   const [isToggleSubmenu, setIsToggleSubmenu] = useState(false);
+
+
   const isOpenSubMenu = (index) => {
     setActiveTab(index);
     setIsToggleSubmenu(activeTab === index ? !isToggleSubmenu : true);
   };
+
+  const {adminLogout}=useContext(AdminProvider)
 
   return (
     <>
@@ -46,7 +53,9 @@ export default function Sidebat() {
           </li>
           <li>
             <Button
-              className={`w-100 ${  activeTab === 3 && isToggleSubmenu ===true ? "active" : ""}`}
+              className={`w-100 ${
+                activeTab === 3 && isToggleSubmenu === true ? "active" : ""
+              }`}
               onClick={() => isOpenSubMenu(3)}
             >
               <span className="icon">
@@ -68,10 +77,10 @@ export default function Sidebat() {
                   <NavLink>Product List</NavLink>
                 </li>
                 <li>
-                  <NavLink>Product View</NavLink>
+                  <NavLink to={"/admin/productsdetails/products"}>Product View</NavLink>
                 </li>
                 <li>
-                  <NavLink>Product Add</NavLink>
+                  <NavLink to={"/admin/addproducts"}>Product Add</NavLink>
                 </li>
                 <li>
                   <NavLink>Product Updated</NavLink>
@@ -114,7 +123,10 @@ export default function Sidebat() {
         <br />
         <div className="logoutWrapper">
           <div className="logoutBox">
-            <Button variant="contained"><IoMdLogOut/>Logout</Button>
+            <Button variant="contained" onClick={adminLogout}>
+              <IoMdLogOut />
+              Logout
+            </Button>
           </div>
         </div>
       </div>

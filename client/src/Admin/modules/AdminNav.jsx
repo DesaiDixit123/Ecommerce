@@ -20,19 +20,22 @@ import { useContext, useState } from "react";
 import { IoShieldHalfSharp } from "react-icons/io5";
 import { Divider } from "@mui/material";
 import logo from "../../assets/logo.png";
+import { GlobelProvider } from "../../context/globelContext";
 import { useSelector } from "react-redux";
-import { AdminProviderss } from "../../context/AllContext";
-// import { AdminProvider } from "../context/AdminContext";
+import AdminAvtarImg from "../components/AdminAvatarImg";
 
 export default function AdminNavigation() {
-  const { isToggleSidebar, setisToggleSidebar } = useContext(AdminProviderss);
+  const { isToggleSidebar, setisToggleSidebar, adminLogout } =
+    useContext(GlobelProvider);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenNotificationDrop, setIsOpenNotificationDrop] = useState(false);
   const openMyAcc = Boolean(anchorEl);
   const openNotifications = Boolean(isOpenNotificationDrop);
+
   const handeleOpenAccDrop = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handeleCloseMyDrop = () => {
     setAnchorEl(null);
   };
@@ -52,21 +55,25 @@ export default function AdminNavigation() {
         <div className="container-fluid">
           <div className="row d-flex align-items-center w-100">
             <div className="col-sm-2 part-1">
-              <Link className="d-flex align-items-center text-[22px] pl-4">
-                <img src={logo} alt="" />
+              <Link className="d-flex align-items-center  pl-4 relative bottom-1">
+                <img src={logo} alt="" className="" />
               </Link>
             </div>
             <div className="col-sm-3 d-flex align-items-center part-2 pl-4">
-              <Button className="rounded-circle mr-3">
-                <MdMenuOpen className="text-[22px]" />
-              </Button>
-              <SearchBox />
-            </div>
-            <div className="col-sm-7 d-flex align-items-center part-3 pl-4 justify-content-end">
               <Button
                 className="rounded-circle mr-3"
                 onClick={() => setisToggleSidebar(!isToggleSidebar)}
               >
+                {isToggleSidebar ? (
+                  <MdOutlineMenu className="text-[22px]" />
+                ) : (
+                  <MdMenuOpen className="text-[22px]" />
+                )}
+              </Button>
+              <SearchBox />
+            </div>
+            <div className="col-sm-7 d-flex align-items-center part-3 pl-4 justify-content-end">
+              <Button className="rounded-circle mr-3">
                 <MdOutlineLightMode className="text-[22px]" />
               </Button>
 
@@ -332,15 +339,7 @@ export default function AdminNavigation() {
                   className="myAcc d-flex align-items-center"
                   onClick={handeleOpenAccDrop}
                 >
-                  <div className="adminImg">
-                    <span className="rounded-circle">
-                      <img
-                        src={adminData.data.profileImg}
-                        alt=""
-                        className="w-[50px]"
-                      />
-                    </span>
-                  </div>
+                <AdminAvtarImg/>
 
                   <div className="adminInfo">
                     <h4>

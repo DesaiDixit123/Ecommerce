@@ -6,10 +6,10 @@ import { persisterStore, Store } from "./redux/Store.jsx";
 import { ToastContainer } from "react-toastify";
 import { PersistGate } from "redux-persist/integration/react";
 import "react-toastify/dist/ReactToastify.css";
-import AdminContextss from "./context/AllContext.jsx";
+import GlobelContext from "./context/globelContext.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AdminContextss>
+    <GlobelContext>
       <Provider store={Store}>
         <PersistGate loading={null} persistor={persisterStore}>
           <App />
@@ -28,6 +28,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           />
         </PersistGate>
       </Provider>
-    </AdminContextss>
+    </GlobelContext>
   </React.StrictMode>
 );

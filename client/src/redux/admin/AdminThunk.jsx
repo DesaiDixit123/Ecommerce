@@ -102,3 +102,34 @@ export const productAddFetchApi = createAsyncThunk(
     }
   }
 );
+
+export const adminLogoutFetchApi = createAsyncThunk(
+  "admin/logout",
+  async ({ navigate, toast }, { dispatch }) => {
+    try {
+      const response = await axios.post("/api/admin/logout");
+
+      const { data, message, process } = response.data;
+      if (process) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+        dispatch(VerifyAdminFetchApi());
+        navigate("/");
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return { process, message, data };
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }
+  }
+);

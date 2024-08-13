@@ -19,6 +19,7 @@ import AdminAddProduct from "./Admin/components/products/AdminAddProduct";
 import AdminAddCategory from "./Admin/components/products/AdminAddCategory";
 import AdminProductUpadted from "./Admin/components/products/AdminProductUpdated";
 import AdminDashbord from "./Admin/components/AdminDashbord";
+import AdminProductsDetails from "./Admin/components/products/AdminProductsDetails";
 
 const Router = createBrowserRouter([
   {
@@ -45,9 +46,10 @@ const Router = createBrowserRouter([
         children: [
           { path: "/admin", element: <AdminDashbord /> },
           { path: "/admin/login", element: <AdminLogin /> },
-          { path: "/admin/products", element: <AdminAddProduct /> },
+          { path: "/admin/addproducts", element: <AdminAddProduct /> },
           { path: "/admin/category", element: <AdminAddCategory /> },
           { path: "/admin/updated/products", element: <AdminProductUpadted /> },
+          { path: "/admin/productsdetails/products", element: <AdminProductsDetails /> },
         ],
       },
     ],

@@ -86,3 +86,13 @@ export const verifyAdmin = async(req, res) => {
         })
     }
 }
+export const adminLogout = (req, res) => {
+
+    res.clearCookie("adminCookie")
+
+    res.status(200).send({
+        process: true,
+        message: "AdminLogout Successfully"
+    })
+
+}
