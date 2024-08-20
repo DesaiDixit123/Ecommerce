@@ -13,9 +13,10 @@ const productSchema = Schema({
     ratings: { type: String },
     discount: { type: Number, default: 0 },
     qnt: { type: Number },
-    discription: { type: String }
+    discription: { type: String },
+    publishedDate: { type: Date, default: Date.now } 
 
-})
+}, { timestamps: true })
 
 
 export const $ProductModel = model("product", productSchema)

@@ -2,12 +2,12 @@ import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Chip from "@mui/material/Chip";
 import HomeIcon from "@mui/icons-material/Home";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { useState } from "react";
+import Button from "@mui/material/Button";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { categoryByFieldsFetchApi } from "../../../redux/user/UserThunk";
+import { productAddFetchApi } from "../../../redux/admin/AdminThunk";
+// import uploadedImg from "../../../assets/uploaded.jpg"
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -30,10 +30,79 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 });
 
 export default function AdminAddProduct() {
-  const [categoryVal, setCategoryVal] = useState("");
+  const dispatch = useDispatch();
+  const { categoriesData, categoryFields,allUsers } = useSelector(
+    (state) => state.UserSliceProvider
+  );
+  console.log(categoriesData);
+  console.log(categoryFields);
 
-  const handleChangeCategory = (e) => {
-    setCategoryVal(e.target.value);
+
+  console.log(allUsers)
+  const [formdata, setFormdata] = useState({
+    category: "",
+    fields: "",
+    img1: null,
+    img2: null,
+    img3: null,
+    img4: null,
+    img5: null,
+    title: "",
+    price: "",
+    discount: "",
+    qnt: "",
+    discription: "",
+  });
+
+  useEffect(() => {
+    if (formdata.category) {
+      dispatch(categoryByFieldsFetchApi(formdata.category));
+    }
+  }, [formdata.category, dispatch]);
+
+  const handleInputChange = (e) => {
+    setFormdata({ ...formdata, [e.target.name]: e.target.value });
+  };
+  const selectHandeler = (e) => {
+    setFormdata({ ...formdata, category: e.target.value });
+  };
+  const handleFileChange = (e, fieldName) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+        setFormdata((prevState) => ({
+            ...prevState,
+            [fieldName]: file // Store the actual file object
+        }));
+    } else {
+        console.error("Please upload a valid image file.");
+    }
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+
+  // Append all form fields to FormData
+  Object.keys(formdata).forEach((key) => {
+      if (formdata[key] instanceof File) {
+          formData.append(key, formdata[key]); // Append file objects
+      } else {
+          formData.append(key, formdata[key]); // Append other fields
+      }
+  });
+
+  try {
+      const response = await dispatch(productAddFetchApi(formData));
+      console.log("Product added successfully:", response);
+  } catch (error) {
+      console.error("Error adding product:", error);
+  }
+};
+
+  const fielSelectHandeler = (e) => {
+    setFormdata({ ...formdata, fields: e.target.value });
   };
 
   return (
@@ -53,7 +122,7 @@ export default function AdminAddProduct() {
           </Breadcrumbs>
         </div>
 
-        <form className="form">
+        <form className="form" onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-sm-7">
               <div className="card p-4">
@@ -61,50 +130,67 @@ export default function AdminAddProduct() {
 
                 <div className="form-group">
                   <h6>TITLE</h6>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    name="title"
+                    value={formdata.title}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div className="form-group">
                   <h6>DESCRIPTION</h6>
-                  <textarea name="" id="" rows={5} cols={10}></textarea>
+                  <textarea
+                    name="discription"
+                    rows={5}
+                    cols={10}
+                    value={formdata.discription}
+                    onChange={handleInputChange}
+                  ></textarea>
                 </div>
 
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
                       <h6>CATEGORY</h6>
-                      <Select
-                        value={categoryVal}
-                        onChange={handleChangeCategory}
-                        displayEmpty
-                        inputProps={{ "aria-label": "Without label" }}
-                        className="w-100"
+                      <select
+                        name="category"
+                        id="category"
+                        className="cursor-pointer"
+                        onChange={selectHandeler}
                       >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                      </Select>
+                        <option value="">Select Category</option>
+                        {categoriesData &&
+                          categoriesData.map((category) => (
+                            <option
+                              key={category._id}
+                              value={category.categoryname}
+                            >
+                              {category.categoryname}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
                   <div className="col">
                     <div className="form-group">
-                      <h6>BRAND</h6>
-                      <Select
-                        value={categoryVal}
-                        onChange={handleChangeCategory}
-                        displayEmpty
-                        inputProps={{ "aria-label": "Without label" }}
-                        className="w-100"
+                      <h6>FIELDS</h6>
+                      <select
+                        type="text"
+                        name="fields"
+                        value={formdata.fields}
+                        placeholder="fields"
+                        className="fields_selects cursor-pointer"
+                        onChange={fielSelectHandeler}
                       >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                      </Select>
+                        <option value="">Select Field</option>
+                        {categoryFields &&
+                          Array.isArray(categoryFields.fields) &&
+                          categoryFields.fields.map((field, index) => (
+                            <option key={index} value={field}>
+                              {field}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -113,22 +199,211 @@ export default function AdminAddProduct() {
                   <div className="col">
                     <div className="form-group">
                       <h6>REGULAR PRICE</h6>
-
-                      <input type="text" />
+                      <input
+                        type="text"
+                        name="price"
+                        value={formdata.price}
+                        onChange={handleInputChange}
+                      />
                     </div>
                   </div>
                   <div className="col">
                     <div className="form-group">
                       <h6>DISCOUNT PRICE</h6>
-
-                      <input type="text" />
+                      <input
+                        type="text"
+                        name="discount"
+                        value={formdata.discount}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <h6>QUANTITY</h6>
+                      <input
+                        type="text"
+                        name="qnt"
+                        value={formdata.qnt}
+                        onChange={handleInputChange}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="col-sm-5"></div>
+            <div className="col-sm-5">
+              <div className="card p-4">
+                <h1 className="mb-4">Upload Images</h1>
+
+                <div className="flex justify-between">
+                  <div>
+                    <label>IMAGE 1</label>
+                    <div className="file_upload">
+                      {!formdata.img1 ? (
+                        <input
+                          name="img1"
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "img1")}
+                          style={{
+                            
+                            width: "150px",
+                            height: "150px",
+                            border: "1px dashed grey",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundImage: formdata.img1 ? `url(${formdata.img1})` : `url(../../../assets/uploaded.jpg)`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={formdata.img1}
+                          alt="Uploaded"
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            objectFit: "contain",
+                            borderRadius: "5px",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label>IMAGE 2</label>
+                    <div className="file_upload">
+                      {!formdata.img2 ? (
+                        <input
+                          name="img2"
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "img2")}
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            border: "1px dashed grey",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={formdata.img2}
+                          alt="Uploaded"
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            objectFit: "contain",
+                            borderRadius: "5px",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <div>
+                    <label>IMAGE 3</label>
+                    <div className="file_upload">
+                      {!formdata.img3 ? (
+                        <input
+                          name="img3"
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "img3")}
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            border: "1px dashed grey",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={formdata.img3}
+                          alt="Uploaded"
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            objectFit: "contain",
+                            borderRadius: "5px",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label>IMAGE 4</label>
+                    <div className="file_upload">
+                      {!formdata.img4 ? (
+                        <input
+                          name="img4"
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "img4")}
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            border: "1px dashed grey",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={formdata.img4}
+                          alt="Uploaded"
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            objectFit: "contain",
+                            borderRadius: "5px",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <div>
+                    <label>IMAGE 5</label>
+                    <div className="file_upload">
+                      {!formdata.img5 ? (
+                        <input
+                          name="img5"
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "img5")}
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            border: "1px dashed grey",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={formdata.img5}
+                          alt="Uploaded"
+                          style={{
+                            width: "150px",
+                            height: "150px",
+                            objectFit: "contain",
+                            borderRadius: "5px",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+          <Button type="submit" className="mt-3 btn-blue w-100">
+            PRODUCT ADD
+          </Button>
         </form>
       </div>
     </>
@@ -143,51 +418,43 @@ export default function AdminAddProduct() {
 // import { categoryByFieldsFetchApi } from "../../../redux/user/UserThunk";
 
 // export default function AdminAddProduct() {
-//   const [formdata, setFormdata] = useState({
-//     category: "",
-//     fields: "",
-//     img1: "",
-//     img2: "",
-//     img3: "",
-//     img4: "",
-//     img5: "",
-//     title: "",
-//     price: "",
-//     discount: "",
-//     qnt: "",
-//     discription: "",
-//   });
+// const [formdata, setFormdata] = useState({
+//   category: "",
+//   fields: "",
+//   img1: "",
+//   img2: "",
+//   img3: "",
+//   img4: "",
+//   img5: "",
+//   title: "",
+//   price: "",
+//   discount: "",
+//   qnt: "",
+//   discription: "",
+// });
 
-//   const dispatch = useDispatch();
-//   const { categoriesData, categoryFields } = useSelector(
-//     (state) => state.UserSliceProvider
-//   );
-//   useEffect(() => {
-//     if (formdata.category) {
-//       dispatch(categoryByFieldsFetchApi(formdata.category));
-//     }
-//   }, [formdata.category, dispatch]);
+// const dispatch = useDispatch();
 
-//   const formhandeler = async (e) => {
-//     e.preventDefault();
-//     console.log(formdata);
-//     try {
-//       dispatch(productAddFetchApi(formdata));
-//     } catch (error) {
-//       console.error("Error:", error);
-//     }
-//   };
+// useEffect(() => {
+//   if (formdata.category) {
+//     dispatch(categoryByFieldsFetchApi(formdata.category));
+//   }
+// }, [formdata.category, dispatch]);
 
-//   const inputHandeler = (e) => {
-//     setFormdata({ ...formdata, [e.target.name]: e.target.value });
-//   };
+// const formhandeler = async (e) => {
+//   e.preventDefault();
+//   console.log(formdata);
+//   try {
+//     dispatch(productAddFetchApi(formdata));
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// };
 
-//   const selectHandeler = (e) => {
-//     setFormdata({ ...formdata, category: e.target.value });
-//   };
-//   const fielSelectHandeler = (e) => {
-//     setFormdata({ ...formdata, fields: e.target.value });
-//   };
+// const inputHandeler = (e) => {
+//   setFormdata({ ...formdata, [e.target.name]: e.target.value });
+// };
+
 //   return (
 //     <>
 //       <div className="bg-Adminnav-400 text-white w-[100%] h-[100vh]  flex justify-center items-center rounded-[10px] p-[30px]">
@@ -200,39 +467,7 @@ export default function AdminAddProduct() {
 //           </div>
 
 //           <div className="flex justify-center mt-[10px] text-black gap-[35px] px-[20px] pt-[30px]">
-//             <select
-//               name="category"
-//               id="category"
-//               className="w-[70%] bg-white border-2 border-black p-[5px] rounded-[10px]"
-//               onChange={selectHandeler}
-//               value={formdata.category}
-//             >
-//               <option value="">Select Category</option>
-//               {categoriesData &&
-//                 categoriesData.map((category) => (
-//                   <option key={category._id} value={category.categoryname}>
-//                     {category.categoryname}
-//                   </option>
-//                 ))}
-//             </select>
 
-//             <select
-//               type="text"
-//               name="fields"
-//               value={formdata.fields}
-//               placeholder="fields"
-//               className="border-2 border-black w-[70%] p-[5px] rounded-[15px] outline-none bg-white"
-//               onChange={fielSelectHandeler}
-//             >
-//               <option value="">Select Field</option>
-//               {categoryFields &&
-//                 Array.isArray(categoryFields.fields) &&
-//                 categoryFields.fields.map((field, index) => (
-//                   <option key={index} value={field}>
-//                     {field}
-//                   </option>
-//                 ))}
-//             </select>
 //           </div>
 
 //           <div className="flex justify-center mt-[10px] text-black gap-[35px] px-[20px] pt-[15px]">

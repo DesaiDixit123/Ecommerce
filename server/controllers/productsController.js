@@ -1,15 +1,57 @@
 import { $ProductModel } from "../models/productsModel.js";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import dotenv from "dotenv";
 
-export const products = async(req, res) => {
+
+
+dotenv.config();
+
+cloudinary.config({
+    cloud_name: "dsslrk2kp",
+    api_key: "499747174164267",
+    api_secret: "3yRqcZo3-vwF7HDGXpOObTY6TyM",
+});
+
+const upload = multer({
+    storage: new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: {
+       
+            folder: "Ecommerce-Products",
+            allowed_formats: ["jpg", "jpeg", "png", "gif"],
+            transformation: [{ width: 500, height: 500, crop: "limit" }],
+        }
+    }),
+
+
+    fileFilter: (req, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+            return cb(new Error("Only image files are allowed!"), false);
+        }
+        cb(null, true);
+    },
+    limits: { fileSize: 1024 * 1024 * 5 },
+})
+
+
+export const uploadImages = upload.fields([
+    {name:"img1",maxCount:1},
+    {name:"img2",maxCount:2},
+    {name:"img3",maxCount:3},
+    {name:"img4",maxCount:4},
+    {name:"img5",maxCount:5},
+])
+export const products = async (req, res) => {
     try {
+        // Log the incoming request body and files to debug
+        console.log(req.body);
+        console.log(req.files);
+
         const {
             category,
             fields,
-            img1,
-            img2,
-            img3,
-            img4,
-            img5,
             title,
             price,
             ratings,
@@ -18,22 +60,35 @@ export const products = async(req, res) => {
             discription,
         } = req.body;
 
+        // Assigning file paths from req.files to variables
+        const img1 = req.files.img1 ? req.files.img1[0].path : null;
+        const img2 = req.files.img2 ? req.files.img2[0].path : null;
+        const img3 = req.files.img3 ? req.files.img3[0].path : null;
+        const img4 = req.files.img4 ? req.files.img4[0].path : null;
+        const img5 = req.files.img5 ? req.files.img5[0].path : null;
+
+
+        console.log(img1)
+        // Validate all required fields and images
         if (!category ||
             !fields ||
-            !img1 ||
             !title ||
             !price ||
             !discount ||
             !qnt ||
             !discription
-        )
-            throw new Error("All fields are requried.");
+        ) {
+            throw new Error("All fields are required.");
+        }
 
-        const findProducts = await $ProductModel.findOne({
-            $or: [{ img1 }, { title }, { discription }],
-        });
+        // Check if a product with the same img1, title, or description already exists
+        // const findProducts = await $ProductModel.findOne({
+        //     $or: [{ img1 }, { title }, { discription }],
+        // });
 
-        if (findProducts) throw new Error("Product already added.");
+        // if (findProducts) throw new Error("Product already added.");
+
+        // Save the new product in the database
         const response = await $ProductModel({
             category,
             fields,
@@ -56,12 +111,13 @@ export const products = async(req, res) => {
             data: response,
         });
     } catch (error) {
-        res.status(201).send({
+        res.status(400).send({
             process: false,
             message: error.message,
         });
     }
 };
+
 
 export const getAllProducts = async(req, res) => {
     res.send(await $ProductModel.find({}))

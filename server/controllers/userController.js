@@ -140,11 +140,19 @@ export const register = async(req, res) => {
         });
     }
 };
-export const getAllUser = async(req, res) => {
-    res.status(200).send(await User.find({}));
+export const getUser = async(req, res) => {
+    try {
+        const users = await User.find({});
+        res.send({ process: true, data: users });
+    } catch (error) {
+        res.status(500).send({ process: false, message: 'Failed to fetch users' });
+    }
 };
 export const login = async(req, res) => {
     try {
+
+
+        console.log(req.body)
         const { identifiers, password } = req.body;
 
         if (!identifiers) throw new Error("Username/Email Requried.");

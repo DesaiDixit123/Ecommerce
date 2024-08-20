@@ -234,3 +234,27 @@ export const categoryByFieldsFetchApi=createAsyncThunk(
  
   }
 )
+
+// export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
+//   try {
+//     const response = await axios.get("/api/user");
+//     console.log("API Response Data:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.log("API Error:", error.message); // Error Logging
+//     throw error;
+//   }
+// });
+
+
+
+export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
+  try {
+    const response = await axios.get("/api/user");
+    console.log("API Response Data:", response.data); // Check API Response
+    return response.data;
+  } catch (error) {
+    console.log("API Error:", error.message); // Error Logging
+    throw error;
+  }
+});

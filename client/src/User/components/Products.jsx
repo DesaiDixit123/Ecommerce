@@ -21,15 +21,15 @@ export default function Products() {
     },[])
   return (
     <>
-      <div className="px-[20px] py-[20px] grid grid-cols-4 justify-center gap-[40px]">
+      <div className="px-[20px] py-[20px] grid grid-cols-3 justify-center gap-[40px]">
        {allProducts.map((product)=>(
         <>
-         <div key={product._id} className="border-2 border-topnavBorderBottom-400 w-[300px] px-[20px] py-[20px] rounded-[10px] relative group overflow-hidden hover:shadow-lg shadow-gray-500/50">
+         <div key={product._id} className="box_card border-2 border-topnavBorderBottom-400 w-[300px] px-[20px] py-[20px] rounded-[10px] relative group overflow-hidden hover:shadow-lg shadow-gray-500/50">
           <div className="overflow-hidden rounded-2.5 relative cursor-pointer">
             <img
               src={product.img1}
               alt=""
-              className="w-full rounded-2.5 transform transition-transform duration-300 group-hover:scale-110 rounded-[10px]"
+              className="imagesds rounded-2.5 transform transition-transform duration-300 group-hover:scale-110 rounded-[10px]"
             />
           </div>
           <div className="pt-[10px] relative">

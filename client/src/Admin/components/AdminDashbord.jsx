@@ -17,7 +17,7 @@ import Select from "@mui/material/Select";
 import { MdDelete } from "react-icons/md";
 import Pagination from "@mui/material/Pagination";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export const data = [
   ["Task", "Hours per Day"],
@@ -44,6 +44,7 @@ export default function AdminDashbord() {
   const [showBy, setShowBy] = useState("");
   const [categoryBy, setCategoryBy] = useState("");
   const open = Boolean(anchorEl);
+  const navigate=useNavigate()
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,8 +53,13 @@ export default function AdminDashbord() {
     setAnchorEl(null);
   };
 
-  const { allProducts } = useSelector((state) => state.UserSliceProvider);
-  console.log(allProducts);
+  const { allProducts ,allUsers} = useSelector((state) => state.UserSliceProvider);
+  // console.log(allProducts);
+  console.log(allUsers)
+
+  const handeleProductClick = (id) => {
+    navigate(`/admin/productsdetails/products/${id}`)
+  }
 
   return (
     <>
@@ -214,18 +220,14 @@ export default function AdminDashbord() {
               </thead>
 
               <tbody>
-                {allProducts.map((product,index) => (
+                {allProducts.map((product, index) => (
                   <tr key={product._id}>
-                    <td> #{index+1} </td>
+                    <td> #{index + 1} </td>
                     <td>
                       <div className="d-flex align-items-center productBox gap-[20px]">
                         <div className="imageWrapper">
                           <div className="img">
-                            <img
-                              src={product.img1}
-                              alt=""
-                              className="w-100"
-                            />
+                            <img src={product.img1} alt="" className="w-100" />
                           </div>
                         </div>
                         <div className="info">
@@ -250,12 +252,11 @@ export default function AdminDashbord() {
 
                     <td>
                       <div className="actions d-flex align-items-center gap-3">
-                        <NavLink to={"/admin/productsdetails/products"}>
-
-                        <Button color="secondary" className="secondary">
-                          <FaEye />
-                        </Button>
-                        </NavLink>
+                   
+                          <Button color="secondary" className="secondary" onClick={()=>handeleProductClick(product._id)}>
+                            <FaEye />
+                          </Button>
+                      
                         <Button color="success" className="success">
                           <FaPencil />
                         </Button>

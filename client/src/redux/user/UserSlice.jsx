@@ -7,6 +7,7 @@ import {
   // getAllCategories,
   getAllCountriesWithPhoneCodes,
   getAllProductsFecthApi,
+  getAllUsersFetchApi,
   LoginUser,
   userLogoutFecthApi,
   UserValidation,
@@ -22,7 +23,8 @@ const initialState = {
   process: false,
   allProducts:[],
   categoriesData:[],
-  categoryFields:[]
+  categoryFields: [],
+  allUsers:[],
 };
 
 const UserSlice = createSlice({
@@ -109,10 +111,23 @@ const UserSlice = createSlice({
         state.allProducts=action.payload
       })
 
-      .addCase(getAllProductsFecthApi.rejected,(state,action)=>{
-        state.loading=false,
-        state.error=action.payload
+      .addCase(getAllUsersFetchApi.pending, (state) => {
+        state.loading = true;
       })
+      .addCase(getAllUsersFetchApi.fulfilled, (state, action) => {
+        console.log("Action Payload (all users):", action.payload); // Check Data
+        state.loading = false;
+        state.allUsers = action.payload; // Update State
+      })
+      
+      .addCase(getAllUsersFetchApi.rejected, (state, action) => {
+        console.log("Action Error:", action.error.message); // Error Logging
+        state.loading = false;
+        state.error = action.error.message;
+      })
+    
+
+     
 
       .addCase(getAllCategories2.pending,(state)=>{
         state.loading=true
@@ -140,21 +155,8 @@ const UserSlice = createSlice({
         state.loading=false
         state.action=action.payload
        })
-
-      // .addCase(getAllCategories.pending,(state)=>{
-      //   state.loading=true
-      // })
-
-      // .addCase(getAllCategories.fulfilled,(state,action)=>{
-      //   console.log(action.payload)
-      //   state.loading=false
-      //   state.categoriesData=action.payload
-      // })
-
-      // .addCase(getAllCategories.rejected,(state,action)=>{
-      //   state.loading=false,
-      //   state.error=action.payload
-      // })
+    
+  
   },
 });
 

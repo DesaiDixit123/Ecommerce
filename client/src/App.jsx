@@ -49,7 +49,7 @@ const Router = createBrowserRouter([
           { path: "/admin/addproducts", element: <AdminAddProduct /> },
           { path: "/admin/category", element: <AdminAddCategory /> },
           { path: "/admin/updated/products", element: <AdminProductUpadted /> },
-          { path: "/admin/productsdetails/products", element: <AdminProductsDetails /> },
+          { path: "/admin/productsdetails/products/:id", element: <AdminProductsDetails /> },
         ],
       },
     ],

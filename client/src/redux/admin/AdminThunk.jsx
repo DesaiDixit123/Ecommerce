@@ -95,7 +95,12 @@ export const productAddFetchApi = createAsyncThunk(
   "productAddFetchApi",
   async (formData) => {
     try {
-      const response = await axios.post("/api/products", formData);
+      const response = await axios.post("/api/products", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       return response.data;
     } catch (error) {
       return error.message;

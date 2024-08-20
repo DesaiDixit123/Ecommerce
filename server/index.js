@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { productRouter } from "./routers/products.Router.js";
 import { adminRouter } from "./routers/AdminRouter/adminRouter.js";
 import { CategoryRouter } from "./routers/CategoryRouter.js";
+import bodyParser from 'body-parser';
 dotenv.config()
 const app = express()
 
@@ -17,9 +18,11 @@ db_con(process.env.dbURL)
 
 
 app.use(cors())
-app.use(json())
+
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cookieParser())
-app.use(urlencoded({ extends: true }))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 
 
 app.use("/api", userRouter)

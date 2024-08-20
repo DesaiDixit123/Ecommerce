@@ -175,8 +175,13 @@ body {
 .slide-images img {
     width: 100%;
 }
-
-
+.imagesds{
+  height: 300px;
+  width: 350px;
+}
+.box_card{
+    width: 350px;
+}
 /* Hide the images by default */
 
 .mySlides {
