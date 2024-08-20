@@ -16,8 +16,9 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { MdDelete } from "react-icons/md";
 import Pagination from "@mui/material/Pagination";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { deleteProduct, getAllProductsFecthApi } from "../../redux/user/UserThunk";
 
 export const data = [
   ["Task", "Hours per Day"],
@@ -44,7 +45,9 @@ export default function AdminDashbord() {
   const [showBy, setShowBy] = useState("");
   const [categoryBy, setCategoryBy] = useState("");
   const open = Boolean(anchorEl);
-  const navigate=useNavigate()
+  const navigate = useNavigate()
+  
+  const dispatch=useDispatch()
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -59,6 +62,16 @@ export default function AdminDashbord() {
 
   const handeleProductClick = (id) => {
     navigate(`/admin/productsdetails/products/${id}`)
+  }
+  
+
+  const handeleDeleteProduct = (productId) => {
+    dispatch(deleteProduct(productId)).unwrap()
+    .then(() => {
+      dispatch(getAllProductsFecthApi());
+    }).catch((err) => {
+      console.error("Failed to delete product: ", err);
+    });
   }
 
   return (
@@ -260,7 +273,7 @@ export default function AdminDashbord() {
                         <Button color="success" className="success">
                           <FaPencil />
                         </Button>
-                        <Button color="error" className="error">
+                        <Button color="error" className="error" onClick={()=>handeleDeleteProduct(product._id)}>
                           <MdDelete />
                         </Button>
                       </div>

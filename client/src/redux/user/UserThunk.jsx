@@ -258,3 +258,12 @@ export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
     throw error;
   }
 });
+
+export const deleteProduct = createAsyncThunk(
+  "deleteProduct",
+  async (productId) => {
+    const response = axios.delete(`/api/products/${productId}`)
+    
+    return response.data
+  }
+)

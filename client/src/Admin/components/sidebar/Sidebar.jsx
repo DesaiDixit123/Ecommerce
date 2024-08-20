@@ -44,12 +44,39 @@ export default function Sidebat() {
             </Button>
           </li>
           <li>
-            <Button>
+            <Button
+              className={`w-100 ${
+                activeTab === 2 && isToggleSubmenu === true ? "active" : ""
+              }`}
+              onClick={() => isOpenSubMenu(2)}
+            >
               <span className="icon">
                 <MdCategory />
               </span>
               Categories
+              <span className="arrow">
+                <FaAngleRight />
+              </span>
             </Button>
+
+            <div
+              className={`submenuWrapper ${
+                activeTab === 2 && isToggleSubmenu ? "colapse" : "colapsed"
+              }`}
+            >
+              <ul className="submenu">
+                <li>
+                  <NavLink>Category List</NavLink>
+                </li>
+               
+                <li>
+                  <NavLink to={"/admin/category"}>Category Add</NavLink>
+                </li>
+                <li>
+                  <NavLink>Category Updated</NavLink>
+                </li>
+              </ul>
+            </div>
           </li>
           <li>
             <Button
