@@ -66,15 +66,13 @@ export default function Sidebat() {
             >
               <ul className="submenu">
                 <li>
-                  <NavLink>Category List</NavLink>
+                  <NavLink to={"/admin/category/list"}>Category Manage</NavLink>
                 </li>
                
                 <li>
                   <NavLink to={"/admin/category"}>Category Add</NavLink>
                 </li>
-                <li>
-                  <NavLink>Category Updated</NavLink>
-                </li>
+               
               </ul>
             </div>
           </li>
@@ -101,17 +99,13 @@ export default function Sidebat() {
             >
               <ul className="submenu">
                 <li>
-                  <NavLink>Product List</NavLink>
+                  <NavLink>Product Manage</NavLink>
                 </li>
-                <li>
-                  <NavLink to={"/admin/productsdetails/products"}>Product View</NavLink>
-                </li>
+              
                 <li>
                   <NavLink to={"/admin/addproducts"}>Product Add</NavLink>
                 </li>
-                <li>
-                  <NavLink>Product Updated</NavLink>
-                </li>
+               
               </ul>
             </div>
           </li>

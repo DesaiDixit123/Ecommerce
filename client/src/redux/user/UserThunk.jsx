@@ -224,16 +224,15 @@ export const getAllCategories2 = createAsyncThunk("categories", async () => {
   return response.data;
 });
 
-
-export const categoryByFieldsFetchApi=createAsyncThunk(
+export const categoryByFieldsFetchApi = createAsyncThunk(
   "categoryByFields",
-  async(categoryname)=>{
-  
-      const response=await axios.get(`/api/admin/get/category/fields/${categoryname}`)
-      return response.data
- 
+  async (categoryname) => {
+    const response = await axios.get(
+      `/api/admin/get/category/fields/${categoryname}`
+    );
+    return response.data;
   }
-)
+);
 
 // export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
 //   try {
@@ -245,8 +244,6 @@ export const categoryByFieldsFetchApi=createAsyncThunk(
 //     throw error;
 //   }
 // });
-
-
 
 export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
   try {
@@ -262,8 +259,107 @@ export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
 export const deleteProduct = createAsyncThunk(
   "deleteProduct",
   async (productId) => {
-    const response = axios.delete(`/api/products/${productId}`)
-    
-    return response.data
+    const response = axios.delete(`/api/products/${productId}`);
+
+    return response.data;
   }
-)
+);
+export const deleteCategory = createAsyncThunk(
+  "deleteCategory",
+  async ({ categoryId, toast }) => {
+    try {
+      const response = await axios.delete(`/api/admin/category/${categoryId}`);
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+      return error.message;
+    }
+  }
+);
+export const updateCategory = createAsyncThunk(
+  "updateCategory",
+  async ({ categoryId, categoryData, toast }) => {
+    try {
+      const response = await axios.put(
+        `/api/admin/category/${categoryId}`,
+        categoryData
+      );
+
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      return error.message;
+    }
+  }
+);
+
+export const deleteFieldFromCategory =
+  ( categoryId, fieldToRemove, toast ) =>
+  async () => {
+    try {
+      const response = await axios.delete(
+        `/api/admin/category/deleteField/${categoryId}`,
+        {
+          data: { fieldToRemove },
+        }
+      );
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      // Return a rejected value
+      return error.message;
+    }
+  };

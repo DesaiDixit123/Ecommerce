@@ -45,16 +45,10 @@ export const VerifyAdminFetchApi = createAsyncThunk(
 
 export const categoryFetchApi = createAsyncThunk(
   "categoryFetchApi",
-  async ({ formdata, setFormdata, toast }, { rejectWithValue }) => {
+  async ({ formdata, setFormdata, toast }) => {
     try {
       // Make sure formdata includes both categoryname and fields
-      const { categoryname, fields } = formdata;
-
-      if (!categoryname || !Array.isArray(fields)) {
-        throw new Error("Invalid data format");
-      }
-
-      // Send the POST request to the backend
+   
       const response = await axios.post("/api/admin/category", formdata);
 
       const { success, message, data } = response.data;
@@ -66,14 +60,17 @@ export const categoryFetchApi = createAsyncThunk(
         });
 
         // Reset formdata
+     
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+
         setFormdata({
           categoryname: "",
           fields: [""],
-        });
-      } else {
-        toast.error(message, {
-          position: "top-right",
-          style: { marginTop: "50px", marginRight: "10px" },
         });
       }
 
@@ -86,7 +83,7 @@ export const categoryFetchApi = createAsyncThunk(
       });
 
       // Return a rejected value
-      return rejectWithValue(error.message);
+      return error.message;
     }
   }
 );

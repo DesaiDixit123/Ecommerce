@@ -1,44 +1,4 @@
-// import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { categoryFetchApi } from "../../../redux/admin/AdminThunk";
-// export default function AdminAddCategory() {
-//   const [formdata, setFormdata] = useState({
 
-//   });
-//   const dispatch = useDispatch();
-
-//   return (
-//     <>
-//       <div className="bg-Adminnav-400 text-white w-[100%] h-[100vh] flex justify-center items-center rounded-[10px]">
-//         <form
-//           className="bg-gray-500 w-[50%] h-[100vh] rounded-[20px] "
-//           onSubmit={formhandeler}
-//         >
-//           <div className="text-center text-[22px] bg-blue-400 roundedsform">
-//             Add category
-//           </div>
-
-//           <div className="flex justify-center mt-[60px] text-black">
-//             <input
-//               type="text"
-//               name="categoryname"
-//               value={formdata.categoryname}
-//               placeholder="Category Name"
-//               className="border-2 border-black w-[70%] p-[5px] rounded-[15px] outline-none"
-//               onChange={inputHandeler}
-//             />
-//           </div>
-
-//           <div className="flex justify-center ">
-//             <button className="bg-blue-400 w-[200px]  text-[20px] rounded-[10px] p-[15px] mt-[20px]">
-//               Add Category
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </>
-//   );
-// }
 
 import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -168,7 +128,7 @@ export default function AdminAddCategory() {
                   onClick={addFields}
                   className="bg-green-400 mt-[20px] w-[200px] h-[40px] font-bold text-black rounded-[10px] "
                 >
-                  Add Another Fields
+                  Add Another  Fields
                 </button>
               </div>
             </div>
