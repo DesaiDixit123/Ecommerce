@@ -1,23 +1,16 @@
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import Pagination from "@mui/material/Pagination";
-
 import { FaPencil } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteCategory,
-  getAllCategories2,
-} from "../../../redux/user/UserThunk";
+import { deleteCategory, getAllCategories2 } from "../../../redux/user/UserThunk";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Chip from "@mui/material/Chip";
 import HomeIcon from "@mui/icons-material/Home";
-
-
-
-
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -38,13 +31,17 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     },
   };
 });
+
 export default function AdminCategoryList() {
   const { categoriesData } = useSelector((state) => state.UserSliceProvider);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const categoriesPerPage = 5; // 5 categories per page
 
   const handleDeleteCategory = (categoryId) => {
-    dispatch(deleteCategory({categoryId,toast}))
+    dispatch(deleteCategory({ categoryId, toast }))
       .unwrap()
       .then(() => {
         dispatch(getAllCategories2());
@@ -58,12 +55,22 @@ export default function AdminCategoryList() {
     navigate(`/admin/category/Update/${category._id}`, { state: { category } });
   };
 
+  // Pagination logic
+  const indexOfLastCategory = currentPage * categoriesPerPage;
+  const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
+  const currentCategories = categoriesData.slice(
+    indexOfFirstCategory,
+    indexOfLastCategory
+  );
+
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
+
   return (
     <>
       <div className="right-content w-100">
-
-
-      <div className="card shadow border-0 w-100 flex-row p-4 justify-between">
+        <div className="card shadow border-0 w-100 flex-row p-4 justify-between">
           <h5 className="mb-3">Category Manage</h5>
           <Breadcrumbs aria-label="breadcrumb">
             <StyledBreadcrumb
@@ -73,13 +80,12 @@ export default function AdminCategoryList() {
               icon={<HomeIcon fontSize="small" />}
             />
             <StyledBreadcrumb component="a" href="#" label="Category" />
-           
           </Breadcrumbs>
         </div>
         <div className="card shadow border-0 p-3 mt-4">
           <h3 className="hd">Category List</h3>
           <div className="table_responsive mt-3">
-            {categoriesData && categoriesData.length > 0 ? (
+            {currentCategories && currentCategories.length > 0 ? (
               <table className="table table-bordered v-aligns">
                 <thead className="thead-dark">
                   <tr>
@@ -89,11 +95,10 @@ export default function AdminCategoryList() {
                     <th>Action</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {categoriesData.map((category, index) => (
+                  {currentCategories.map((category, index) => (
                     <tr key={category._id}>
-                      <td> #{index + 1} </td>
+                      <td> #{indexOfFirstCategory + index + 1} </td>
                       <td>{category.categoryname}</td>
                       <td>
                         <div>
@@ -105,7 +110,6 @@ export default function AdminCategoryList() {
                       </td>
                       <td>
                         <div className="actions d-flex align-items-center gap-3">
-                       
                           <Button
                             color="success"
                             className="success"
@@ -137,13 +141,15 @@ export default function AdminCategoryList() {
             {categoriesData && categoriesData.length > 0 && (
               <div className="d-flex tableFooter">
                 <p>
-                  Showing <b>{categoriesData.length}</b> of{" "}
+                  Showing <b>{currentCategories.length}</b> of{" "}
                   <b>{categoriesData.length}</b> results
                 </p>
                 <Pagination
-                  count={10}
+                  count={Math.ceil(categoriesData.length / categoriesPerPage)}
+                  page={currentPage}
                   color="primary"
                   className="pagination"
+                  onChange={handleChangePage}
                   showFirstButton
                   showLastButton
                 />

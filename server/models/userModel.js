@@ -6,6 +6,7 @@ const userSchema = Schema({
     username: { type: String },
     email: { type: String },
     password: { type: String },
+    Pincode: { type: String },
     phonecode: { type: String },
     contactno: { type: String },
     token: { type: String, default: "" },

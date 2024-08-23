@@ -744,8 +744,8 @@ console.log(id)
 
           <div className="p-4">
             <h4 className="mt-4 mb-3 text-[22px]">Product Description</h4>
-            <p>
-              {product.description}
+            <p className="w-[50%]">
+              {product.discription}
             </p>
 
             <br />

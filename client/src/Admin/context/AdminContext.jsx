@@ -62,7 +62,7 @@
 // }
 
 import { createContext, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   adminLogoutFetchApi,
   VerifyAdminFetchApi,
@@ -81,6 +81,7 @@ export default function AdminContext({ children }) {
   const adminLogout = () => {
     dispatch(adminLogoutFetchApi({ dispatch, navigate, toast }));
   };
+
   useEffect(() => {
     // alert(isToggleSidebar)
   }, [isToggleSidebar]);

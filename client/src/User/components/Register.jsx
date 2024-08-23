@@ -8,6 +8,7 @@ import {
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { getAllUsersFetchApi } from "../../redux/admin/AdminThunk";
 export default function Register() {
   const [profileImg, setProfileImg] = useState(null);
   const [formData, setFormData] = useState({
@@ -17,16 +18,18 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    Pincode:"",
     phonecode: "",
     contactno: "",
   });
 
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const { countrieswithphonecode } = useSelector(
     (state) => state.UserSliceProvider
   );
+  console.log("countrywithphonecode:-",countrieswithphonecode)
 
   useEffect(() => {
     dispatch(getAllCountriesWithPhoneCodes());
@@ -41,7 +44,10 @@ export default function Register() {
     }
 
     try {
-      dispatch(RegisterUser({form,toast,navigate}));
+    await  dispatch(RegisterUser({ form, toast, navigate }));
+
+
+      dispatch(getAllUsersFetchApi());
     } catch (error) {
       console.error("Error:", error);
     }
@@ -138,7 +144,7 @@ export default function Register() {
                   <option value="" className="bg-gray-400 p-[10px]">
                     Select Phone Code
                   </option>
-                  {countrieswithphonecode.map((country) => (
+                  {countrieswithphonecode && countrieswithphonecode.map((country) => (
                     <option
                       key={country.isoCode}
                       value={country.phoneCode}
@@ -158,9 +164,20 @@ export default function Register() {
                   onChange={inputHandler}
                 />
               </div>
+
+              <div className="pt-[15px]">
+                <input
+                  type="text"
+                  name="Pincode"
+                  value={formData.Pincode}
+                  placeholder="Pincode :"
+                  className="registerInputSet form_color"
+                  onChange={inputHandler}
+                />
+              </div>
               <div className="pt-[15px] relative">
                 <input
-                  type={showPassword ? "text": "password"}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   placeholder="Password :"
@@ -172,7 +189,7 @@ export default function Register() {
                   className="absolute bottom-[10px] right-4 text-[20px]"
                   onClick={togglePass}
                 >
-                  {showPassword ? <FaEye /> :<FaEyeSlash/>}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
               <div className="pt-[15px]">

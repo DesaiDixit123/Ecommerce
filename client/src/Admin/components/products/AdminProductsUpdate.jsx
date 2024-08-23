@@ -9,9 +9,12 @@ import {
   categoryByFieldsFetchApi,
   getAllProductsFecthApi,
 } from "../../../redux/user/UserThunk";
-import { productAddFetchApi } from "../../../redux/admin/AdminThunk";
-// import uploadedImg from "../../../assets/uploaded.jpg"
+import {
+  productUpdatedFetchApi,
+} from "../../../redux/admin/AdminThunk";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -33,11 +36,14 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   };
 });
 
-export default function AdminAddProduct() {
+export default function AdminProductsUpdateds() {
   const dispatch = useDispatch();
   const { categoriesData, categoryFields, allUsers } = useSelector(
     (state) => state.UserSliceProvider
   );
+
+  const location = useLocation();
+  const { product } = location.state || {};
   console.log(categoriesData);
   console.log(categoryFields);
 
@@ -62,12 +68,32 @@ export default function AdminAddProduct() {
     discription: "",
   });
 
+
+  useEffect(() => {
+    if (product) {
+      setFormdata({
+        ...formdata,
+        category: product.category || "",
+        fields: product.fields || "",
+        img1Preview: product.img1 || null,
+        img2Preview: product.img2 || null,
+        img3Preview: product.img3 || null,
+        img4Preview: product.img4 || null,
+        img5Preview: product.img5 || null,
+        title: product.title || "",
+        price: product.price || "",
+        discount: product.discount || "",
+        qnt: product.qnt || "",
+        discription: product.discription || "",
+      });
+    }
+  }, [product]);
   useEffect(() => {
     if (formdata.category) {
       dispatch(categoryByFieldsFetchApi(formdata.category));
     }
   }, [formdata.category, dispatch]);
-
+  
   const handleInputChange = (e) => {
     setFormdata({ ...formdata, [e.target.name]: e.target.value });
   };
@@ -89,10 +115,9 @@ export default function AdminAddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("product id:", product._id);
     const formData = new FormData();
 
-    // Append all form fields to FormData
     Object.keys(formdata).forEach((key) => {
       if (formdata[key] instanceof File) {
         formData.append(key, formdata[key]); // Append file objects
@@ -102,8 +127,10 @@ export default function AdminAddProduct() {
     });
 
     try {
-      const response = await dispatch(productAddFetchApi({formdata,setFormdata,toast}));
-      console.log("Product added successfully:", response);
+      const response = await dispatch(
+        productUpdatedFetchApi({ formdata, productId: product._id,toast })
+      );
+      console.log("Product updated successfully:", response);
 
       // Fetch all products after successful addition
       await dispatch(getAllProductsFecthApi());
@@ -122,7 +149,7 @@ export default function AdminAddProduct() {
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4 justify-between">
-          <h5 className="mb-3">Product Add</h5>
+          <h5 className="mb-3">Product Update</h5>
           <Breadcrumbs aria-label="breadcrumb">
             <StyledBreadcrumb
               component="a"
@@ -131,7 +158,7 @@ export default function AdminAddProduct() {
               icon={<HomeIcon fontSize="small" />}
             />
             <StyledBreadcrumb component="a" href="#" label="Products" />
-            <StyledBreadcrumb component="a" href="#" label="Product Add" />
+            <StyledBreadcrumb component="a" href="#" label="Product Update" />
           </Breadcrumbs>
         </div>
 
@@ -146,7 +173,7 @@ export default function AdminAddProduct() {
                   <input
                     type="text"
                     name="title"
-                    value={formdata.title}
+                    value={product.title}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -156,7 +183,7 @@ export default function AdminAddProduct() {
                     name="discription"
                     rows={5}
                     cols={10}
-                    value={formdata.discription}
+                    value={product.discription}
                     onChange={handleInputChange}
                   ></textarea>
                 </div>
@@ -172,7 +199,9 @@ export default function AdminAddProduct() {
                         onChange={selectHandeler}
                         value={formdata.category}
                       >
-                        <option value="">Select Category</option>
+                        <option value="">
+                          Select Category
+                        </option>
                         {categoriesData &&
                           categoriesData.map((category) => (
                             <option
@@ -216,7 +245,7 @@ export default function AdminAddProduct() {
                       <input
                         type="text"
                         name="price"
-                        value={formdata.price}
+                        value={product.price}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -227,7 +256,7 @@ export default function AdminAddProduct() {
                       <input
                         type="text"
                         name="discount"
-                        value={formdata.discount}
+                        value={product.discount}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -238,7 +267,7 @@ export default function AdminAddProduct() {
                       <input
                         type="text"
                         name="qnt"
-                        value={formdata.qnt}
+                        value={product.qnt}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -507,7 +536,7 @@ export default function AdminAddProduct() {
           </div>
 
           <Button type="submit" className="mt-3 btn-blue w-100">
-            PRODUCT ADD
+            PRODUCT UPDATE
           </Button>
         </form>
       </div>

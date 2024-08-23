@@ -17,11 +17,13 @@ import AdminHome from "./Admin/components/AdminHome";
 import AdminLogin from "./Admin/components/AdminLogin";
 import AdminAddProduct from "./Admin/components/products/AdminAddProduct";
 import AdminAddCategory from "./Admin/components/products/AdminAddCategory";
-import AdminProductUpadted from "./Admin/components/products/AdminProductUpdated";
 import AdminDashbord from "./Admin/components/AdminDashbord";
 import AdminProductsDetails from "./Admin/components/products/AdminProductsDetails";
 import AdminCategoryList from "./Admin/components/products/AdminCategoryList";
 import AdminUpdateCategory from "./Admin/components/products/AdminUpdateCategory";
+import AdminProductManage from "./Admin/components/products/AdminProductManage";
+import AdminAllUsers from "./Admin/components/AdminAllUsers";
+import AdminProductsUpdateds from "./Admin/components/products/AdminProductsUpdate";
 
 const Router = createBrowserRouter([
   {
@@ -52,8 +54,11 @@ const Router = createBrowserRouter([
           { path: "/admin/category", element: <AdminAddCategory /> },
           {path:"/admin/category/list",element:<AdminCategoryList/>},
           {path:"/admin/category/Update/:id",element:<AdminUpdateCategory/>},
-          { path: "/admin/updated/products", element: <AdminProductUpadted /> },
+        
           { path: "/admin/productsdetails/products/:id", element: <AdminProductsDetails /> },
+          {path:"/admin/productManage",element:<AdminProductManage/>},
+          {path:"/admin/allUsers",element:<AdminAllUsers/>},
+          {path:"/admin/products/update/:id",element:<AdminProductsUpdateds/>},
         ],
       },
     ],

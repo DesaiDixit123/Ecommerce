@@ -69,6 +69,7 @@ export const register = async(req, res) => {
             email,
             password,
             confirmPassword,
+            Pincode,
             phonecode,
             contactno,
         } = req.body;
@@ -81,6 +82,7 @@ export const register = async(req, res) => {
             !email ||
             !password ||
             !confirmPassword ||
+            !Pincode ||
             !phonecode ||
             !contactno
         )
@@ -124,6 +126,7 @@ export const register = async(req, res) => {
             username,
             email,
             password: hashPassword,
+            Pincode,
             phonecode,
             contactno,
         }).save();
@@ -375,6 +378,30 @@ export const updatePassword = async(req, res) => {
             process: true,
             message: "Password updated successfully",
         });
+    } catch (error) {
+        res.status(201).send({
+            process: false,
+            message: error.message,
+        });
+    }
+};
+
+
+export const deleteUser = async(req, res) => {
+    try {
+        const { id } = req.params;
+
+        const findUser = await User.findByIdAndDelete(id);
+
+        if (findUser) {
+            res.status(200).send({
+                process: true,
+                message: "User deleted successfully.",
+                data: findUser,
+            });
+        } else {
+            throw new Error("User not found.");
+        }
     } catch (error) {
         res.status(201).send({
             process: false,

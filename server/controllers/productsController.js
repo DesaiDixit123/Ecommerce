@@ -82,11 +82,11 @@ export const products = async (req, res) => {
         }
 
         // Check if a product with the same img1, title, or description already exists
-        // const findProducts = await $ProductModel.findOne({
-        //     $or: [{ img1 }, { title }, { discription }],
-        // });
+        const findProducts = await $ProductModel.findOne({
+            $or: [{ img1 }, { title }, { discription }],
+        });
 
-        // if (findProducts) throw new Error("Product already added.");
+        if (findProducts) throw new Error("Product already added.");
 
         // Save the new product in the database
         const response = await $ProductModel({
@@ -163,31 +163,36 @@ export const deleteProduct = async(req, res) => {
         });
     }
 };
-
-export const updateProduct = async(req, res) => {
+export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedProduct = req.body;
-
-        const findProduct = await $ProductModel.findByIdAndUpdate(
-            id,
-            updatedProduct, {
-                new: true,
-            }
-        );
-
-        if (findProduct) {
-            res.status(200).send({
-                process: true,
-                message: "Product updated successfully."
-            })
-        } else {
-            throw new Error("Product not found.")
+        
+        if (!id) {
+            return res.status(400).send({ process: false, message: "Product ID is missing." });
         }
+
+        const updatedProductData = req.body;
+        const files = req.files || {};
+
+        const existingProduct = await $ProductModel.findById(id);
+        if (!existingProduct) {
+            return res.status(404).send({ process: false, message: "Product not found." });
+        }
+
+        if (files.img1) updatedProductData.img1 = files.img1[0].path;
+        if (files.img2) updatedProductData.img2 = files.img2[0].path;
+        if (files.img3) updatedProductData.img3 = files.img3[0].path;
+        if (files.img4) updatedProductData.img4 = files.img4[0].path;
+        if (files.img5) updatedProductData.img5 = files.img5[0].path;
+
+        const updatedProduct = await $ProductModel.findByIdAndUpdate(id, updatedProductData, { new: true });
+
+        res.status(200).send({
+            process: true,
+            message: "Product updated successfully.",
+            data: updatedProduct,
+        });
     } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message
-        })
+        res.status(201).send({ process: false, message: error.message });
     }
 };

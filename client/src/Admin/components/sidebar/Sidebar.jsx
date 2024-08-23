@@ -8,18 +8,16 @@ import { useContext, useState } from "react";
 import { IoMdLogOut } from "react-icons/io";
 import { AdminProvider } from "../../context/AdminContext";
 
-
 export default function Sidebat() {
   const [activeTab, setActiveTab] = useState(0);
   const [isToggleSubmenu, setIsToggleSubmenu] = useState(false);
-
 
   const isOpenSubMenu = (index) => {
     setActiveTab(index);
     setIsToggleSubmenu(activeTab === index ? !isToggleSubmenu : true);
   };
 
-  const {adminLogout}=useContext(AdminProvider)
+  const { adminLogout } = useContext(AdminProvider);
 
   return (
     <>
@@ -36,12 +34,14 @@ export default function Sidebat() {
             </Link>
           </li>
           <li>
-            <Button>
-              <span className="icon">
-                <FaUser />
-              </span>
-              Users
-            </Button>
+            <NavLink to={"/admin/allUsers"}>
+              <Button className="w-100">
+                <span className="icon">
+                  <FaUser />
+                </span>
+                Users
+              </Button>
+            </NavLink>
           </li>
           <li>
             <Button
@@ -68,11 +68,10 @@ export default function Sidebat() {
                 <li>
                   <NavLink to={"/admin/category/list"}>Category Manage</NavLink>
                 </li>
-               
+
                 <li>
                   <NavLink to={"/admin/category"}>Category Add</NavLink>
                 </li>
-               
               </ul>
             </div>
           </li>
@@ -99,13 +98,12 @@ export default function Sidebat() {
             >
               <ul className="submenu">
                 <li>
-                  <NavLink>Product Manage</NavLink>
+                  <NavLink to={"/admin/productManage"}>Product Manage</NavLink>
                 </li>
-              
+
                 <li>
                   <NavLink to={"/admin/addproducts"}>Product Add</NavLink>
                 </li>
-               
               </ul>
             </div>
           </li>

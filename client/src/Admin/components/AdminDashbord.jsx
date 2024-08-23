@@ -18,8 +18,11 @@ import { MdDelete } from "react-icons/md";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { deleteProduct, getAllProductsFecthApi } from "../../redux/user/UserThunk";
-
+import {
+  deleteProduct,
+  getAllProductsFecthApi,
+} from "../../redux/user/UserThunk";
+import { toast } from "react-toastify";
 export const data = [
   ["Task", "Hours per Day"],
   ["Work", 11],
@@ -45,10 +48,11 @@ export default function AdminDashbord() {
   const [showBy, setShowBy] = useState("");
   const [categoryBy, setCategoryBy] = useState("");
   const open = Boolean(anchorEl);
-  const navigate = useNavigate()
-  
-  const dispatch=useDispatch()
+  const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,24 +60,42 @@ export default function AdminDashbord() {
     setAnchorEl(null);
   };
 
-  const { allProducts ,allUsers} = useSelector((state) => state.UserSliceProvider);
-  // console.log(allProducts);
-  console.log(allUsers)
+  const { allProducts } = useSelector((state) => state.UserSliceProvider);
+
+  const { allUsers } = useSelector((state) => state.AdminSliceProvider);
+
+  console.log("All Users:", allUsers);
 
   const handeleProductClick = (id) => {
-    navigate(`/admin/productsdetails/products/${id}`)
-  }
-  
+    navigate(`/admin/productsdetails/products/${id}`);
+  };
 
   const handeleDeleteProduct = (productId) => {
-    dispatch(deleteProduct(productId)).unwrap()
-    .then(() => {
-      dispatch(getAllProductsFecthApi());
-    }).catch((err) => {
-      console.error("Failed to delete product: ", err);
-    });
-  }
+    dispatch(deleteProduct({ productId, toast }))
+      .unwrap()
+      .then(() => {
+        dispatch(getAllProductsFecthApi());
+      })
+      .catch((err) => {
+        console.error("Failed to delete product: ", err);
+      });
+  };
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = allProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
+  const handeleChangePerPage = (e, value) => {
+    setCurrentPage(value);
+  };
+
+  const productUpdateHandeler = (product) => {
+    navigate(`/admin/products/update/${product._id} `, { state: { product } });
+  };
+
+  // console.log(allUsers.username)
   return (
     <>
       <div className="right-content w-100">
@@ -85,7 +107,8 @@ export default function AdminDashbord() {
                 icon={<FaCircleUser />}
                 grow={<TrendingUpIcon />}
                 name={"Total Users"}
-                total={252}
+                total={allUsers.length}
+                onClick={() => navigate("/admin/allUsers")}
               />
               <DashboardBox
                 color={["#c012e2", "#eb64fe"]}
@@ -100,6 +123,7 @@ export default function AdminDashbord() {
                 grow={<TrendingDownIcon />}
                 name={"Total Products"}
                 total={allProducts.length}
+                onClick={() => navigate("/admin/productManage")}
               />
               <DashboardBox
                 color={["#e1950e", "#f3cd29"]}
@@ -233,68 +257,114 @@ export default function AdminDashbord() {
               </thead>
 
               <tbody>
-                {allProducts.map((product, index) => (
-                  <tr key={product._id}>
-                    <td> #{index + 1} </td>
-                    <td>
-                      <div className="d-flex align-items-center productBox gap-[20px]">
-                        <div className="imageWrapper">
-                          <div className="img">
-                            <img src={product.img1} alt="" className="w-100" />
-                          </div>
-                        </div>
-                        <div className="info">
-                          <h6>{product.title}</h6>
-                          <p>{product.discription}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{product.category}</td>
-                    <td>{product.fields}</td>
-                    <td className="">
-                      <div style={{ width: "70px" }}>
-                        <del className="old">{product.price}</del>
-                        <span className="new text-danger">
-                          {" "}
-                          {product.discount}{" "}
-                        </span>
-                      </div>
-                    </td>
-                    <td> {product.qnt} </td>
-                    <td> {product.ratings} </td>
+              {currentProducts && currentProducts.length > 0 ? (
+                  currentProducts.map((product, index) => {
+                    const regularPrice = product.price;
+                    const discountPrice = product.discount;
+                    const discountPercentage = (
+                      ((regularPrice - discountPrice) / regularPrice) *
+                      100
+                    ).toFixed(2); // Calculate percentage difference and format to 2 decimal places
 
-                    <td>
-                      <div className="actions d-flex align-items-center gap-3">
-                   
-                          <Button color="secondary" className="secondary" onClick={()=>handeleProductClick(product._id)}>
-                            <FaEye />
-                          </Button>
-                      
-                        <Button color="success" className="success">
-                          <FaPencil />
-                        </Button>
-                        <Button color="error" className="error" onClick={()=>handeleDeleteProduct(product._id)}>
-                          <MdDelete />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                    return (
+                      <tr key={product._id}>
+                        <td> #{indexOfFirstProduct + index + 1} </td>
+                        <td>
+                          <div className="d-flex align-items-center productBox gap-[20px]">
+                            <div className="imageWrapper">
+                              <div className="img">
+                                <img
+                                  src={product.img1}
+                                  alt="Profile"
+                                  style={{
+                                    width: "50px",
+                                    height: "50px",
+                                    borderRadius: "50%",
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div className="info">
+                              <h6>{product.title}</h6>
+                              <p>{product.discription}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>{product.category}</td>
+                        <td>{product.fields}</td>
+                        <td className="w-[170px]">
+                          <div style={{ width: "70px" }}>
+                            
+                            <span className="new text-green-700 text-[18px] flex justify-center pl-[12px]">
+                              ₹ {discountPrice}
+                            </span>
+
+                            <div className="flex gap-4 text-[15px]">
+                              
+                              <del className="old text-danger">₹{regularPrice}</del>
+                              {discountPercentage}%
+</div>
+                          </div>
+                        </td>
+                       
+                        <td> {product.qnt} </td>
+                        <td> {product.ratings} </td>
+
+                        <td>
+                          <div className="actions d-flex align-items-center gap-3">
+                            <Button
+                              color="secondary"
+                              className="secondary"
+                              onClick={() => handeleProductClick(product._id)}
+                            >
+                              <FaEye />
+                            </Button>
+
+                            <Button
+                              color="success"
+                              className="success"
+                              onClick={() => productUpdateHandeler(product)}
+                            >
+                              <FaPencil />
+                            </Button>
+                            <Button
+                              color="error"
+                              className="error"
+                              onClick={() => handeleDeleteProduct(product._id)}
+                            >
+                              <MdDelete />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                  <td colSpan="8" className="text-center">
+                    Product not available
+                      </td>
+                      </tr>
+                )}
               </tbody>
             </table>
 
-            <div className="d-flex tableFooter">
-              <p>
-                Showing <b>12</b> of <b>60</b> results
-              </p>
-              <Pagination
-                count={10}
-                color="primary"
-                className="pagination"
-                showFirstButton
-                showLastButton
-              />
-            </div>
+            {allProducts && allProducts.length > 0 && (
+              <div className="d-flex tableFooter">
+                <p>
+                  Showing <b>{currentProducts.length}</b> of{" "}
+                  <b> {allProducts.length} </b> results
+                </p>
+                <Pagination
+                  count={Math.ceil(allProducts.length / productsPerPage)}
+                  color="primary"
+                  className="pagination"
+                  showFirstButton
+                  showLastButton
+                  onChange={handeleChangePerPage}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -7,7 +7,6 @@ import {
   // getAllCategories,
   getAllCountriesWithPhoneCodes,
   getAllProductsFecthApi,
-  getAllUsersFetchApi,
   LoginUser,
   userLogoutFecthApi,
   UserValidation,
@@ -111,20 +110,7 @@ const UserSlice = createSlice({
         state.allProducts=action.payload
       })
 
-      .addCase(getAllUsersFetchApi.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getAllUsersFetchApi.fulfilled, (state, action) => {
-        console.log("Action Payload (all users):", action.payload); // Check Data
-        state.loading = false;
-        state.allUsers = action.payload; // Update State
-      })
-      
-      .addCase(getAllUsersFetchApi.rejected, (state, action) => {
-        console.log("Action Error:", action.error.message); // Error Logging
-        state.loading = false;
-        state.error = action.error.message;
-      })
+    
     
 
      

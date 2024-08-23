@@ -234,34 +234,33 @@ export const categoryByFieldsFetchApi = createAsyncThunk(
   }
 );
 
-// export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
-//   try {
-//     const response = await axios.get("/api/user");
-//     console.log("API Response Data:", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.log("API Error:", error.message); // Error Logging
-//     throw error;
-//   }
-// });
-
-export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
-  try {
-    const response = await axios.get("/api/user");
-    console.log("API Response Data:", response.data); // Check API Response
-    return response.data;
-  } catch (error) {
-    console.log("API Error:", error.message); // Error Logging
-    throw error;
-  }
-});
-
 export const deleteProduct = createAsyncThunk(
   "deleteProduct",
-  async (productId) => {
-    const response = axios.delete(`/api/products/${productId}`);
+  async ({ productId, toast }) => {
+    try {
+      const response = await axios.delete(`/api/products/${productId}`);
+      const { success, message } = response.data;
 
-    return response.data;
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return { success, message };
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+      return error.message;
+    }
   }
 );
 export const deleteCategory = createAsyncThunk(
@@ -329,8 +328,7 @@ export const updateCategory = createAsyncThunk(
 );
 
 export const deleteFieldFromCategory =
-  ( categoryId, fieldToRemove, toast ) =>
-  async () => {
+  (categoryId, fieldToRemove, toast) => async () => {
     try {
       const response = await axios.delete(
         `/api/admin/category/deleteField/${categoryId}`,
@@ -345,7 +343,6 @@ export const deleteFieldFromCategory =
           position: "top-right",
           style: { marginTop: "50px", marginRight: "10px" },
         });
-
       } else {
         toast.success(message, {
           position: "top-right",
@@ -363,3 +360,32 @@ export const deleteFieldFromCategory =
       return error.message;
     }
   };
+
+export const deleteUser = createAsyncThunk(
+  "deleteUser",
+  async ({ userId, toast }) => {
+    try {
+      const response = await axios.delete(`/api/user/delete/${userId}`);
+
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }
+  }
+);

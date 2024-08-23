@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AdminLoginFetchApi, adminLogoutFetchApi, VerifyAdminFetchApi } from "./AdminThunk";
+import {
+  AdminLoginFetchApi,
+  adminLogoutFetchApi,
+  getAllUsersFetchApi,
+  VerifyAdminFetchApi,
+} from "./AdminThunk";
 
 const initialState = {
   loading: false,
@@ -8,6 +13,7 @@ const initialState = {
   adminData: null,
   message: "",
   isAdmin: false,
+  allUsers: [],
 };
 
 const AdminSlice = createSlice({
@@ -37,7 +43,7 @@ const AdminSlice = createSlice({
         state.message = "pending";
       })
       .addCase(VerifyAdminFetchApi.fulfilled, (state, action) => {
-        console.log("Action Payload in fulfilled:", action.payload); // Debugging
+        // console.log("Action Payload in fulfilled:", action.payload); // Debugging
         state.adminData = action.payload;
         state.isAdmin = action.payload.process;
         state.message = "fulfilled";
@@ -49,7 +55,6 @@ const AdminSlice = createSlice({
         state.message = action.payload?.message || "Verification failed";
       })
 
-
       .addCase(adminLogoutFetchApi.pending, (state) => {
         state.loading = true;
       })
@@ -58,6 +63,20 @@ const AdminSlice = createSlice({
         state.loading = false;
         state.adminData = null;
       })
+
+      .addCase(getAllUsersFetchApi.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllUsersFetchApi.fulfilled, (state, action) => {
+        console.log("Action Payload (all users):", action.payload); // Check Data
+        state.loading = false;
+        state.allUsers = action.payload; // Update State
+      })
+      .addCase(getAllUsersFetchApi.rejected, (state, action) => {
+        console.log("Action Error:", action.error.message); // Error Logging
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
