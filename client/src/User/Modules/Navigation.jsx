@@ -9,7 +9,7 @@ import {
   FaInstagramSquare,
   FaYoutube,
 } from "react-icons/fa";
-import { IoLocationSharp, IoCartOutline } from "react-icons/io5";
+import { IoLocationSharp, IoCartOutline, IoShieldHalfSharp } from "react-icons/io5";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IoLogIn } from "react-icons/io5";
 import logo from "../../assets/logo.png";
@@ -17,8 +17,13 @@ import { useContext, useEffect, useState } from "react";
 import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 import { UserProvider } from "../context/UserProvider";
 import { useDispatch } from "react-redux";
-import { userLogoutFecthApi, UserValidation } from "../../redux/user/UserThunk";
+import { userLogoutFecthApi } from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
+import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Logout from "@mui/icons-material/Logout";
+
+
 const texts = [
   "Great deals 50% off",
   "Unbeatable offers",
@@ -39,6 +44,9 @@ export default function Navigation() {
 const TopNav = () => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const userData = useContext(UserProvider);
+  
+const [anchorEl, setAnchorEl] = useState(null);
+const openMyAcc = Boolean(anchorEl);
   const dispatch = useDispatch();
   const navigate=useNavigate()
 
@@ -58,9 +66,17 @@ const TopNav = () => {
   const logoutButton = () => {
     dispatch(userLogoutFecthApi({ dispatch,toast,navigate }));
   };
+
+  const handeleOpenAccDrop = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handeleCloseMyDrop = () => {
+    setAnchorEl(null);
+  };
   return (
     <>
-      <div className="bg-topnav-400 flex justify-between h-[40px] items-center px-[110px] topNavBorderBottom max-[940px]:hidden">
+      <div className="bg-topnav-400 flex justify-between h-[60px] items-center px-[110px] topNavBorderBottom max-[940px]:hidden">
         <div className="flex gap-[15px]">
           <div className="flex items-center gap-[5px] border-r-2 border-black pr-[15px]">
             <span>
@@ -79,22 +95,59 @@ const TopNav = () => {
         {userData ? (
           <>
             <div className="flex gap-[40px]">
-              <div className="flex gap-[15px]">
-                <div>
+            <div className="myAccWrapper">
+                <Button
+                  className="myAcc d-flex align-items-center"
+                  onClick={handeleOpenAccDrop}
+                >
                   <img
                     src={userData.profileImg}
                     alt=""
-                    className="w-[40px] rounded-[100%]"
+                    className="w-[40px] h-[40px] rounded-[100%]"
                   />
-                </div>
-                <div className="flex items-center">
+                  <div className="adminInfo">
+                    <h4>
+                      {userData.fname} {userData.lname}
+                    </h4>
+                    <p>{userData.username}</p>
+                  </div>
+                </Button>
+                <Menu
+                  anchorEl={anchorEl}
+                  id="account-menu"
+                  open={openMyAcc}
+                  onClose={handeleCloseMyDrop}
+                  onClick={handeleCloseMyDrop}
+                  transformOrigin={{ horizontal: "right", vertical: "top" }}
+                  anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                >
+                  {/* <MenuItem onClick={handeleCloseMyDrop}>
+                    <Avatar /> My Account
+                  </MenuItem>
+                
+                  <Divider /> */}
+                  <NavLink to={"/add/products"}>
+                    <ListItemIcon>
+                      <PersonAdd fontSize="small" />
+                    </ListItemIcon>
+                    Add Product
+                  </NavLink>
+                  <MenuItem onClick={handeleCloseMyDrop}>
+                    <ListItemIcon>
+                      <IoShieldHalfSharp />
+                    </ListItemIcon>
+                    Reset Password
+                  </MenuItem>
 
-                <h1>{userData.username}</h1>
-                </div>
+                  <MenuItem onClick={logoutButton}>
+                    <ListItemIcon  >
+                      <Logout fontSize="small" />
+                    </ListItemIcon>
+                    Logout
+                  </MenuItem>
+                </Menu>
               </div>
-              <div className="flex items-center">
-                <button onClick={logoutButton}>Logout</button>
-              </div>
+             
             </div>
           </>
         ) : (

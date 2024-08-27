@@ -24,6 +24,11 @@ import AdminUpdateCategory from "./Admin/components/products/AdminUpdateCategory
 import AdminProductManage from "./Admin/components/products/AdminProductManage";
 import AdminAllUsers from "./Admin/components/AdminAllUsers";
 import AdminProductsUpdateds from "./Admin/components/products/AdminProductsUpdate";
+import UserProductsAdd from "./User/UserProducts/UserProductsAdd";
+import { Herosec } from "./User/components/LightBox";
+import ProductFilter from "./User/components/ProductFilter";
+import Productspage from "./User/components/ProductsPage";
+// import Herosec from "./User/components/Herosec";
 
 const Router = createBrowserRouter([
   {
@@ -41,7 +46,10 @@ const Router = createBrowserRouter([
           { path: "/verifyOtp", element: <VerifyOtp /> },
           { path: "/resetPassword", element: <ResetPassword /> },
           { path: "/updatePassword", element: <UpdatePassword /> },
-          { path: "/products", element: <Products /> },
+          { path: "/products", element: <Productspage /> },
+          { path: "/add/products", element: <UserProductsAdd /> },
+          { path: "/viewProduct/:id", element: <Herosec /> },
+          { path: "/productFilter", element: <ProductFilter /> },
         ],
       },
       {

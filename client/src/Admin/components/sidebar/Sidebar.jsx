@@ -108,14 +108,14 @@ export default function Sidebat() {
             </div>
           </li>
           <li>
-            <Link>
+            <NavLink to={"/admin/allUsers"}>
               <Button className="w-100">
                 <span className="icon">
                   <FaShoppingCart />
                 </span>
                 Orders
               </Button>
-            </Link>
+            </NavLink>
           </li>
           <li>
             <Link>

@@ -53,7 +53,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="pt-[30px]">
-            <h1 className="text-[30px] font-bold">About</h1>
+            <h1 className="text-[25px] font-bold">About</h1>
 
             <div>
               <ul className="pt-[30px]">
@@ -79,7 +79,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="pt-[30px]">
-            <h1 className="text-[30px] font-bold">My Account</h1>
+            <h1 className="text-[25px] font-bold">My Account</h1>
 
             <div>
               <ul className="pt-[30px]">
@@ -105,7 +105,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="pt-[30px]">
-            <h1 className="text-[30px] font-bold">Install App</h1>
+            <h1 className="text-[25px] font-bold">Install App</h1>
             <p className="pt-[20px] text-[20px]">
               From App Store or Google Play
             </p>

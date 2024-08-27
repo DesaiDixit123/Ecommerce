@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   categoryByFieldsFetchApi,
+  filterProductsByCategory,
   ForgetPasswords,
   getAllCategories2,
   // getAllCategories,
@@ -23,15 +24,18 @@ const initialState = {
   allProducts:[],
   categoriesData:[],
   categoryFields: [],
-  allUsers:[],
+  allUsers: [],
+  filteredProducts: [], 
 };
 
 const UserSlice = createSlice({
   name: "UserSlice",
   initialState,
-  reducers: {},
+  reducers: {
+
+  },
   extraReducers: (builder) => {
-    builder
+    builder 
 
     .addCase(UserValidation.pending, (state) => {
       state.loading = true;
@@ -112,7 +116,18 @@ const UserSlice = createSlice({
 
     
     
-
+      .addCase(filterProductsByCategory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(filterProductsByCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.filteredProducts = action.payload;
+      })
+      .addCase(filterProductsByCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
      
 
       .addCase(getAllCategories2.pending,(state)=>{
@@ -141,6 +156,9 @@ const UserSlice = createSlice({
         state.loading=false
         state.action=action.payload
        })
+    
+    
+    
     
   
   },

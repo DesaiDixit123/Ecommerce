@@ -23,6 +23,7 @@ import {
   getAllProductsFecthApi,
 } from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
+import AdminAllUsers from "./AdminAllUsers";
 export const data = [
   ["Task", "Hours per Day"],
   ["Work", 11],
@@ -96,6 +97,20 @@ export default function AdminDashbord() {
   };
 
   // console.log(allUsers.username)
+
+  const formatPriceWithCommas = (price) => {
+    const priceString = price.toString();
+    const lastThreeDigits = priceString.slice(-3);
+    const otherDigits = priceString.slice(0, -3);
+    const formattedOtherDigits = otherDigits.replace(
+      /\B(?=(\d{2})+(?!\d))/g,
+      ","
+    );
+    return otherDigits
+      ? `${formattedOtherDigits},${lastThreeDigits}`
+      : lastThreeDigits;
+  };
+
   return (
     <>
       <div className="right-content w-100">
@@ -189,7 +204,7 @@ export default function AdminDashbord() {
           </div>
         </div>
 
-        <div className="card shadow border-0 p-3 mt-4">
+        <div className="card  border-0 p-3 mt-4">
           <h3 className="hd">Best Selling Products</h3>
           <div className="row cardFilters mt-3 ">
             <div className="col-md-3">
@@ -257,14 +272,13 @@ export default function AdminDashbord() {
               </thead>
 
               <tbody>
-              {currentProducts && currentProducts.length > 0 ? (
+                {currentProducts && currentProducts.length > 0 ? (
                   currentProducts.map((product, index) => {
-                    const regularPrice = product.price;
-                    const discountPrice = product.discount;
-                    const discountPercentage = (
-                      ((regularPrice - discountPrice) / regularPrice) *
-                      100
-                    ).toFixed(2); // Calculate percentage difference and format to 2 decimal places
+                    const regularPrice = product.price || 0; // or provide a default value
+                    const discountPrice = product.discount || 0;
+                    const discountPercentage = Math.round(
+                      ((regularPrice - discountPrice) / regularPrice) * 100
+                    );
 
                     return (
                       <tr key={product._id}>
@@ -293,20 +307,26 @@ export default function AdminDashbord() {
                         <td>{product.category}</td>
                         <td>{product.fields}</td>
                         <td className="w-[170px]">
-                          <div style={{ width: "70px" }}>
-                            
-                            <span className="new text-green-700 text-[18px] flex justify-center pl-[12px]">
-                              ₹ {discountPrice}
-                            </span>
-
-                            <div className="flex gap-4 text-[15px]">
-                              
-                              <del className="old text-danger">₹{regularPrice}</del>
-                              {discountPercentage}%
-</div>
+                          <div style={{ width: "100px" }}>
+                            {regularPrice ? (
+                              <>
+                                <span className="new text-green-700 text-[15px] flex justify-center">
+                                  ₹ {formatPriceWithCommas(discountPrice)}
+                                </span>
+                                <div className="flex gap-4 text-[15px]">
+                                  <del className="old text-danger">
+                                    ₹{formatPriceWithCommas(regularPrice)}
+                                  </del>
+                                </div>
+                              </>
+                            ) : (
+                              <span className="text-danger">
+                                Price not available
+                              </span>
+                            )}
                           </div>
                         </td>
-                       
+
                         <td> {product.qnt} </td>
                         <td> {product.ratings} </td>
 
@@ -341,10 +361,10 @@ export default function AdminDashbord() {
                   })
                 ) : (
                   <tr>
-                  <td colSpan="8" className="text-center">
-                    Product not available
-                      </td>
-                      </tr>
+                    <td colSpan="8" className="text-center">
+                      Product not available
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

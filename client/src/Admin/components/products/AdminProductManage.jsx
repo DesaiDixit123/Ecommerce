@@ -18,7 +18,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -55,7 +54,7 @@ export default function AdminProductManage() {
   };
 
   const handeleDeleteProduct = (productId) => {
-    dispatch(deleteProduct({productId,toast}))
+    dispatch(deleteProduct({ productId, toast }))
       .unwrap()
       .then(() => {
         dispatch(getAllProductsFecthApi());
@@ -81,15 +80,12 @@ export default function AdminProductManage() {
   };
 
   const addProduct = () => {
-    navigate("/admin/addproducts")
-  }
+    navigate("/admin/addproducts");
+  };
   return (
     <>
       <div className="right-content w-100">
-      
-
-       
-        <div className="card shadow border-0 w-100 flex-row p-4 justify-between">
+        <div className="card  border-0 w-100 flex-row p-4 justify-between">
           <h5 className="mb-3">Products Manage</h5>
           <Breadcrumbs aria-label="breadcrumb">
             <StyledBreadcrumb
@@ -100,22 +96,18 @@ export default function AdminProductManage() {
             />
             <StyledBreadcrumb component="a" href="#" label="Products" />
           </Breadcrumbs>
-          </div>
-          
+        </div>
 
-      
-        
-        <div className="card shadow border-0 p-3 mt-4">
+        <div className="card  border-0 p-3 mt-4">
           <div className="flex justify-between">
-
             <h3 className="hd"> Products Manage</h3>
             <button
-                  type="button"
-                  onClick={addProduct}
-                  className="bg-green-400 w-[200px] h-[40px] font-bold text-black rounded-[10px] "
-                >
-                  Add Product
-                </button>
+              type="button"
+              onClick={addProduct}
+              className="bg-green-400 w-[200px] h-[40px] font-bold text-black rounded-[10px] "
+            >
+              Add Product
+            </button>
           </div>
 
           <div className="table_responsive mt-3">
@@ -127,8 +119,7 @@ export default function AdminProductManage() {
                   <th>Category</th>
                   <th>Field</th>
                   <th>Price</th>
-                 
-                 
+
                   <th>Stock</th>
                   <th>Rating</th>
 
@@ -173,19 +164,19 @@ export default function AdminProductManage() {
                         <td>{product.fields}</td>
                         <td className="w-[170px]">
                           <div style={{ width: "70px" }}>
-                            
-                            <span className="new text-green-700 text-[18px] flex justify-center pl-[12px]">
+                            <span className="new text-green-700 text-[15px] flex justify-center ">
                               ₹ {discountPrice}
                             </span>
 
                             <div className="flex gap-4 text-[15px]">
-                              
-                              <del className="old text-danger">₹{regularPrice}</del>
-                              {discountPercentage}%
-</div>
+                              <del className="old text-danger">
+                                ₹{regularPrice}
+                              </del>
+                           
+                            </div>
                           </div>
                         </td>
-                       
+
                         <td> {product.qnt} </td>
                         <td> {product.ratings} </td>
 
@@ -220,10 +211,10 @@ export default function AdminProductManage() {
                   })
                 ) : (
                   <tr>
-      <td colSpan="8" className="text-center">
-        Product not available
-      </td>
-    </tr>
+                    <td colSpan="8" className="text-center">
+                      Product not available
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

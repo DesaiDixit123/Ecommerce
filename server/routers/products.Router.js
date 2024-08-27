@@ -1,9 +1,13 @@
 import { Router } from "express";
 import {
     deleteProduct,
+    filterProductsByRange,
     getAllProducts,
     getProductsByCategory,
     products,
+  
+    searchProducts,
+  
     updateProduct,
     uploadImages,
 } from "../controllers/productsController.js";
@@ -15,3 +19,7 @@ productRouter.get('/products', getAllProducts);
 productRouter.post("/products", uploadImages, products);
 productRouter.delete("/products/:id", deleteProduct);
 productRouter.put("/products/:id", uploadImages, updateProduct);
+
+
+productRouter.get("/filterProductsByRange", filterProductsByRange);
+productRouter.get("/products/search", searchProducts);

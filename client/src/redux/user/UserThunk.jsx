@@ -389,3 +389,34 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
+
+export const filterProductsByCategory = createAsyncThunk(
+  "filterProductsByCategory",
+  async (category) => {
+    try {
+      const response = await axios.get(`/api/products/category/${category}`);
+      console.log('API Response:', response.data); // Log the response
+      return response.data.data; 
+    } catch (error) {
+      console.error('API Error:', error.message); // Log the error
+      throw new Error(error.message);
+    }
+  }
+);
+
+
+
+export const filterProductsByRange = (min, max) => async (dispatch) => {
+  try {
+    const response = await axios.get(`/filterProductsByRange?min=${min}&max=${max}`);
+    dispatch({
+      type: "FILTER_PRODUCTS_BY_RANGE_SUCCESS",
+      payload: response.data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "FILTER_PRODUCTS_BY_RANGE_FAILURE",
+      payload: error.response.data.message,
+    });
+  }
+};

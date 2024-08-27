@@ -4,6 +4,12 @@ import slider_3 from "../../assets/slider-3.png";
 import { useState, useEffect } from "react";
 import Products from "./Products";
 import { useSelector } from "react-redux";
+import fuature1 from "../../assets/feature-1.png"
+import fuature2 from "../../assets/feature-2.png"
+import fuature3 from "../../assets/feature-3.png"
+import fuature4 from "../../assets/feature-4.png"
+import fuature5 from "../../assets/feature-5.png"
+import fuature6 from "../../assets/feature-6.png"
 
 export default function Home() {
 
@@ -13,6 +19,7 @@ export default function Home() {
   return (
     <>
       <Slider />
+      <CustomerFacelity/>
       <Products />
     </>
   );
@@ -115,3 +122,67 @@ const Slider = () => {
     </div>
   );
 };
+
+
+const CustomerFacelity = () => {
+  return (
+    <>
+      <div className="flex w-[90%] m-auto gap-8 pb-[20px]">
+        <div className="border-2 border-gray-400 p-[15px] w-[200px] rounded-[5px]  group hover:shadow-lg shadow-gray-500/50 hover:pt-[5px] transition-all ease-in-out ">
+          <div>
+            <img src={fuature1} alt="" />
+          </div>
+
+          <div className="CusomerFacelityText bg-shipping-400">
+            <h1 className="text-text-400 py-[5px] px-[5px] ">Free Shipping</h1>
+          </div>
+        </div>
+        <div className="border-2 border-gray-400 p-[15px] w-[200px] rounded-[5px]  group hover:shadow-lg shadow-gray-500/50 hover:pt-[5px] transition-all ease-in-out">
+          <div>
+            <img src={fuature2} alt="" />
+          </div>
+
+          <div className="CusomerFacelityText bg-order-400 ">
+            <h1 className="text-text-400 py-[5px] px-[5px]">Online Order</h1>
+          </div>
+        </div>
+        <div className="border-2 border-gray-400 p-[15px] w-[200px] rounded-[5px]  group hover:shadow-lg shadow-gray-500/50 hover:pt-[5px] transition-all ease-in-out">
+          <div>
+            <img src={fuature3} alt="" />
+          </div>
+
+          <div className="CusomerFacelityText bg-money-400">
+            <h1 className="text-text-400 py-[5px] px-[5px]">Save Money</h1>
+          </div>
+        </div>
+        <div className="border-2 border-gray-400 p-[15px] w-[200px] rounded-[5px]  group hover:shadow-lg shadow-gray-500/50 hover:pt-[5px] transition-all ease-in-out">
+          <div>
+            <img src={fuature4} alt="" />
+          </div>
+
+          <div className="CusomerFacelityText bg-promotion-400">
+            <h1 className="text-text-400 py-[5px] px-[5px]">Promotions</h1>
+          </div>
+        </div>
+        <div className="border-2 border-gray-400 p-[15px] w-[200px] rounded-[5px]  group hover:shadow-lg shadow-gray-500/50 hover:pt-[5px] transition-all ease-in-out">
+          <div>
+            <img src={fuature5} alt="" />
+          </div>
+
+          <div className="CusomerFacelityText bg-sell-400">
+            <h1 className="text-text-400 py-[5px] px-[5px]">Happy Sell</h1>
+          </div>
+        </div>
+        <div className="border-2 border-gray-400 p-[15px] w-[200px] rounded-[5px]  group hover:shadow-lg shadow-gray-500/50 hover:pt-[5px] transition-all ease-in-out">
+          <div>
+            <img src={fuature6} alt="" />
+          </div>
+
+          <div className="CusomerFacelityText bg-support-400">
+            <h1 className="text-text-400 py-[5px] px-[5px]">24/7 Support</h1>
+          </div>
+        </div>
+    </div>
+    </>
+  )
+}

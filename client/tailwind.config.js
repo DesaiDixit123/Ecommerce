@@ -21,7 +21,29 @@ export default {
                 },
                 AdminForm: {
                     400: "#A797BD"
+                },
+                shipping: {
+                    400:"#FDDDE4"
+                },
+                order: {
+                    400:"#D1E8F2"
+                },
+                money: {
+                    400:"#CDEBBC"
+                },
+                promotion: {
+                    400:"#CDD4F8"
+                },
+                sell: {
+                    400:"#F6DBF6"
+                },
+                support: {
+                    400:"#FFF2E5"
+                },
+                text: {
+                    400:"#088178"
                 }
+
             },
 
             backgroundImage: {
