@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
-import cartImg from "../components/images/img1-icon.jpg";
+// import cartImg from "../components/images/img1-icon.jpg";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { FaRegStar } from "react-icons/fa";
@@ -12,7 +13,7 @@ export const Herosec = () => {
   const myRef2 = useRef(null);
   const myRef3 = useRef(null);
   const shadowRef = useRef(null);
-  const [selectedImage, setSelectedImage] = useState("");
+
   const [product, setProduct] = useState(null);
 
   const { allProducts } = useSelector((state) => state.UserSliceProvider);
@@ -23,9 +24,7 @@ export const Herosec = () => {
     setProduct(foundProduct);
     console.log(foundProduct);
 
-    if (foundProduct) {
-      setSelectedImage(foundProduct.img1);
-    }
+   
   }, [id, allProducts]);
   const regularPrice = Number(product?.price);
   const discountPrice = Number(product?.discount);
@@ -64,7 +63,7 @@ export const Herosec = () => {
         </p>
         <div ref={myRef1} className="cart-item-div">
           <div className="cart-item-col1">
-            <img src={cartImg} className="cart-item-img" />
+
           </div>
           <div className="cart-item-col2">
             <p className="cart-para">
@@ -205,18 +204,14 @@ export const LightBox = ({ imageTrack }) => {
   const { id } = useParams();
 
   const [product, setProduct] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("");
+
   const { allProducts } = useSelector((state) => state.UserSliceProvider);
 
   useEffect(() => {
     const foundProduct = allProducts.find((prod) => prod._id === id);
 
     setProduct(foundProduct);
-    if (foundProduct) {
-      setSelectedImage(foundProduct.img1);
-      // Ensure `product` is updated correctly
-      setImage2(imageTrack);
-    }
+    
   }, [id, allProducts, imageTrack]);
 
   let url = "";
@@ -371,21 +366,17 @@ export const LightBox = ({ imageTrack }) => {
 
 export const Sneakers = ({ imageTrack }) => {
   const [image, setImage] = useState(1);
-  const [image2, setImage2] = useState(imageTrack);
+
   let url = "";
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("");
+
   const { allProducts } = useSelector((state) => state.UserSliceProvider);
   useEffect(() => {
     const foundProduct = allProducts.find((prod) => prod._id === id);
 
     setProduct(foundProduct);
-    if (foundProduct) {
-      setSelectedImage(foundProduct.img1);
-      // Ensure `product` is updated correctly
-      setImage2(imageTrack);
-    }
+    
   }, [id, allProducts, imageTrack]);
 
   if (image === 1) {

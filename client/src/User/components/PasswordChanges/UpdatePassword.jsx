@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {  updatePasswordApi} from "../../redux/user/UserThunk";
+import {  updatePasswordApi} from "../../../redux/user/UserThunk";
 import { useDispatch } from "react-redux";
 
 

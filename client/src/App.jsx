@@ -2,15 +2,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Index from "./Index";
 // import IndexUser from "./Index"
-import Register from "./User/components/Register";
-import Login from "./User/components/Login";
-import ForgetPassword from "./User/components/ForgetPassword";
-import VerifyOtp from "./User/components/VerifyOtp";
-import ResetPassword from "./User/components/ResetPassword";
-import UpdatePassword from "./User/components/UpdatePassword";
+import Register from "./User/components/Login_Register/Register";
+import Login from "./User/components/Login_Register/Login";
+import ForgetPassword from "./User/components/PasswordChanges/ForgetPassword";
+import VerifyOtp from "./User/components/PasswordChanges/VerifyOtp";
+import ResetPassword from "./User/components/PasswordChanges/ResetPassword";
+import UpdatePassword from "./User/components/PasswordChanges/UpdatePassword";
 import Home from "./User/components/Home";
 import UserIndex from "./User/Index";
-import Products from "./User/components/Products";
+
 import AdminIndex from "./Admin/Index";
 // import AdminLogin from "./Admin/components/AdminLogin";
 import AdminHome from "./Admin/components/AdminHome";
@@ -25,9 +25,12 @@ import AdminProductManage from "./Admin/components/products/AdminProductManage";
 import AdminAllUsers from "./Admin/components/AdminAllUsers";
 import AdminProductsUpdateds from "./Admin/components/products/AdminProductsUpdate";
 import UserProductsAdd from "./User/UserProducts/UserProductsAdd";
-import { Herosec } from "./User/components/LightBox";
-import ProductFilter from "./User/components/ProductFilter";
-import Productspage from "./User/components/ProductsPage";
+import { Herosec } from "./User/components/Products/ProductsDetails";
+import ProductFilter from "./User/components/Products/ProductFilter";
+import Productspage from "./User/components/Products/ProductsPage";
+import FilteredProductsPage from "./User/components/Products/FilterProductsRange";
+import FilteredProducts from "./User/components/Products/FilteredProducts";
+import SearchResults from "./User/components/Products/SearchResult";
 // import Herosec from "./User/components/Herosec";
 
 const Router = createBrowserRouter([
@@ -50,6 +53,9 @@ const Router = createBrowserRouter([
           { path: "/add/products", element: <UserProductsAdd /> },
           { path: "/viewProduct/:id", element: <Herosec /> },
           { path: "/productFilter", element: <ProductFilter /> },
+          { path: "/filtered-products", element: <FilteredProductsPage /> },
+          { path: "/filtered-products/:category", element: <FilteredProducts /> },
+          { path: "/search-results", element: <SearchResults /> },
         ],
       },
       {

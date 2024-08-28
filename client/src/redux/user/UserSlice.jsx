@@ -3,12 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   categoryByFieldsFetchApi,
   filterProductsByCategory,
+  filterProductsByRange,
   ForgetPasswords,
   getAllCategories2,
   // getAllCategories,
   getAllCountriesWithPhoneCodes,
   getAllProductsFecthApi,
   LoginUser,
+  searchProducts,
   userLogoutFecthApi,
   UserValidation,
 } from "./UserThunk";
@@ -18,43 +20,43 @@ const initialState = {
   loading: false,
   error: null,
   forgetPasswordProcess: null,
-  userData:null,
+  userData: null,
   message: "",
   process: false,
-  allProducts:[],
-  categoriesData:[],
+  allProducts: [],
+  categoriesData: [],
   categoryFields: [],
   allUsers: [],
-  filteredProducts: [], 
+  filteredProducts: [],
+  filteredProducts1: [],
+  searchResults: [],
 };
 
 const UserSlice = createSlice({
   name: "UserSlice",
   initialState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder 
+    builder
 
-    .addCase(UserValidation.pending, (state) => {
-      state.loading = true;
-    })
+      .addCase(UserValidation.pending, (state) => {
+        state.loading = true;
+      })
 
-    .addCase(UserValidation.fulfilled, (state, action) => {
-      console.log(action.payload.data)
-      const { message, process, userData } = action.payload;
-      state.loading = false;
-      state.message = message;
-      state.process = process;
-      if (process) state.userData = userData;
-    })
+      .addCase(UserValidation.fulfilled, (state, action) => {
+        console.log(action.payload.data);
+        const { message, process, userData } = action.payload;
+        state.loading = false;
+        state.message = message;
+        state.process = process;
+        if (process) state.userData = userData;
+      })
 
-    .addCase(UserValidation.rejected, (state, action) => {
-      state.loading = false;
-      state.message = action.payload;
-      state.process = false;
-    })
+      .addCase(UserValidation.rejected, (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+        state.process = false;
+      })
 
       .addCase(getAllCountriesWithPhoneCodes.pending, (state) => {
         state.loading = true;
@@ -104,18 +106,16 @@ const UserSlice = createSlice({
         state.userData = null;
       })
 
-      .addCase(getAllProductsFecthApi.pending,(state)=>{
-        state.loading=true
+      .addCase(getAllProductsFecthApi.pending, (state) => {
+        state.loading = true;
       })
 
-      .addCase(getAllProductsFecthApi.fulfilled,(state,action)=>{
-        console.log(action.payload)
-        state.loading=false
-        state.allProducts=action.payload
+      .addCase(getAllProductsFecthApi.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.allProducts = action.payload;
       })
 
-    
-    
       .addCase(filterProductsByCategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -128,39 +128,57 @@ const UserSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-     
-
-      .addCase(getAllCategories2.pending,(state)=>{
-        state.loading=true
+      .addCase(filterProductsByRange.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(filterProductsByRange.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+        state.filteredProducts1 = action.payload; // <-- Store filtered products
+      })
+      .addCase(filterProductsByRange.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(searchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+        state.searchResults = action.payload; // <-- Store filtered products
+      })
+      .addCase(searchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
-      .addCase(getAllCategories2.fulfilled,(state,action)=>{
-        
-        state.loading=false
-        state.categoriesData=action.payload
+      .addCase(getAllCategories2.pending, (state) => {
+        state.loading = true;
       })
 
-      .addCase(getAllCategories2.rejected,(state,action)=>{
-        state.loading=false,
-        state.error=action.payload
+      .addCase(getAllCategories2.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categoriesData = action.payload;
       })
 
-      .addCase(categoryByFieldsFetchApi.pending,(state)=>{
-        state.loading=true
-       })
-       .addCase(categoryByFieldsFetchApi.fulfilled,(state,action)=>{
-        state.categoryFields=action.payload
-        state.loading=false
-       })
-       .addCase(categoryByFieldsFetchApi.rejected,(state,action)=>{
-        state.loading=false
-        state.action=action.payload
-       })
-    
-    
-    
-    
-  
+      .addCase(getAllCategories2.rejected, (state, action) => {
+        (state.loading = false), (state.error = action.payload);
+      })
+
+      .addCase(categoryByFieldsFetchApi.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(categoryByFieldsFetchApi.fulfilled, (state, action) => {
+        state.categoryFields = action.payload;
+        state.loading = false;
+      })
+      .addCase(categoryByFieldsFetchApi.rejected, (state, action) => {
+        state.loading = false;
+        state.action = action.payload;
+      });
   },
 });
 

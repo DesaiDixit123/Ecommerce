@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Navigation from "./Modules/Navigation";
-import Footer from "./components/Footer";
+import Footer from "./Modules/Footer";
 import UserContext from "./context/UserProvider";
 
 export default function UserIndex() {
@@ -11,7 +11,11 @@ export default function UserIndex() {
         <div className="flex-grow ">
           <Outlet />
         </div>
+
+        <div className="">
+
         <Footer />
+        </div>
       </div>
     </UserContext>
   );

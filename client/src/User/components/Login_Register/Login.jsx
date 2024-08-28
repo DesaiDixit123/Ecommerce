@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { LoginUser } from "../../redux/user/UserThunk";
+import { LoginUser } from "../../../redux/user/UserThunk";
 import { useDispatch } from "react-redux";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -34,7 +34,7 @@ const navigate=useNavigate()
 
   return (
     <>
-      <div className="linear-color">
+      <div className="linear-color1">
         <div className="form_css">
           <div className=" w-[50%] flex p-[30px] rounded-[50px] backImage">
             <form className="pl-[25px] w-[100%]" onSubmit={formHandler}>

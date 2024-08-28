@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllCountriesWithPhoneCodes,
   RegisterUser,
-} from "../../redux/user/UserThunk";
+} from "../../../redux/user/UserThunk";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { getAllUsersFetchApi } from "../../redux/admin/AdminThunk";
+import { getAllUsersFetchApi } from "../../../redux/admin/AdminThunk";
 export default function Register() {
   const [profileImg, setProfileImg] = useState(null);
   const [formData, setFormData] = useState({

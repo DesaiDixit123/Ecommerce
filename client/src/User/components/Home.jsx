@@ -2,7 +2,7 @@ import slider_1 from "../../assets/slider-1.png";
 import slider_2 from "../../assets/slider-2.png";
 import slider_3 from "../../assets/slider-3.png";
 import { useState, useEffect } from "react";
-import Products from "./Products";
+import Products from "./Products/Products";
 import { useSelector } from "react-redux";
 import fuature1 from "../../assets/feature-1.png"
 import fuature2 from "../../assets/feature-2.png"
@@ -18,16 +18,19 @@ export default function Home() {
   console.log("adminData:",adminData)
   return (
     <>
+      <div className="main_div">
+
       <Slider />
       <CustomerFacelity/>
-      <Products />
+      <Products  limit={6} />
+      </div>
     </>
   );
 }
 
 const Slider = () => {
   const [slideIndex, setSlideIndex] = useState(0);
-
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       setSlideIndex((prevIndex) => (prevIndex + 1) % 3);

@@ -406,17 +406,35 @@ export const filterProductsByCategory = createAsyncThunk(
 
 
 
-export const filterProductsByRange = (min, max) => async (dispatch) => {
-  try {
-    const response = await axios.get(`/filterProductsByRange?min=${min}&max=${max}`);
-    dispatch({
-      type: "FILTER_PRODUCTS_BY_RANGE_SUCCESS",
-      payload: response.data.data,
-    });
-  } catch (error) {
-    dispatch({
-      type: "FILTER_PRODUCTS_BY_RANGE_FAILURE",
-      payload: error.response.data.message,
-    });
+
+
+
+
+
+export const filterProductsByRange = createAsyncThunk(
+  "user/filterProductsByRange",
+  async ({ min, max }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/products/filterProductsByRange`, {
+        params: { min, max }
+      });
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
-};
+);
+
+
+
+export const searchProducts = createAsyncThunk(
+  "searchProducts",
+  async (query) => {
+    try {
+      const response = await axios.get(`/api/products/search?query=${query}`);
+      return response.data.data;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);

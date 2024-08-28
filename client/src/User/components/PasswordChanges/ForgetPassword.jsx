@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { ForgetPasswords } from "../../redux/user/UserThunk";
+import { ForgetPasswords } from "../../../redux/user/UserThunk";
 import { useDispatch } from "react-redux";
 import {  useNavigate } from "react-router-dom";
 

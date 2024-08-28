@@ -1,304 +1,331 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 .registerInputSet {
-    @apply border-b-2 border-black text-black p-[5px] w-[100%] rounded-[10px] pl-[10px] font-semibold outline-none;
+  @apply border-b-2 border-black text-black p-[5px] w-[100%] rounded-[10px] pl-[10px] font-semibold outline-none;
 }
 
 body {
-    overflow-x: hidden;
-    width: 100%;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .form_color {
-    background: transparent !important;
+  background: transparent !important;
 }
 
 .toastBody {
-    font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
-    /* #10171D */
-    font-size: 1.2rem;
+  font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
+  /* #10171D */
+  font-size: 1.2rem;
 }
 
 .Overlay {
-    /* background: rgba(0, 0, 0, 0.75); */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    right: 0;
-    bottom: 0;
+  /* background: rgba(0, 0, 0, 0.75); */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: 0;
+  bottom: 0;
 }
 
 .backImage {
-    background-image: url("./assets/background,jpg.jpg");
-    background-size: 100% 45vh;
-    color: black !important;
+  background-image: url("./assets/background,jpg.jpg");
+  background-size: 100% 45vh;
+  color: black !important;
 }
 
 .linear-color {
-    background-image: linear-gradient( to left, #99dde7, #2ec7c0, #87dfe9, #b2e5ed, #00abc5);
-    width: 100%;
-    height: 100vh;
-    position: relative;
+  background-image: linear-gradient(
+    to left,
+    #99dde7,
+    #2ec7c0,
+    #87dfe9,
+    #b2e5ed,
+    #00abc5
+  );
+  width: 100%;
+  min-height: 150vh;
+  position: relative;
+}
+.linear-color1 {
+  background-image: linear-gradient(
+    to left,
+    #99dde7,
+    #2ec7c0,
+    #87dfe9,
+    #b2e5ed,
+    #00abc5
+  );
+  width: 100%;
+  min-height: 90vh;
+  position: relative;
 }
 
 .form_css {
-    position: absolute;
-    top: 25%;
-    left: 25%;
-    width: 100%;
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 100%;
 }
 
 .form_css1 {
-    position: absolute;
-    top: 1%;
-    left: 25%;
-    width: 100%;
+  position: absolute;
+  top: 1%;
+  left: 25%;
+  width: 100%;
 }
 
 ::placeholder {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .topNavBorderBottom {
-    border-bottom: 4px solid #39B4AC;
+  border-bottom: 4px solid #39b4ac;
 }
 
 .secondTopNavInputChange {
-    background: transparent !important;
+  background: transparent !important;
 }
 
 .logo_img {
-    width: 300px;
-    height: 150px;
+  width: 300px;
+  height: 150px;
 }
 
 .cross_button {
-    height: 100px;
+  height: 100px;
 }
-
 
 /* .active {
     color: orange;
 } */
 
-
 /* Add these styles in your CSS file */
 
 .dropdown-menu {
-    transform: translateX(100%);
-    transition: transform 0.5s ease-in-out;
+  transform: translateX(100%);
+  transition: transform 0.5s ease-in-out;
 }
 
 .dropdown-menu.show {
-    transform: translateX(0);
+  transform: translateX(0);
 }
 
 .textColor {
-    color: #00abc5;
-    font-weight: bold;
+  color: #00abc5;
+  font-weight: bold;
 }
 
 .navSearchBorder {
-    border: 2px solid #00abc5;
+  border: 2px solid #00abc5;
 }
 
 .navigationBorder {
-    border-bottom: 2px solid rgba(128, 128, 128, 0.5);
+  border-bottom: 2px solid rgba(128, 128, 128, 0.5);
 }
-
 
 /* Slideshow container */
 
 .slideshow-container {
-    position: relative;
-    margin: auto;
-    height: 100%;
+  position: relative;
+  margin: auto;
+  height: 100%;
 }
 
 .slides-div {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    padding: 50px 90px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 50px 90px;
 }
 
 .slides-text {
-    width: 50%;
+  width: 50%;
 }
 
 .btn1 button {
-    width: 150px;
-    height: 40px;
-    font-size: 18px;
-    background-color: var(--color2);
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    border: 1px solid var(--color2);
+  width: 150px;
+  height: 40px;
+  font-size: 18px;
+  background-color: var(--color2);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid var(--color2);
 }
 
 .btn2 button {
-    width: 150px;
-    height: 40px;
-    font-size: 18px;
-    background-color: #d77f7a;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    border: 1px solid #d77f7a;
+  width: 150px;
+  height: 40px;
+  font-size: 18px;
+  background-color: #d77f7a;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid #d77f7a;
 }
 
 .btn3 button {
-    width: 150px;
-    height: 40px;
-    font-size: 18px;
-    background-color: #63a2c1;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    border: 1px solid #63a2c1;
+  width: 150px;
+  height: 40px;
+  font-size: 18px;
+  background-color: #63a2c1;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid #63a2c1;
 }
 
 .slide-images {
-    width: 70%;
+  width: 70%;
 }
 
 .roundedsform {
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
 }
 
 .slide-images img {
-    width: 100%;
+  width: 100%;
 }
-.imagesds{
+.imagesds {
   height: 300px;
   width: 350px;
 }
-.box_card{
-    width: 330px;
+.box_card {
+  width: 280px;
 }
 
-.box_parentCard{
+.box_parentCard {
   display: grid;
-  grid-template-columns: repeat(3,auto);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.productsPage{
+.productsPage {
   display: grid;
-  grid-template-columns: repeat(2,auto);
+  grid-template-columns: repeat(2, auto);
 }
 /* Hide the images by default */
 
 .mySlides {
-    display: none;
+  display: none;
 }
 
 .mySlides.active {
-    display: block;
+  display: block;
 }
 
 .admin_nav .admin_nav_link {
-    display: block;
-    text-align: center;
-    padding: 10px 12px;
-    font-size: 20px;
+  display: block;
+  text-align: center;
+  padding: 10px 12px;
+  font-size: 20px;
 }
 
 .nav-item2 {
-    background-color: #100217;
-    width: 100%;
+  background-color: #100217;
+  width: 100%;
 }
 
 .admin_nav .admin_nav_link:hover {
-    color: black;
-    background-color: lightblue;
+  color: black;
+  background-color: lightblue;
 }
-
 
 /* Fading animation */
 
 .fade {
-    animation-name: fade;
-    animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
 }
 
 @keyframes fade {
-    from {
-        opacity: 0.4;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
 }
-
 
 /* Add this to your main CSS file */
 
 .flex {
-    display: flex;
+  display: flex;
 }
 
 .flex-col {
-    flex-direction: column;
+  flex-direction: column;
 }
 
 .min-h-screen {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .flex-grow {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
-
+a:hover {
+  text-decoration: none !important;
+  color: #282c34;
+}
+/* 
+.active{
+  color:#39B4AC;
+} */
 .App {
-    text-align: center;
-  }
-  
-  .App-logo {
-    height: 40vmin;
-    pointer-events: none;
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-      animation: App-logo-spin infinite 20s linear;
-    }
-  }
-  
-  .App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  
-  .App-link {
-    color: #61dafb;
-  }
-  
-  @keyframes App-logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
+  text-align: center;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-left: 0;
+  list-style: none;
+  border-radius: 0.25rem;
+}
 
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 *,
 html,
@@ -450,7 +477,6 @@ header {
   width: 80%;
   padding-top: 280px !important;
   padding-bottom: 130px !important;
- 
 }
 .main-heading {
   font-size: 22px;
@@ -814,8 +840,8 @@ header {
   opacity: 0.8;
 }
 
-.CusomerFacelityText{
-  @apply mt-[15px] text-center rounded-[5px]
+.CusomerFacelityText {
+  @apply mt-[15px] text-center rounded-[5px];
 }
 /*********************************************** MEDIA QUERIES ************************************/
 @media (max-width: 1300px) {
@@ -840,7 +866,6 @@ header {
   }
   .hero-row {
     height: 90vh;
- 
   }
   .col2-wrapper {
     width: 90%;
@@ -1145,5 +1170,3 @@ header {
     line-height: 1.3;
   }
 }
-
-

@@ -9,20 +9,23 @@ import {
   FaInstagramSquare,
   FaYoutube,
 } from "react-icons/fa";
-import { IoLocationSharp, IoCartOutline, IoShieldHalfSharp } from "react-icons/io5";
+import {
+  IoLocationSharp,
+  IoCartOutline,
+  IoShieldHalfSharp,
+} from "react-icons/io5";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IoLogIn } from "react-icons/io5";
 import logo from "../../assets/logo.png";
 import { useContext, useEffect, useState } from "react";
 import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 import { UserProvider } from "../context/UserProvider";
-import { useDispatch } from "react-redux";
-import { userLogoutFecthApi } from "../../redux/user/UserThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { searchProducts, userLogoutFecthApi } from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
-
 
 const texts = [
   "Great deals 50% off",
@@ -44,11 +47,11 @@ export default function Navigation() {
 const TopNav = () => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const userData = useContext(UserProvider);
-  
-const [anchorEl, setAnchorEl] = useState(null);
-const openMyAcc = Boolean(anchorEl);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMyAcc = Boolean(anchorEl);
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -60,11 +63,11 @@ const openMyAcc = Boolean(anchorEl);
   useEffect(() => {
     // Redirect to home page if userData is available
     if (userData) {
-      navigate('/'); // Redirect to the home page or any other page
+      navigate("/"); // Redirect to the home page or any other page
     }
   }, [userData, navigate]);
   const logoutButton = () => {
-    dispatch(userLogoutFecthApi({ dispatch,toast,navigate }));
+    dispatch(userLogoutFecthApi({ dispatch, toast, navigate }));
   };
 
   const handeleOpenAccDrop = (event) => {
@@ -95,7 +98,7 @@ const openMyAcc = Boolean(anchorEl);
         {userData ? (
           <>
             <div className="flex gap-[40px]">
-            <div className="myAccWrapper">
+              <div className="myAccWrapper">
                 <Button
                   className="myAcc d-flex align-items-center"
                   onClick={handeleOpenAccDrop}
@@ -140,14 +143,13 @@ const openMyAcc = Boolean(anchorEl);
                   </MenuItem>
 
                   <MenuItem onClick={logoutButton}>
-                    <ListItemIcon  >
+                    <ListItemIcon>
                       <Logout fontSize="small" />
                     </ListItemIcon>
                     Logout
                   </MenuItem>
                 </Menu>
               </div>
-             
             </div>
           </>
         ) : (
@@ -163,7 +165,10 @@ const openMyAcc = Boolean(anchorEl);
                 <span className="text-[20px] relative -top-[2px] font-semibold">
                   /
                 </span>
-                <NavLink className="flex items-center gap-[5px]" to={"/register"}>
+                <NavLink
+                  className="flex items-center gap-[5px]"
+                  to={"/register"}
+                >
                   <span>
                     <FaRegUser />
                   </span>
@@ -183,6 +188,11 @@ export const SecondtopNav = () => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [responsiveNavDrop, setResponsiveNavDrop] = useState(false);
   const [cancelDropdown, setCancelDropDown] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+const dispatch=useDispatch()
+  const { categoriesData } = useSelector((state) => state.UserSliceProvider);
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
@@ -200,56 +210,80 @@ export const SecondtopNav = () => {
     setCancelDropDown(false);
     setResponsiveNavDrop(false);
   };
+
+  const handleCategoryChange = (event) => {
+    const category = event.target.value;
+    setSelectedCategory(category);
+    if (category) {
+      navigate(`/filtered-products/${category}`);
+    }
+  };
+
+
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = () => {
+    if (searchQuery) {
+      dispatch(searchProducts(searchQuery));
+      navigate(`/search-results?query=${searchQuery}`);
+    }
+  };
   return (
     <>
       <div className="flex justify-between h-[70px] items-center px-[110px] max-[1050px]:px-[50px] max-[960px]:px-[30px] max-[930px]:border-b-2 border-gray-500 relative ">
-        <div>
+        <NavLink to={"/"}>
           <img
             src={logo}
             alt=""
             className="max-w-[150px] relative top-[2px] -left-3 max-[930px]:max-w-[200px] max-[930px]:top-0 max-[400px]:w-[150px] max-[400px]:-left-[20px]"
           />
-        </div>
+        </NavLink>
         <div className="max-[930px]:block hidden max-[610px]:hidden">
           {texts[currentTextIndex]}
         </div>
         <div>
           <div className="flex  border-b-2 w-[100%] border-black max-[1089px]:w-[90%]">
             <div className="flex gap-[25px] pb-[4px] max-[930px]:hidden">
-              <div
+              {/* <div
                 className="flex items-center gap-[5px] cursor-pointer max-[1088px]:w-[120px]"
                 onClick={toggleDropdown}
+                onChange={handleCategoryChange}
+                value={selectedCategory}
               >
                 All Categories
                 <span>
                   <FaAngleDown />
                 </span>
                 {dropdown ? (
-                  <div className="absolute bg-white  shadow-lg shadow-indigo-500/50 w-[200px] px-[15px]  top-[50px] z-50 duration-300">
-                    <ul>
-                      <li>
-                        <NavLink>Women's</NavLink>
-                      </li>
-                      <li>
-                        <NavLink>Men's</NavLink>
-                      </li>
-                      <li>
-                        <NavLink>Electronics</NavLink>
-                      </li>
-                      <li>
-                        <NavLink>Kids</NavLink>
-                      </li>
-                      <li>
-                        <NavLink>Computers</NavLink>
-                      </li>
-                      <li>
-                        <NavLink>Shoes</NavLink>
-                      </li>
-                    </ul>
+                  <div className="absolute bg-white  shadow-lg shadow-indigo-500/50 w-[200px] px-[15px]  top-[50px] z-50 duration-300"  >
+                    {categoriesData &&
+                      categoriesData.map((category) => (
+                        <option
+                          key={category._id}
+                          value={category.categoryname}
+                        >
+                          {category.categoryname}
+                        </option>
+                      ))}
                   </div>
                 ) : null}
-              </div>
-
+              </div> */}
+              <select
+                className="w-full p-[10px] border-none rounded-[5px] bg-transparent cursor-pointer"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="" className="cursor-pointer">All Categories</option>
+                {categoriesData &&
+                  categoriesData.map((category) => (
+                    <option key={category._id} value={category.categoryname} className="cursor-pointer">
+                      {category.categoryname}
+                    </option>
+                  ))}
+              </select>
               <div className="flex gap-[10px]">
                 <span className="flex items-center text-[18px] pt-[2px]">
                   <FaSearch />
@@ -260,7 +294,15 @@ export const SecondtopNav = () => {
                   id=""
                   placeholder="Search For Items..."
                   className="secondTopNavInputChange w-[450px] outline-none"
+                  onChange={handleSearchChange}
+
                 />
+
+
+
+<Button onClick={handleSearch} className="w-[100%] bg-black">
+            Search
+          </Button>
               </div>
             </div>
           </div>

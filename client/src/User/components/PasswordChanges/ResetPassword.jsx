@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { resetPasswordApi } from "../../redux/user/UserThunk";
+import { resetPasswordApi } from "../../../redux/user/UserThunk";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

@@ -21,5 +21,5 @@ productRouter.delete("/products/:id", deleteProduct);
 productRouter.put("/products/:id", uploadImages, updateProduct);
 
 
-productRouter.get("/filterProductsByRange", filterProductsByRange);
+productRouter.get("/products/filterProductsByRange", filterProductsByRange);
 productRouter.get("/products/search", searchProducts);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { verifyOtpApi } from "../../redux/user/UserThunk";
+import { verifyOtpApi } from "../../../redux/user/UserThunk";
 import { useDispatch } from "react-redux";
 import {  useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';

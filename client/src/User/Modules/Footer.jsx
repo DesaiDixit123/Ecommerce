@@ -12,7 +12,7 @@ import payment_method from "../../assets/payment-method.png";
 export default function Footer() {
   return (
     <>
-      <div className="">
+      <div className="footer_details">
         <div className="bg-topnav-400 border-b-2 border-black grid grid-cols-4 px-[40px] py-[20px] shadow-lg shadow-indigo-500/50 ">
           <div className="w-[90%]">
             <div className="w-[250px] flex justify-center">
