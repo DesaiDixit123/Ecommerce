@@ -498,8 +498,7 @@ export const Sneakers = ({ imageTrack }) => {
           <div
             className={`small-sneaker-div ${image === 5 && "active-sneaker"}`}
           >
-            {" "}
-            /{" "}
+         
             <img
               alt="img"
               className={`small-sneaker`}

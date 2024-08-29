@@ -395,28 +395,21 @@ export const filterProductsByCategory = createAsyncThunk(
   async (category) => {
     try {
       const response = await axios.get(`/api/products/category/${category}`);
-      console.log('API Response:', response.data); // Log the response
-      return response.data.data; 
+      console.log("API Response:", response.data); // Log the response
+      return response.data.data;
     } catch (error) {
-      console.error('API Error:', error.message); // Log the error
+      console.error("API Error:", error.message); // Log the error
       throw new Error(error.message);
     }
   }
 );
-
-
-
-
-
-
-
 
 export const filterProductsByRange = createAsyncThunk(
   "user/filterProductsByRange",
   async ({ min, max }, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/products/filterProductsByRange`, {
-        params: { min, max }
+        params: { min, max },
       });
       return response.data.data;
     } catch (error) {
@@ -425,16 +418,71 @@ export const filterProductsByRange = createAsyncThunk(
   }
 );
 
-
-
 export const searchProducts = createAsyncThunk(
   "searchProducts",
-  async (query) => {
+  async (searchQuery) => {
     try {
-      const response = await axios.get(`/api/products/search?query=${query}`);
+      const response = await axios.get(
+        `/api/products/search?query=${searchQuery}`
+      );
       return response.data.data;
     } catch (error) {
       return error.message;
+    }
+  }
+);
+
+export const userAddToWishlist = createAsyncThunk(
+  "userAddToWishlist",
+  async ({ productId, userId, toast }) => {
+    try {
+      const response = await axios.post("/api/AddToWishlist", {
+        productId,
+        userId,
+      });
+      const { success, message } = response.data;
+
+      // Check if the product is already in the wishlist
+      if (!success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }
+  }
+);
+
+export const userRemoveToWishlist = createAsyncThunk(
+  "userRemoveToWishlist",
+  async ({ productId, userId, toast },{dispatch}) => {
+    try {
+      const response = await axios.post("/api/RemoveWishlsit", {
+        productId,
+        userId,
+      });
+      const { success, message } = response.data;
+
+      dispatch(UserValidation())
+      if (!success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
     }
   }
 );

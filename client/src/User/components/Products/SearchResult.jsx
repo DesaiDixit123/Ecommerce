@@ -8,7 +8,7 @@ import Paginations from "./Pagination";
 export default function SearchResults() {
   const dispatch = useDispatch();
   const location = useLocation(); // To get search query from URL
-  const query = new URLSearchParams(location.search).get("q"); // Assuming query param is 'q'
+  const query = new URLSearchParams(location.search).get("query"); // Assuming query param is 'q'
   const { searchResults =[]} = useSelector((state) => state.UserSliceProvider);
 console.log("searchResults",searchResults)
   // State for pagination
@@ -16,13 +16,16 @@ console.log("searchResults",searchResults)
   const productsPerPage = 6; // Number of products per page
 
   // Calculate the indices for slicing the searchResults array
-//   const indexOfLastProduct = currentPage * productsPerPage;
-//   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-//   const currentProducts = searchResults.slice(
-//     indexOfFirstProduct,
-//     indexOfLastProduct
-//   );
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = searchResults.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+  console.log("query:",query)
 
+
+  
   // Fetch search results whenever the query changes
   useEffect(() => {
     if (query) {
@@ -43,12 +46,12 @@ console.log("searchResults",searchResults)
       </h2>
       <div className="searchResultsPage px-[20px] w-[100%]">
         <div className="px-[20px] py-[90px] box_parentCard gap-3">
-          {searchResults && searchResults.length > 0 ? (
-            searchResults.map((product) => (
+          {currentProducts && currentProducts.length > 0 ? (
+            currentProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))
           ) : (
-            <p>No products found for "{query}".</p>
+            <p className="text-[22px] pt-[100px] pb-[220px]">No products found for "{query}".</p>
           )}
         </div>
       </div>

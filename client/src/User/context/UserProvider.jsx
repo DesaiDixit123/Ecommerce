@@ -12,8 +12,9 @@ export default function UserContext({ children }) {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.UserSliceProvider);
   useEffect(() => {
-   dispatch( getAllUsersFetchApi())
-  },[]);
+    dispatch(getAllUsersFetchApi());
+  }, []);
+
   useEffect(() => {
     dispatch(UserValidation());
   }, [dispatch]);

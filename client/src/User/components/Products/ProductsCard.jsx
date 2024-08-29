@@ -6,14 +6,23 @@ import {
     FaRegStar,
     FaShoppingCart,
   } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { userAddToWishlist, UserValidation } from "../../../redux/user/UserThunk";
+import { toast } from 'react-toastify';
   
 export default function ProductCard({ product }) {
-    const navigate=useNavigate()
+  const navigate = useNavigate()
+  
+  const dispatch=useDispatch()
 
   const handleImageClick = () => {
     navigate(`/viewProduct/${product._id}`);
   };
+
+  const { userData } = useSelector((state) => state.UserSliceProvider)
+  
+  // console.log(userData)
     const truncatedTitle = product.title.split(" ").length > 5
       ? `${product.title.split(" ").slice(0, 4).join(" ")}...`
       : product.title;
@@ -37,6 +46,28 @@ export default function ProductCard({ product }) {
         : lastThreeDigit;
     };
   
+  
+  const handleAddToWishlist = async (productId) => {
+    if (!userData) {
+      toast.success("Please log in to add items to your wishlist.");
+      return;
+    }
+      await dispatch(userAddToWishlist({
+        productId,
+        userId: userData._id,
+        toast
+      }));
+    
+      // UserValidation call karo update mate
+      const validationResult = await dispatch(UserValidation());
+    
+      if (validationResult) {
+        // Here, navigate function is not being called to avoid any redirection
+        console.log('User validated successfully, staying on the same product page.');
+      }
+    };
+    
+    
     return (
       <div
         key={product._id}
@@ -111,6 +142,7 @@ export default function ProductCard({ product }) {
                 data-toggle="tooltip"
                 data-placement="top"
                 title="Add To Wishlist"
+                onClick={() => handleAddToWishlist(product._id)}
               >
                 <span className="text-[23px]">
                   <FaHeart className="" />

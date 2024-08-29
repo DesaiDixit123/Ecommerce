@@ -246,91 +246,41 @@ export const filterProductsByRange = async (req, res) => {
 
 export const searchProducts = async (req, res) => {
   try {
-    const {query}=req.query
+    const { query } = req.query;
 
     if (!query) {
-      res.status(201).send({
+      return res.status(201).send({
         process: false,
-        message: "Please provide a search query "
-
-      })
+        message: "Please provide a search query"
+      });
     }
-      const products = await $ProductModel.find({
-        $or: [
-          {
-            title:{$regex:`^${query}`,$options:"i"}
-          },
-          {
-            category:{$regex:`^${query}`,$options:"i"}
-          },
-          {
-            fields:{$regex:`^${query}`,$options:"i"}
-          },
-        ]
-      })
 
+    const products = await $ProductModel.find({
+      $or: [
+        { title: { $regex: `^${query}`, $options: "i" } },
+        { category: { $regex: `^${query}`, $options: "i" } },
+        { fields: { $regex: `^${query}`, $options: "i" } },
+      ]
+    });
 
-      if (products.length === 0) {
-        res.status(200).send({
-          process: true,
-          message: `No products found for query:${query}`,
-          data:[]
-        })
-      }
-
-
-      res.status(200).send({
+    if (products.length === 0) {
+      return res.status(200).send({
         process: true,
-        message: `Products found for query:${query}`,
-        data:products
-      })
-   
+        message: `No products found for query: ${query}`,
+        data: []
+      });
+    }
+
+    return res.status(200).send({
+      process: true,
+      message: `Products found for query: ${query}`,
+      data: products
+    });
+
   } catch (error) {
-    res.status(201).send({
+    return res.status(201).send({
       process: false,
-      message:error.message
-    })
-    
+      message: error.message
+    });
   }
 }
-
-// export const searchProducts = async (req, res) => {
-//   try {
-//     const { query } = req.query; // Get the search query from the query parameters
-
-//     if (!query) {
-//       return res.status(400).send({
-//         process: false,
-//         message: "Please provide a search query.",
-//       });
-//     }
-
-//     // Find products that match the query in title, category, or fields
-//     const products = await $ProductModel.find({
-//       $or: [
-//         { title: { $regex: `^${query}`, $options: "i" } },
-//         { category: { $regex: `^${query}`, $options: "i" } },
-//         { fields: { $regex: `^${query}`, $options: "i" } },
-//       ],
-//     });
-
-//     if (products.length === 0) {
-//       return res.status(404).send({
-//         process: true,
-//         message: `No products found for query: ${query}`,
-//         data: [],
-//       });
-//     }
-
-//     res.status(200).send({
-//       process: true,
-//       message: `Products found for query: ${query}`,
-//       data: products,
-//     });
-//   } catch (error) {
-//     res.status(500).send({
-//       process: false,
-//       message: error.message,
-//     });
-//   }
-// };

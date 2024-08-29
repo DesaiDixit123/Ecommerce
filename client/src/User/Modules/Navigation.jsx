@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import {
   FaMobileAlt,
   FaAngleDown,
@@ -59,15 +60,12 @@ const TopNav = () => {
     }, 3000); // Change text every 3 seconds
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
-  console.log("userdata:navigation:39", userData);
-  useEffect(() => {
-    // Redirect to home page if userData is available
-    if (userData) {
-      navigate("/"); // Redirect to the home page or any other page
-    }
-  }, [userData, navigate]);
-  const logoutButton = () => {
-    dispatch(userLogoutFecthApi({ dispatch, toast, navigate }));
+
+
+  const logoutButton = async() => {
+    await dispatch(userLogoutFecthApi({ dispatch, toast, navigate }));
+    
+    navigate("/")
   };
 
   const handeleOpenAccDrop = (event) => {
@@ -124,11 +122,7 @@ const TopNav = () => {
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
-                  {/* <MenuItem onClick={handeleCloseMyDrop}>
-                    <Avatar /> My Account
-                  </MenuItem>
-                
-                  <Divider /> */}
+               
                   <NavLink to={"/add/products"}>
                     <ListItemIcon>
                       <PersonAdd fontSize="small" />
@@ -191,8 +185,10 @@ export const SecondtopNav = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-const dispatch=useDispatch()
-  const { categoriesData } = useSelector((state) => state.UserSliceProvider);
+  const dispatch = useDispatch();
+  const { categoriesData, userData } = useSelector(
+    (state) => state.UserSliceProvider
+  );
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
@@ -219,8 +215,6 @@ const dispatch=useDispatch()
     }
   };
 
-
-
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -229,8 +223,14 @@ const dispatch=useDispatch()
     if (searchQuery) {
       dispatch(searchProducts(searchQuery));
       navigate(`/search-results?query=${searchQuery}`);
+      setSearchQuery("");
     }
+    console.log(searchQuery);
   };
+
+  const wishlistLength = useSelector(
+    (state) => state.UserSliceProvider.userData?.wishlist.length || 0
+  );
   return (
     <>
       <div className="flex justify-between h-[70px] items-center px-[110px] max-[1050px]:px-[50px] max-[960px]:px-[30px] max-[930px]:border-b-2 border-gray-500 relative ">
@@ -247,39 +247,21 @@ const dispatch=useDispatch()
         <div>
           <div className="flex  border-b-2 w-[100%] border-black max-[1089px]:w-[90%]">
             <div className="flex gap-[25px] pb-[4px] max-[930px]:hidden">
-              {/* <div
-                className="flex items-center gap-[5px] cursor-pointer max-[1088px]:w-[120px]"
-                onClick={toggleDropdown}
-                onChange={handleCategoryChange}
-                value={selectedCategory}
-              >
-                All Categories
-                <span>
-                  <FaAngleDown />
-                </span>
-                {dropdown ? (
-                  <div className="absolute bg-white  shadow-lg shadow-indigo-500/50 w-[200px] px-[15px]  top-[50px] z-50 duration-300"  >
-                    {categoriesData &&
-                      categoriesData.map((category) => (
-                        <option
-                          key={category._id}
-                          value={category.categoryname}
-                        >
-                          {category.categoryname}
-                        </option>
-                      ))}
-                  </div>
-                ) : null}
-              </div> */}
               <select
                 className="w-full p-[10px] border-none rounded-[5px] bg-transparent cursor-pointer"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
-                <option value="" className="cursor-pointer">All Categories</option>
+                <option value="" className="cursor-pointer">
+                  All Categories
+                </option>
                 {categoriesData &&
                   categoriesData.map((category) => (
-                    <option key={category._id} value={category.categoryname} className="cursor-pointer">
+                    <option
+                      key={category._id}
+                      value={category.categoryname}
+                      className="cursor-pointer"
+                    >
                       {category.categoryname}
                     </option>
                   ))}
@@ -294,34 +276,45 @@ const dispatch=useDispatch()
                   id=""
                   placeholder="Search For Items..."
                   className="secondTopNavInputChange w-[450px] outline-none"
+                  value={searchQuery}
                   onChange={handleSearchChange}
-
                 />
 
-
-
-<Button onClick={handleSearch} className="w-[100%] bg-black">
-            Search
-          </Button>
+                <button
+                  className="btn rounded-[10px]  btn-info w-[100px] font-bold text-[20px]"
+                  onClick={handleSearch}
+                >
+                  Search
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex gap-[15px] text-[25px] font-bold relative ">
-          <div>
-            <FaRegHeart className="font-bold" />
-          </div>
-          <div>
-            <IoCartOutline className="font-bold text-[28px]" />
-          </div>
-          <div className="hidden max-[930px]:block cursor-pointer">
-            <GiHamburgerMenu
-              className="text-[28px]"
-              onClick={toggleResponsiveNavDrop}
-            />
-          </div>
-        </div>
+        {userData ? (
+           <div className="flex gap-[15px] text-[25px] font-bold relative pt-[20px]">
+           <NavLink to={"/wishlsit"}>
+             <FaRegHeart className="font-bold " />
+             <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 right-8">
+               <p>{wishlistLength}</p>
+             </div>
+           </NavLink>
+           <div>
+             <IoCartOutline className="font-bold text-[28px]" />
+             <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 -right-3">
+               <p>0</p>
+             </div>  
+           </div>
+           <div className="hidden max-[930px]:block cursor-pointer">
+             <GiHamburgerMenu
+               className="text-[28px]"
+               onClick={toggleResponsiveNavDrop}
+             />
+           </div>
+         </div>
+        ) : (
+            null
+       )}
       </div>
 
       {responsiveNavDrop ? (
@@ -559,7 +552,7 @@ export const NavlinkNavigation = () => {
         <div className="pb-[5px]">
           <ul className="flex gap-[50px] list-none">
             <li className="decoration-slate-900">
-              <NavLink>Home</NavLink>
+              <NavLink to={"/"}>Home</NavLink>
             </li>
             <li>
               <NavLink to={"/products"}>Products</NavLink>

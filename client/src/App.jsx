@@ -31,6 +31,7 @@ import Productspage from "./User/components/Products/ProductsPage";
 import FilteredProductsPage from "./User/components/Products/FilterProductsRange";
 import FilteredProducts from "./User/components/Products/FilteredProducts";
 import SearchResults from "./User/components/Products/SearchResult";
+import WishlsitPage from "./User/components/Products/WishlsitPage";
 // import Herosec from "./User/components/Herosec";
 
 const Router = createBrowserRouter([
@@ -56,6 +57,7 @@ const Router = createBrowserRouter([
           { path: "/filtered-products", element: <FilteredProductsPage /> },
           { path: "/filtered-products/:category", element: <FilteredProducts /> },
           { path: "/search-results", element: <SearchResults /> },
+          { path: "/wishlsit", element: <WishlsitPage /> },
         ],
       },
       {

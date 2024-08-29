@@ -35,12 +35,25 @@ export default function FilteredProductsPage() {
   const handleChangePage = (event, value) => {
     setCurrentPage(value);
   };
+
+  const formatPriceWithCommas = (price) => {
+    const priceString = price.toString();
+    const lastThreeDigit = priceString.slice(-3);
+    const otherDigits = priceString.slice(0, -3);
+    const formattedOtherDigits = otherDigits.replace(
+      /\B(?=(\d{2})+(?!\d))/g,
+      ","
+    );
+    return otherDigits
+      ? `${formattedOtherDigits},${lastThreeDigit}`
+      : lastThreeDigit;
+  };
   return (
     <>
       <div className="productsPage px-[20px]">
         <div className="p-4">
           <h2 className="text-[24px] font-bold mb-4 text-center">
-            Products in the range ₹{min} - ₹{max}
+          Products in the range ₹{formatPriceWithCommas(min)} - ₹{formatPriceWithCommas(max)}
           </h2>
           <div className="px-[20px] py-[90px] box_parentCard gap-3">
             {currentProducts && currentProducts.length > 0 ? (

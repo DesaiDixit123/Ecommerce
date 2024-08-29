@@ -291,7 +291,15 @@ a:hover {
   list-style: none;
   border-radius: 0.25rem;
 }
+.table tbody .actions button.secondary1 {
+  background:green !important;
+  width: 100%;
+}
 
+.btnSearch:hover{
+  background-color: #11aad5;
+  
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

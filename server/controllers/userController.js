@@ -13,399 +13,461 @@ import dotenv from "dotenv";
 dotenv.config();
 
 cloudinary.config({
-    cloud_name: "dsslrk2kp",
-    api_key: "499747174164267",
-    api_secret: "3yRqcZo3-vwF7HDGXpOObTY6TyM",
+  cloud_name: "dsslrk2kp",
+  api_key: "499747174164267",
+  api_secret: "3yRqcZo3-vwF7HDGXpOObTY6TyM",
 });
 
 export const upload = multer({
-    storage: new CloudinaryStorage({
-        cloudinary: cloudinary,
-        params: {
-            format: async(req, file) => "png",
-            folder: "Ecommerce-user-profileImg",
-            allowed_formats: ["jpg", "jpeg", "png", "gif"],
-            transformation: [{ width: 500, height: 500, crop: "limit" }],
-        },
-    }),
-    fileFilter: (req, file, cb) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-            return cb(new Error("Only image files are allowed!"), false);
-        }
-        cb(null, true);
+  storage: new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      format: async (req, file) => "png",
+      folder: "Ecommerce-user-profileImg",
+      allowed_formats: ["jpg", "jpeg", "png", "gif"],
+      transformation: [{ width: 500, height: 500, crop: "limit" }],
     },
-    limits: { fileSize: 1024 * 1024 * 5 }, // Limit file size to 5MB
+  }),
+  fileFilter: (req, file, cb) => {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return cb(new Error("Only image files are allowed!"), false);
+    }
+    cb(null, true);
+  },
+  limits: { fileSize: 1024 * 1024 * 5 }, // Limit file size to 5MB
 });
 
 export const getAllCountryWithPhoneCodes = (req, res) => {
-    try {
-        const countries = Country.getAllCountries();
+  try {
+    const countries = Country.getAllCountries();
 
-        const countrieswithphonecode = countries.map((country) => ({
-            name: country.name,
-            isoCode: country.isoCode,
-            phoneCode: country.phonecode,
-        }));
+    const countrieswithphonecode = countries.map((country) => ({
+      name: country.name,
+      isoCode: country.isoCode,
+      phoneCode: country.phonecode,
+    }));
 
-        res.status(200).send({
-            process: true,
-            message: "Country with phone codes retrieved successfully",
-            data: countrieswithphonecode,
-        });
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    res.status(200).send({
+      process: true,
+      message: "Country with phone codes retrieved successfully",
+      data: countrieswithphonecode,
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
-export const register = async(req, res) => {
-    try {
-        const {
-            fname,
-            lname,
-            username,
-            email,
-            password,
-            confirmPassword,
-            Pincode,
-            phonecode,
-            contactno,
-        } = req.body;
+export const register = async (req, res) => {
+  try {
+    const {
+      fname,
+      lname,
+      username,
+      email,
+      password,
+      confirmPassword,
+      Pincode,
+      phonecode,
+      contactno,
+    } = req.body;
 
-        const profileImg = req.file ? req.file.path : null;
+    const profileImg = req.file ? req.file.path : null;
 
-        if (!fname ||
-            !lname ||
-            !username ||
-            !email ||
-            !password ||
-            !confirmPassword ||
-            !Pincode ||
-            !phonecode ||
-            !contactno
-        )
-            throw new Error("All Fields Are Required");
+    if (
+      !fname ||
+      !lname ||
+      !username ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !Pincode ||
+      !phonecode ||
+      !contactno
+    )
+      throw new Error("All Fields Are Required");
 
-        const findUser = await User.findOne({
-            $or: [{ username }, { email }],
-        });
-        if (findUser) throw new Error("User already exists.");
+    const findUser = await User.findOne({
+      $or: [{ username }, { email }],
+    });
+    if (findUser) throw new Error("User already exists.");
 
-        if (username.length < 3 || username.length > 20)
-            throw new Error("Username must be 3 to 20 characters.");
-        if (!/^[a-zA-Z0-9._-]+$/.test(username))
-            throw new Error(
-                "Username can only contain letters, numbers, dots, underscores, and hyphens."
-            );
+    if (username.length < 3 || username.length > 20)
+      throw new Error("Username must be 3 to 20 characters.");
+    if (!/^[a-zA-Z0-9._-]+$/.test(username))
+      throw new Error(
+        "Username can only contain letters, numbers, dots, underscores, and hyphens."
+      );
 
-        if (!/^\d{10}$/.test(contactno))
-            throw new Error("The contact number must be exactly 10 digits long.");
-        if (password.length < 6)
-            throw new Error("Password must be at least 6 characters long.");
-        if (!/[a-z]/.test(password))
-            throw new Error("Password must contain at least one lowercase letter.");
-        if (!/[A-Z]/.test(password))
-            throw new Error("Password must contain at least one uppercase letter.");
-        if (!/[0-9]/.test(password))
-            throw new Error("Password must contain at least one number.");
-        if (!/[^a-zA-Z0-9]/.test(password))
-            throw new Error("Password must contain at least one special character.");
-        if (password !== confirmPassword)
-            throw new Error("Password and confirm password do not match.");
+    if (!/^\d{10}$/.test(contactno))
+      throw new Error("The contact number must be exactly 10 digits long.");
+    if (password.length < 6)
+      throw new Error("Password must be at least 6 characters long.");
+    if (!/[a-z]/.test(password))
+      throw new Error("Password must contain at least one lowercase letter.");
+    if (!/[A-Z]/.test(password))
+      throw new Error("Password must contain at least one uppercase letter.");
+    if (!/[0-9]/.test(password))
+      throw new Error("Password must contain at least one number.");
+    if (!/[^a-zA-Z0-9]/.test(password))
+      throw new Error("Password must contain at least one special character.");
+    if (password !== confirmPassword)
+      throw new Error("Password and confirm password do not match.");
 
-        const hashPassword = await bcrypt.hash(password, 10);
+    const hashPassword = await bcrypt.hash(password, 10);
 
-        if (!isEmail(email)) throw new Error("Invalid email format.");
+    if (!isEmail(email)) throw new Error("Invalid email format.");
 
-        const response = await User({
-            profileImg,
-            fname,
-            lname,
-            username,
-            email,
-            password: hashPassword,
-            Pincode,
-            phonecode,
-            contactno,
-        }).save();
+    const response = await User({
+      profileImg,
+      fname,
+      lname,
+      username,
+      email,
+      password: hashPassword,
+      Pincode,
+      phonecode,
+      contactno,
+    }).save();
 
-        res.status(200).send({
-            process: true,
-            message: "Register Success!",
-            data: response,
-        });
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    res.status(200).send({
+      process: true,
+      message: "Register Success!",
+      data: response,
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
-export const getUser = async(req, res) => {
-    try {
-        const users = await User.find({});
-        res.send({ process: true, data: users });
-    } catch (error) {
-        res.status(500).send({ process: false, message: 'Failed to fetch users' });
-    }
+export const getUser = async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.send({ process: true, data: users });
+  } catch (error) {
+    res.status(500).send({ process: false, message: "Failed to fetch users" });
+  }
 };
-export const login = async(req, res) => {
-    try {
+export const login = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { identifiers, password } = req.body;
 
+    if (!identifiers) throw new Error("Username/Email Requried.");
+    if (!password) throw new Error("Password is requried.");
 
-        console.log(req.body)
-        const { identifiers, password } = req.body;
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifiers);
 
-        if (!identifiers) throw new Error("Username/Email Requried.");
-        if (!password) throw new Error("Password is requried.");
-
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifiers);
-
-        let findUser;
-        if (isEmail) {
-            findUser = await User.findOne({ email: identifiers });
-        } else {
-            findUser = await User.findOne({ username: identifiers });
-        }
-
-        if (!findUser) throw new Error("User not found.");
-
-        const checkPassword = await bcrypt.compare(password, findUser.password);
-
-        if (checkPassword) {
-            const createToken = jwt.sign({ id: findUser._id },
-                process.env.secureToken, { expiresIn: "2m" }
-            );
-
-            await User.findByIdAndUpdate(findUser._id, { token: createToken });
-
-            const cookieExpireTime = 2 * 60 * 1000;
-            res
-                .cookie("userCookie", createToken, {
-                    maxAge: cookieExpireTime,
-                    httpOnly: true,
-                })
-                .status(200)
-                .send({
-                    process: true,
-                    message: "Login Success!",
-                });
-        } else {
-            throw new Error("Password is incorrect.");
-        }
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
+    let findUser;
+    if (isEmail) {
+      findUser = await User.findOne({ email: identifiers });
+    } else {
+      findUser = await User.findOne({ username: identifiers });
     }
+
+    if (!findUser) throw new Error("User not found.");
+
+    const checkPassword = await bcrypt.compare(password, findUser.password);
+
+    if (checkPassword) {
+      const createToken = jwt.sign(
+        { id: findUser._id },
+        process.env.secureToken,
+        { expiresIn: "2m" }
+      );
+
+      await User.findByIdAndUpdate(findUser._id, { token: createToken });
+
+      const cookieExpireTime = 2 * 60 * 1000;
+      res
+        .cookie("userCookie", createToken, {
+          maxAge: cookieExpireTime,
+          httpOnly: true,
+        })
+        .status(200)
+        .send({
+          process: true,
+          message: "Login Success!",
+        });
+    } else {
+      throw new Error("Password is incorrect.");
+    }
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
 export const veriFicationUser = (req, res, next) => {
-    try {
-        const token = req.cookies.userCookie;
-        if (!token) throw new Error("Token not found.");
+  try {
+    const token = req.cookies.userCookie;
+    if (!token) throw new Error("Token not found.");
 
-        const verifyToken = jwt.verify(token, process.env.secureToken);
+    const verifyToken = jwt.verify(token, process.env.secureToken);
 
-        if (!verifyToken) throw new Error("Token is invalid.");
+    if (!verifyToken) throw new Error("Token is invalid.");
 
-        req.verifyTokenId = verifyToken.id;
-        next();
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    req.verifyTokenId = verifyToken.id;
+    next();
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
-export const verifyUser = async(req, res) => {
-    try {
-        const id = req.verifyTokenId;
-        if (!id) throw new Error("User not verified.");
+export const verifyUser = async (req, res) => {
+  try {
+    const id = req.verifyTokenId;
+    if (!id) throw new Error("User not verified.");
 
-        const findUser = await User.findById(id);
-        res.status(200).send({
-            process: true,
-            message: "User verified!",
-            userData: findUser,
-        });
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    const findUser = await User.findById(id);
+    res.status(200).send({
+      process: true,
+      message: "User verified!",
+      userData: findUser,
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
 export const userLogout = (req, res) => {
-    res.clearCookie("userCookie");
-    res.status(200).send({
-        process: true,
-        message: "Logout Successfully.",
-    });
+  res.clearCookie("userCookie");
+  res.status(200).send({
+    process: true,
+    message: "Logout Successfully.",
+  });
 };
 
 const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-        user: process.env.Email_User,
-        pass: process.env.Email_Password,
-    },
+  service: "Gmail",
+  auth: {
+    user: process.env.Email_User,
+    pass: process.env.Email_Password,
+  },
 });
 
 const generateOtp = () => {
-    return crypto.randomBytes(3).toString("hex");
+  return crypto.randomBytes(3).toString("hex");
 };
 
-export const forgetPassword = async(req, res) => {
-    try {
-        const { email } = req.body;
+export const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
 
-        if (!email) throw new Error("Email is requried");
+    if (!email) throw new Error("Email is requried");
 
-        const findEmail = await User.findOne({ email });
+    const findEmail = await User.findOne({ email });
 
-        if (!findEmail) throw new Error("User not found");
+    if (!findEmail) throw new Error("User not found");
 
-        const otp = generateOtp();
+    const otp = generateOtp();
 
-        findEmail.resetPasswordOTP = otp;
+    findEmail.resetPasswordOTP = otp;
 
-        findEmail.resetPasswordExpires = Date.now() + 3600000;
-        await findEmail.save();
+    findEmail.resetPasswordExpires = Date.now() + 3600000;
+    await findEmail.save();
 
-        const mailoption = {
-            to: email,
-            from: process.env.Email_User,
-            subject: "Password reset request.",
-            text: `Your OTP for password reset is : ${otp}`,
-        };
+    const mailoption = {
+      to: email,
+      from: process.env.Email_User,
+      subject: "Password reset request.",
+      text: `Your OTP for password reset is : ${otp}`,
+    };
 
-        transporter.sendMail(mailoption, (err) => {
-            if (err) throw new Error("Error sending email.");
-            res.status(200).send({
-                process: true,
-                message: "OTP sent to your email.",
-            });
-        });
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    transporter.sendMail(mailoption, (err) => {
+      if (err) throw new Error("Error sending email.");
+      res.status(200).send({
+        process: true,
+        message: "OTP sent to your email.",
+      });
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
-export const verifyOTP = async(req, res) => {
-    try {
-        const { email, otp } = req.body;
+export const verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
 
-        if (!email || !otp) throw new Error("Email and otp are requried.");
+    if (!email || !otp) throw new Error("Email and otp are requried.");
 
-        const findUser = await User.findOne({ email });
-        if (!findUser) throw new Error("User not found");
+    const findUser = await User.findOne({ email });
+    if (!findUser) throw new Error("User not found");
 
-        if (
-            findUser.resetPasswordOTP !== otp ||
-            findUser.resetPasswordExpires < Date.now()
-        )
-            throw new Error("OTP is invalid or has expired.");
+    if (
+      findUser.resetPasswordOTP !== otp ||
+      findUser.resetPasswordExpires < Date.now()
+    )
+      throw new Error("OTP is invalid or has expired.");
 
-        res.status(200).send({
-            process: true,
-            message: "OTP verified successfully.",
-        });
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    res.status(200).send({
+      process: true,
+      message: "OTP verified successfully.",
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
-export const resetPassword = async(req, res) => {
-    try {
-        const { email, newPassword, confirmPassword } = req.body;
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword, confirmPassword } = req.body;
 
-        if (!newPassword || !confirmPassword)
-            throw new Error("All fields are requried.");
+    if (!newPassword || !confirmPassword)
+      throw new Error("All fields are requried.");
 
-        if (newPassword !== confirmPassword)
-            throw new Error("Password and confirm password does not match.");
+    if (newPassword !== confirmPassword)
+      throw new Error("Password and confirm password does not match.");
 
-        const findUser = await User.findOne({ email });
-        if (!findUser) throw new Error("User not found.");
+    const findUser = await User.findOne({ email });
+    if (!findUser) throw new Error("User not found.");
 
-        const hashPassword = await bcrypt.hash(newPassword, 10);
-        findUser.password = hashPassword;
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    findUser.password = hashPassword;
 
-        await findUser.save();
-        res.status(200).send({
-            process: true,
-            message: "Password reset  successfull.",
-        });
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    await findUser.save();
+    res.status(200).send({
+      process: true,
+      message: "Password reset  successfull.",
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
-export const updatePassword = async(req, res) => {
-    try {
-        // const userId = req.verifyTokenId
-        const { email, oldPassword, newPassword, confirmPassword } = req.body;
+export const updatePassword = async (req, res) => {
+  try {
+    // const userId = req.verifyTokenId
+    const { email, oldPassword, newPassword, confirmPassword } = req.body;
 
-        if (!oldPassword || !newPassword || !confirmPassword)
-            throw new Error("All fields are requried.");
+    if (!oldPassword || !newPassword || !confirmPassword)
+      throw new Error("All fields are requried.");
 
-        const findUser = await User.findOne({ email });
-        if (!findUser) throw new Error("User not found.");
+    const findUser = await User.findOne({ email });
+    if (!findUser) throw new Error("User not found.");
 
-        const ismatch = await bcrypt.compare(oldPassword, findUser.password);
-        if (!ismatch) throw new Error("Old password is incorrect.");
+    const ismatch = await bcrypt.compare(oldPassword, findUser.password);
+    if (!ismatch) throw new Error("Old password is incorrect.");
 
-        const hashNewPassword = await bcrypt.hash(newPassword, 10);
-        findUser.password = hashNewPassword;
-        await findUser.save();
+    const hashNewPassword = await bcrypt.hash(newPassword, 10);
+    findUser.password = hashNewPassword;
+    await findUser.save();
 
-        res.status(200).send({
-            process: true,
-            message: "Password updated successfully",
-        });
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
-    }
+    res.status(200).send({
+      process: true,
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
 
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-export const deleteUser = async(req, res) => {
-    try {
-        const { id } = req.params;
+    const findUser = await User.findByIdAndDelete(id);
 
-        const findUser = await User.findByIdAndDelete(id);
-
-        if (findUser) {
-            res.status(200).send({
-                process: true,
-                message: "User deleted successfully.",
-                data: findUser,
-            });
-        } else {
-            throw new Error("User not found.");
-        }
-    } catch (error) {
-        res.status(201).send({
-            process: false,
-            message: error.message,
-        });
+    if (findUser) {
+      res.status(200).send({
+        process: true,
+        message: "User deleted successfully.",
+        data: findUser,
+      });
+    } else {
+      throw new Error("User not found.");
     }
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
+
+export const AddToWishlist = async (req, res) => {
+  try {
+    const { userId, productId } = req.body;
+
+    const findUser = await User.findById(userId);
+
+    if (!findUser) throw new Error("User not found.");
+    const addInWishlist = findUser.wishlist;
+
+    if (addInWishlist.includes(productId)) 
+      throw new Error("Product already added in wishlist.")
+    addInWishlist.push(productId);
+
+    const updateUser = await User.findByIdAndUpdate(
+      { _id: userId },
+      { wishlist: addInWishlist }
+    );
+
+    console.log({ wishlist: addInWishlist });
+    if (updateUser) {
+      res.status(200).send({
+        process: true,
+        message: "Product added to wishlist successfully.",
+      });
+    }
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
+
+export const RemoveWishlist = async (req, res) => {
+  try {
+    const { userId, productId } = req.body;
+
+    const findUser = await User.findById(userId);
+
+    if (!findUser) throw new Error("User not found.");
+
+    const updateStatus = await User.findByIdAndUpdate(userId, {
+      wishlist: findUser.wishlist.filter(
+        (item) => item.toString() !== productId
+      ),
+    });
+      
+      if (updateStatus) {
+          res.status(200).send({
+              process: true,
+              message: "Product removed from wishlist",
+              data:findUser
+          })
+      }
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
 };
