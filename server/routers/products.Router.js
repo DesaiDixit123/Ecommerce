@@ -3,6 +3,7 @@ import {
     deleteProduct,
     filterProductsByRange,
     getAllProducts,
+    getProductById,
     getProductsByCategory,
     products,
   
@@ -23,3 +24,4 @@ productRouter.put("/products/:id", uploadImages, updateProduct);
 
 productRouter.get("/products/filterProductsByRange", filterProductsByRange);
 productRouter.get("/products/search", searchProducts);
+productRouter.get("/products/:id", getProductById);

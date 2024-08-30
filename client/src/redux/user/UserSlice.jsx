@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createSlice } from "@reduxjs/toolkit";
+
 import {
   categoryByFieldsFetchApi,
   filterProductsByCategory,
@@ -11,6 +12,7 @@ import {
   getAllProductsFecthApi,
   LoginUser,
   searchProducts,
+  userAddToCart,
   userLogoutFecthApi,
   UserValidation,
 } from "./UserThunk";
@@ -30,12 +32,15 @@ const initialState = {
   filteredProducts: [],
   filteredProducts1: [],
   searchResults: [],
+  addCart:[]
 };
 
 const UserSlice = createSlice({
   name: "UserSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    
+  },
   extraReducers: (builder) => {
     builder
 
@@ -178,6 +183,20 @@ const UserSlice = createSlice({
       .addCase(categoryByFieldsFetchApi.rejected, (state, action) => {
         state.loading = false;
         state.action = action.payload;
+      })
+    
+      .addCase(userAddToCart.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(userAddToCart.fulfilled, (state, action) => {
+   
+        console.log(action.payload)
+        state.addCart = action.payload
+        state.loading = false;
+      })
+      .addCase(userAddToCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });

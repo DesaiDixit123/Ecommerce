@@ -9,6 +9,8 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from "dotenv";
+import { Cart } from "../models/cartModel.js";
+import { $ProductModel } from "../models/productsModel.js";
 
 dotenv.config();
 
@@ -177,12 +179,12 @@ export const login = async (req, res) => {
       const createToken = jwt.sign(
         { id: findUser._id },
         process.env.secureToken,
-        { expiresIn: "2m" }
+        { expiresIn: "30m" }
       );
 
       await User.findByIdAndUpdate(findUser._id, { token: createToken });
 
-      const cookieExpireTime = 2 * 60 * 1000;
+      const cookieExpireTime = 30 * 60 * 1000;
       res
         .cookie("userCookie", createToken, {
           maxAge: cookieExpireTime,
@@ -410,7 +412,7 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const AddToWishlist = async (req, res) => {
+export const addToWishlist = async (req, res) => {
   try {
     const { userId, productId } = req.body;
 
@@ -419,8 +421,8 @@ export const AddToWishlist = async (req, res) => {
     if (!findUser) throw new Error("User not found.");
     const addInWishlist = findUser.wishlist;
 
-    if (addInWishlist.includes(productId)) 
-      throw new Error("Product already added in wishlist.")
+    if (addInWishlist.includes(productId))
+      throw new Error("Product already added in wishlist.");
     addInWishlist.push(productId);
 
     const updateUser = await User.findByIdAndUpdate(
@@ -443,7 +445,7 @@ export const AddToWishlist = async (req, res) => {
   }
 };
 
-export const RemoveWishlist = async (req, res) => {
+export const removeWishlist = async (req, res) => {
   try {
     const { userId, productId } = req.body;
 
@@ -456,16 +458,90 @@ export const RemoveWishlist = async (req, res) => {
         (item) => item.toString() !== productId
       ),
     });
-      
-      if (updateStatus) {
-          res.status(200).send({
-              process: true,
-              message: "Product removed from wishlist",
-              data:findUser
-          })
-      }
+
+    if (updateStatus) {
+      res.status(200).send({
+        process: true,
+        message: "Product removed from wishlist",
+        data: findUser,
+      });
+    }
   } catch (error) {
     res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
+
+export const addToCart = async (req, res) => {
+  try {
+    const { userId, productId, quantity = 1 } = req.body;
+
+    const validQuantity = Number(quantity);
+
+    if (isNaN(validQuantity) || validQuantity <= 0)
+      throw new Error("Invalid quantity value.");
+
+    const findUser = await User.findById(userId);
+    if (!findUser) throw new Error("User not found.");
+
+    let userCart = await Cart.findOne({ userId });
+    if (!userCart) {
+      userCart = new Cart({
+        userId,
+        items: [],
+        totalAmount: 0,
+        shippingCost: 0,
+        discount: 0,
+      });
+    }
+
+    const productIndex = userCart.items.findIndex(
+      (item) => item.productId.toString() === productId
+    );
+
+    const product = await $ProductModel.findById(productId).select("discount");
+    if (!product) throw new Error("Product not found.");
+
+    if (productIndex !== -1) {
+      throw new Error("Product already added to cart.");
+    }
+    const productPrice = Number(product.discount);
+    if (isNaN(productPrice) || productPrice <= 0)
+      throw new Error("Product price invalid.");
+
+    if (productIndex > -1) {
+      userCart.items[productIndex].quantity += validQuantity;
+      userCart.items[productIndex].subTotal +=
+        userCart.items[productIndex].quantity * productPrice;
+    } else {
+      userCart.items.push({
+        productId,
+        quantity: validQuantity,
+        subTotal: validQuantity * productPrice,
+      });
+    }
+
+    let subTotal = userCart.items.reduce((acc, item) => {
+      const itemSubtotal = Number(item.subTotal);
+      return isNaN(itemSubtotal) ? acc : acc + itemSubtotal;
+    }, 0);
+    userCart.shippingCost = subTotal >= 500 ? 50 : 0;
+
+    userCart.totalAmount = subTotal + userCart.shippingCost - userCart.discount;
+
+    userCart.totalAmount = isNaN(userCart.totalAmount)
+      ? 0
+      : userCart.totalAmount;
+    await userCart.save();
+    res.status(200).send({
+      process: true,
+      message: "Product added to cart successfully!",
+      data:userCart
+    });
+  } catch (error) {
+    res.status(400).send({
       process: false,
       message: error.message,
     });

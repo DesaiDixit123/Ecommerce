@@ -299,12 +299,12 @@ export const SecondtopNav = () => {
                <p>{wishlistLength}</p>
              </div>
            </NavLink>
-           <div>
+           <NavLink to={"/carts"}>
              <IoCartOutline className="font-bold text-[28px]" />
              <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 -right-3">
                <p>0</p>
              </div>  
-           </div>
+           </NavLink>
            <div className="hidden max-[930px]:block cursor-pointer">
              <GiHamburgerMenu
                className="text-[28px]"

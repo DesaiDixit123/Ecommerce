@@ -16,7 +16,7 @@ const productSchema = Schema({
     discription: { type: String },
     publishedDate: { type: Date, default: Date.now } 
 
-}, { timestamps: true })
+}, { timestamps: true } )
 
 
 export const $ProductModel = model("product", productSchema)

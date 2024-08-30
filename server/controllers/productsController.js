@@ -284,3 +284,38 @@ export const searchProducts = async (req, res) => {
     });
   }
 }
+
+
+
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).send({
+        process: false,
+        message: "Product ID is required.",
+      });
+    }
+
+    const product = await $ProductModel.findById(id);
+
+    if (!product) {
+      return res.status(404).send({
+        process: false,
+        message: "Product not found.",
+      });
+    }
+
+    res.status(200).send({
+      process: true,
+      message: "Product details fetched successfully.",
+      data: product,
+    });
+  } catch (error) {
+    res.status(500).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
