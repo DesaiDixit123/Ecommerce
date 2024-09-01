@@ -1,30 +1,34 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
-// import cartImg from "../components/images/img1-icon.jpg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { FaRegStar } from "react-icons/fa";
-
+import { toast } from "react-toastify";
+import {
+  userAddToCart,
+  getCartByUserId,
+  UserValidation,
+} from "../../../redux/user/UserThunk";
 export const Herosec = () => {
   const { id } = useParams();
-  const [items, setItems] = useState(0);
-  const [cart, setCart] = useState(0);
-  const myRef1 = useRef(null);
-  const myRef2 = useRef(null);
-  const myRef3 = useRef(null);
-  const shadowRef = useRef(null);
+  const [items, setItems] = useState(1);
+  // const [cart, setCart] = useState(0);
 
+  const shadowRef = useRef(null);
+  const dispatch = useDispatch();
   const [product, setProduct] = useState(null);
 
-  const { allProducts } = useSelector((state) => state.UserSliceProvider);
+  const {
+    allProducts,
+  
+    userData,
+  } = useSelector((state) => state.UserSliceProvider);
 
   useEffect(() => {
     const foundProduct = allProducts.find((product) => product._id === id);
 
     setProduct(foundProduct);
-    console.log(foundProduct);
-
-   
+    // console.log(foundProduct);
   }, [id, allProducts]);
   const regularPrice = Number(product?.price);
   const discountPrice = Number(product?.discount);
@@ -32,10 +36,9 @@ export const Herosec = () => {
     ((regularPrice - discountPrice) / regularPrice) * 100
   );
 
-
   const formatPriceWithCommas = (price) => {
-    const priceString=price.toString()
-    const LastThreeDigit=priceString.slice(-3)
+    const priceString = price.toString();
+    const LastThreeDigit = priceString.slice(-3);
     const otherDigits = priceString.slice(0, -3);
     const formattedOtherDigits = otherDigits.replace(
       /\B(?=(\d{2})+(?!\d))/g,
@@ -44,58 +47,42 @@ export const Herosec = () => {
     return otherDigits
       ? `${formattedOtherDigits},${LastThreeDigit}`
       : LastThreeDigit;
-  }
-  
+  };
 
-  console.log(typeof regularPrice);
+  const handleAddToCart = async (productId) => {
+    if (!userData) {
+      toast.success("Please log in to add items to your cart.");
+      return;
+    }
+  
+    const price = Number(product.price);
+    const subTotal = price * items; // Use items state
+ 
+  
+    await dispatch( 
+      userAddToCart({
+        productId,
+        userId: userData._id,
+        quantity: items, // Ensure correct quantity
+        subTotal: Number(subTotal),
+        toast,
+      })
+    );
+
+    setItems(1)
+   
+    dispatch(getCartByUserId(userData._id));
+  
+await dispatch(UserValidation());
+  
+ 
+  };
+
 
   return (
     <div className="hero-sec content-div">
       <div ref={shadowRef} className="shadow"></div>
-      <div className="cart-box">
-        <span className="cart-para cart-heading">
-          Cart
-          <hr className="cart-hr" />
-        </span>
 
-        <p ref={myRef3} className="cart-para empty-para">
-          Your cart is empty.
-        </p>
-        <div ref={myRef1} className="cart-item-div">
-          <div className="cart-item-col1">
-
-          </div>
-          <div className="cart-item-col2">
-            <p className="cart-para">
-              Fall Limited Edition Sneakers $125.00 x {cart}{" "}
-              <span className="item-amount">${125 * cart}.00</span>
-            </p>
-          </div>
-          <div className="cart-item-col3">
-            <svg
-              className="cart-del"
-              onClick={() => {
-                setCart(cart - 1);
-              }}
-              width="14"
-              height="16"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-            >
-              <defs>
-                <path
-                  d="M0 2.625V1.75C0 1.334.334 1 .75 1h3.5l.294-.584A.741.741 0 0 1 5.213 0h3.571a.75.75 0 0 1 .672.416L9.75 1h3.5c.416 0 .75.334.75.75v.875a.376.376 0 0 1-.375.375H.375A.376.376 0 0 1 0 2.625Zm13 1.75V14.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 1 14.5V4.375C1 4.169 1.169 4 1.375 4h11.25c.206 0 .375.169.375.375ZM4.5 6.5c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Zm3 0c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Zm3 0c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Z"
-                  id="a"
-                />
-              </defs>
-              <use fill="#C3CAD9" fillRule="nonzero" xlinkHref="#a" />
-            </svg>
-          </div>
-        </div>
-        <div ref={myRef2} className="checkout-div">
-          <button className="checkout-btn">checkout</button>
-        </div>
-      </div>
       <div className="hero-row">
         <div className="hero-col hero-col1">
           <Sneakers />
@@ -112,12 +99,16 @@ export const Herosec = () => {
                 </div>
                 <h1 className="main-heading ">{product.title}</h1>
                 <p className="hero-para"> {product.discription} </p>
-                <span className="dollar"> ₹ {formatPriceWithCommas(discountPrice)}</span>
+                <span className="dollar">
+                  {" "}
+                  ₹ {formatPriceWithCommas(discountPrice)}
+                </span>
                 <span className="discount hero-subHeading">
-                
                   {discountPercentage} %
                 </span>
-                <del className="discount2 hero-para">₹ {formatPriceWithCommas(regularPrice)}</del>
+                <del className="discount2 hero-para">
+                  ₹ {formatPriceWithCommas(regularPrice)}
+                </del>
                 <div className="cart2-sec">
                   <div className="cart2-col cart2-col1">
                     <span
@@ -155,14 +146,7 @@ export const Herosec = () => {
                   <div className="cart2-col cart2-col2">
                     <button
                       className="cart2-btn"
-                      onClick={() => {
-                        if (items == 0) {
-                          alert("Please First add the items");
-                        } else {
-                          setCart(items);
-                          setItems(0);
-                        }
-                      }}
+                      onClick={() => handleAddToCart(product._id)}
                     >
                       <svg
                         className="cart2-main"
@@ -176,7 +160,12 @@ export const Herosec = () => {
                           fillRule="nonzero"
                         />
                       </svg>
-                      <span className="cart2-text">Add to cart</span>
+                      <span
+                        className="cart2-text"
+                     
+                      >
+                        Add to cart
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -211,7 +200,6 @@ export const LightBox = ({ imageTrack }) => {
     const foundProduct = allProducts.find((prod) => prod._id === id);
 
     setProduct(foundProduct);
-    
   }, [id, allProducts, imageTrack]);
 
   let url = "";
@@ -376,7 +364,6 @@ export const Sneakers = ({ imageTrack }) => {
     const foundProduct = allProducts.find((prod) => prod._id === id);
 
     setProduct(foundProduct);
-    
   }, [id, allProducts, imageTrack]);
 
   if (image === 1) {
@@ -498,7 +485,6 @@ export const Sneakers = ({ imageTrack }) => {
           <div
             className={`small-sneaker-div ${image === 5 && "active-sneaker"}`}
           >
-         
             <img
               alt="img"
               className={`small-sneaker`}

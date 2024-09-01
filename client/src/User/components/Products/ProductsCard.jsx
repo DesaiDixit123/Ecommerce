@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
+  getCartByUserId,
   userAddToCart,
   userAddToWishlist,
   UserValidation,
@@ -94,7 +95,10 @@ export default function ProductCard({ product }) {
         subTotal: Number(subTotal), // Ensure subTotal is a number
         toast,
       })
+
+      
     );
+      dispatch(getCartByUserId(userData._id))
   
     const validationResult = await dispatch(UserValidation());
   

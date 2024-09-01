@@ -16,6 +16,10 @@ import {
   addToWishlist,
   removeWishlist,
   addToCart,
+  getCartByUserId,
+  updateCart,
+  clearCart,
+  removeProductFromCart,
 } from "../controllers/userController.js";
 
 export const userRouter = Router();
@@ -34,3 +38,7 @@ userRouter.delete("/user/delete/:id", deleteUser);
 userRouter.post("/AddToWishlist", veriFicationUser, addToWishlist);
 userRouter.post("/RemoveWishlsit", veriFicationUser, removeWishlist);
 userRouter.post("/addToCart", veriFicationUser, addToCart);
+userRouter.get("/cart/:userId", getCartByUserId);
+userRouter.put("/updateCart", updateCart);
+userRouter.delete("/clearCart/:userId", clearCart);
+userRouter.delete("/cart/:userId/product/:productId", removeProductFromCart);

@@ -10,8 +10,10 @@ import {
   // getAllCategories,
   getAllCountriesWithPhoneCodes,
   getAllProductsFecthApi,
+  getCartByUserId,
   LoginUser,
   searchProducts,
+  updateCart,
   userAddToCart,
   userLogoutFecthApi,
   UserValidation,
@@ -32,7 +34,11 @@ const initialState = {
   filteredProducts: [],
   filteredProducts1: [],
   searchResults: [],
-  addCart:[]
+  addCart: [],
+  userCart: [],
+  items: [],
+  totalAmount: 0,
+  shippingCost: 0,
 };
 
 const UserSlice = createSlice({
@@ -197,6 +203,36 @@ const UserSlice = createSlice({
       .addCase(userAddToCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(getCartByUserId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getCartByUserId.fulfilled, (state, action) => {
+        console.log('Fetched cart data:', action.payload); 
+        state.loading = false;
+        state.userCart = action.payload;
+      })
+      
+      .addCase(getCartByUserId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+    
+    
+      .addCase(updateCart.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateCart.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Update state with the new cart data
+        state.items = action.payload.items;
+        state.totalAmount = action.payload.totalAmount;
+        state.shippingCost = action.payload.shippingCost;
+        state.error = null;
+      })
+      .addCase(updateCart.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });

@@ -462,7 +462,7 @@ export const userAddToWishlist = createAsyncThunk(
 
 export const userRemoveToWishlist = createAsyncThunk(
   "userRemoveToWishlist",
-  async ({ productId, userId, toast },{dispatch}) => {
+  async ({ productId, userId, toast }, { dispatch }) => {
     try {
       const response = await axios.post("/api/RemoveWishlsit", {
         productId,
@@ -470,7 +470,7 @@ export const userRemoveToWishlist = createAsyncThunk(
       });
       const { success, message } = response.data;
 
-      dispatch(UserValidation())
+      dispatch(UserValidation());
       if (!success) {
         toast.success(message, {
           position: "top-right",
@@ -488,80 +488,19 @@ export const userRemoveToWishlist = createAsyncThunk(
 );
 
 
-
-
-// export const userAddToCart = createAsyncThunk(
-//   "userAddToCart",
-//   async ({ productId, userId, quantity = 1, toast }, { rejectWithValue }) => {
-//     try {
-//       // Ensure quantity is a valid number
-//       const validQuantity = Number(quantity);
-//       if (isNaN(validQuantity) || validQuantity <= 0) {
-//         throw new Error("Invalid quantity value");
-//       }
-
-//       // Fetch product details
-//       const productResponse = await axios.get(`/api/products/${productId}`);
-//       console.log("Product Response:", productResponse.data); // Debugging line
-
-//       // Ensure product price is a valid number
-//       const productPrice = Number(productResponse.data.price);
-
-//       console.log("productsPrice:",productPrice)
-//       if (isNaN(productPrice) || productPrice <= 0) {
-//         throw new Error("Invalid product price");
-//       }
-
-//       // Calculate subtotal
-//       const subTotal = productPrice * validQuantity;
-//       console.log("Subtotal Calculation:", subTotal); // Debugging line
-
-//       // Ensure subTotal is a valid number
-//       if (isNaN(subTotal) || subTotal <= 0) {
-//         throw new Error("Invalid subtotal value");
-//       }
-
-//       // Send request to add item to cart
-//       const response = await axios.post("/api/addToCart", {
-//         productId,
-//         userId,
-//         quantity: validQuantity,
-//         subTotal
-//       });
-
-//       const { success, message } = response.data;
-
-//       if (!success) {
-//         toast.success(message, {
-//           position: "top-right",
-//           style: { marginTop: "50px", marginRight: "10px" },
-//         });
-//       }
-
-//       return response.data.data;
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || error.message, {
-//         position: "top-right",
-//         style: { marginTop: "50px", marginRight: "10px" },
-//       });
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
-
-
-
-
 export const userAddToCart = createAsyncThunk(
   "userAddToCart",
-  async ({ productId, userId, toast }, { rejectWithValue }) => {
+  async ({ productId, userId, quantity, subTotal, toast }) => {
     try {
+   
       const response = await axios.post("/api/addToCart", {
         productId,
         userId,
+        quantity,    
+        subTotal,    
       });
 
-      console.log(response.data)
+      console.log("Response from addToCart:", response.data);
       const { success, message } = response.data;
 
       if (!success) {
@@ -573,11 +512,65 @@ export const userAddToCart = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
+     
       toast.error(error.response?.data?.message || error.message, {
         position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
       });
-      return rejectWithValue(error.message);
+      return error.message;
+    }
+  }
+);
+
+
+export const getCartByUserId = createAsyncThunk(
+  "getCartByuserId",
+  async (userId) => {
+    try {
+      const response = await axios.get(`/api/cart/${userId}`);
+
+      return response.data.data;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+export const updateCart = createAsyncThunk(
+  "updateCart",
+  async ({ userId, items }) => {
+    try {
+      // Make a POST request with the payload
+      const response = await axios.put("/api/updateCart", { userId, items });
+      return response.data; // Return the data from the response
+    } catch (error) {
+      // Return the error message if the request fails
+      return error.response ? error.response.data : error.message;
+    }
+  }
+);
+
+export const clearCart = createAsyncThunk("clearCart", async (userId) => {
+  try {
+    const response = await axios.delete(`/api/clearCart/${userId}`);
+
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+});
+
+export const removeProductFromCart = createAsyncThunk(
+  "removeProductFromCart",
+  async ({ userId, productId }) => {
+    try {
+      const response = await axios.delete(
+        `/api/cart/${userId}/product/${productId}`
+      );
+
+      return response.data;
+    } catch (error) {
+      return error.message;
     }
   }
 );

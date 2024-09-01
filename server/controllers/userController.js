@@ -474,6 +474,85 @@ export const removeWishlist = async (req, res) => {
   }
 };
 
+// export const addToCart = async (req, res) => {
+//   try {
+//     const { userId, productId, quantity = 1 } = req.body;
+
+//     const validQuantity = Number(quantity);
+
+//     if (isNaN(validQuantity) || validQuantity <= 0)
+//       throw new Error("Invalid quantity value.");
+
+//     const findUser = await User.findById(userId);
+//     if (!findUser) throw new Error("User not found.");
+
+//     let userCart = await Cart.findOne({ userId });
+//     if (!userCart) {
+//       userCart = new Cart({
+//         userId,
+//         items: [],
+//         totalAmount: 0,
+//         shippingCost: 0,
+//         discount: 0,
+//       });
+//     }
+
+//     const productIndex = userCart.items.findIndex(
+//       (item) => item.productId.toString() === productId
+//     );
+
+//     const product = await $ProductModel.findById(productId).select("discount");
+//     if (!product) throw new Error("Product not found.");
+
+//     if (productIndex !== -1) {
+//       throw new Error("Product already added to cart.");
+//     }
+//     const productPrice = Number(product.discount);
+//     if (isNaN(productPrice) || productPrice <= 0)
+//       throw new Error("Product price invalid.");
+
+//     if (productIndex > -1) {
+//       userCart.items[productIndex].quantity += validQuantity;
+//       userCart.items[productIndex].subTotal +=
+//         userCart.items[productIndex].quantity * productPrice;
+//     } else {
+//       userCart.items.push({
+//         productId,
+//         quantity: validQuantity,
+//         subTotal: validQuantity * productPrice,
+//       });
+//     }
+
+
+//     console.log(userCart.items.quantity)
+//     let subTotal = userCart.items.reduce((acc, item) => {
+//       const itemSubtotal = Number(item.subTotal);
+//       return isNaN(itemSubtotal) ? acc : acc + itemSubtotal;
+//     }, 0);
+//     userCart.shippingCost = subTotal >= 500 ? 50 : 0;
+
+//     userCart.totalAmount = subTotal + userCart.shippingCost - userCart.discount;
+
+//     userCart.totalAmount = isNaN(userCart.totalAmount)
+//       ? 0
+//       : userCart.totalAmount;
+//     await userCart.save();
+//     res.status(200).send({
+//       process: true,
+//       message: "Product added to cart successfully!",
+//       data: userCart,
+//     });
+
+//     console.log(userCart)
+//   } catch (error) {
+//     res.status(400).send({
+//       process: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
 export const addToCart = async (req, res) => {
   try {
     const { userId, productId, quantity = 1 } = req.body;
@@ -504,17 +583,13 @@ export const addToCart = async (req, res) => {
     const product = await $ProductModel.findById(productId).select("discount");
     if (!product) throw new Error("Product not found.");
 
-    if (productIndex !== -1) {
-      throw new Error("Product already added to cart.");
-    }
     const productPrice = Number(product.discount);
     if (isNaN(productPrice) || productPrice <= 0)
       throw new Error("Product price invalid.");
 
-    if (productIndex > -1) {
+    if (productIndex !== -1) {
       userCart.items[productIndex].quantity += validQuantity;
-      userCart.items[productIndex].subTotal +=
-        userCart.items[productIndex].quantity * productPrice;
+      userCart.items[productIndex].subTotal = userCart.items[productIndex].quantity * productPrice;
     } else {
       userCart.items.push({
         productId,
@@ -538,10 +613,160 @@ export const addToCart = async (req, res) => {
     res.status(200).send({
       process: true,
       message: "Product added to cart successfully!",
-      data:userCart
+      data: userCart,
+    });
+
+    console.log(userCart);
+  } catch (error) {
+    res.status(400).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getCartByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Check if the user exists
+    const findUser = await User.findById(userId);
+    if (!findUser) throw new Error("User not found.");
+
+    // Fetch the user's cart
+    const userCart = await Cart.findOne({ userId });
+    if (!userCart) {
+      throw new Error("Cart not found.");
+    }
+
+    res.status(200).send({
+      process: true,
+      message: "Cart fetched successfully!",
+      data: userCart,
     });
   } catch (error) {
     res.status(400).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
+
+const calculateShippingCost = (subtotal) => {
+  // Example: shipping cost is 5% of the subtotal
+  return subtotal * 0.05;
+};
+
+export const updateCart = async (req, res) => {
+  try {
+    const { userId, items } = req.body;
+
+    // Find the user's cart
+    let cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found." });
+    }
+
+    // Recalculate subtotal and total
+    let subtotal = 0;
+    const updatedItems = [];
+
+    for (const item of items) {
+      const product = await $ProductModel
+        .findById(item.productId)
+        .select("discount");
+      if (!product) throw new Error("Product not found.");
+
+      const productPrice = Number(product.discount);
+      if (isNaN(productPrice) || productPrice <= 0)
+        throw new Error("Product price invalid.");
+
+      const itemSubTotal = item.quantity * productPrice;
+      updatedItems.push({ ...item, subTotal: itemSubTotal });
+      subtotal += itemSubTotal;
+
+      // Debugging logs
+      console.log("Product price:", productPrice);
+      console.log("Item subtotal:", itemSubTotal);
+    }
+
+    const shippingCost = calculateShippingCost(subtotal);
+    const grandTotal = subtotal + shippingCost;
+
+    // Update cart details
+    cart.items = updatedItems;
+    cart.subtotal = subtotal;
+    cart.shippingCost = shippingCost;
+    cart.totalAmount = grandTotal;
+
+    // Debugging log
+    console.log("Updated cart before saving:", cart);
+
+    // Save updated cart
+    await cart.save();
+
+    res.status(200).json({
+      process: true,
+      message: "Cart updated successfully!",
+      data: cart,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const clearCart = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    let cart = await Cart.findOne({ userId });
+
+    if (!cart) throw new Error("Cart not found.");
+
+    cart.items = [];
+    cart.totalAmount = 0;
+    cart.shippingCost = 0;
+    cart.subtotal = 0;
+
+    await cart.save();
+
+    res.status(200).send({
+      process: true,
+      message: "Cart cleared successfully.",
+    });
+  } catch (error) {
+    res.status(500).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
+
+export const removeProductFromCart = async (req, res) => {
+  try {
+    const { userId, productId } = req.params;
+
+    let cart = await Cart.findOne({ userId });
+
+    if (!cart) throw new Error("Cart not found.");
+
+    // Remove the product from the cart
+    cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+    
+    // Recalculate totals after removal
+    cart.totalAmount = cart.items.reduce((acc, item) => acc + item.subTotal, 0);
+    cart.shippingCost = cart.items.length > 0 ? cart.shippingCost : 0;
+    cart.subtotal = cart.totalAmount;
+
+    await cart.save();
+
+    res.status(200).send({
+      process: true,
+      message: "Product removed from cart successfully.",
+      cart,
+    });
+  } catch (error) {
+    res.status(500).send({
       process: false,
       message: error.message,
     });

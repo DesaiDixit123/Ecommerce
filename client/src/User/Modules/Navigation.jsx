@@ -22,7 +22,7 @@ import { useContext, useEffect, useState } from "react";
 import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 import { UserProvider } from "../context/UserProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { searchProducts, userLogoutFecthApi } from "../../redux/user/UserThunk";
+import { getCartByUserId, searchProducts, userLogoutFecthApi } from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import PersonAdd from "@mui/icons-material/PersonAdd";
@@ -186,9 +186,11 @@ export const SecondtopNav = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { categoriesData, userData } = useSelector(
+  const { categoriesData, userData,userCart } = useSelector(
     (state) => state.UserSliceProvider
   );
+
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
@@ -219,6 +221,8 @@ export const SecondtopNav = () => {
     setSearchQuery(e.target.value);
   };
 
+
+
   const handleSearch = () => {
     if (searchQuery) {
       dispatch(searchProducts(searchQuery));
@@ -228,9 +232,9 @@ export const SecondtopNav = () => {
     console.log(searchQuery);
   };
 
-  const wishlistLength = useSelector(
-    (state) => state.UserSliceProvider.userData?.wishlist.length || 0
-  );
+  const wishlistLength = userData?.wishlist?.length || 0;
+  const userCartLength = userCart?.items?.length || 0;
+
   return (
     <>
       <div className="flex justify-between h-[70px] items-center px-[110px] max-[1050px]:px-[50px] max-[960px]:px-[30px] max-[930px]:border-b-2 border-gray-500 relative ">
@@ -302,7 +306,7 @@ export const SecondtopNav = () => {
            <NavLink to={"/carts"}>
              <IoCartOutline className="font-bold text-[28px]" />
              <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 -right-3">
-               <p>0</p>
+               <p> {userCartLength} </p>
              </div>  
            </NavLink>
            <div className="hidden max-[930px]:block cursor-pointer">

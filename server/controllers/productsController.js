@@ -319,3 +319,45 @@ export const getProductById = async (req, res) => {
     });
   }
 };
+
+
+export const getRelatedProducts = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    if (!productId) {
+      return res.status(400).send({
+        process: false,
+        message: "Product ID is required.",
+      });
+    }
+
+    // Find the current product
+    const product = await $ProductModel.findById(productId);
+
+    if (!product) {
+      return res.status(404).send({
+        process: false,
+        message: "Product not found.",
+      });
+    }
+
+
+    const relatedProducts = await $ProductModel.find({
+      category: product.category,
+      fields: product.fields,
+      _id: { $ne: productId }, // Exclude the current product from the results
+    }).limit(5); // Limit the number of related products
+
+    res.status(200).send({
+      process: true,
+      message: "Related products fetched successfully.",
+      data: relatedProducts,
+    });
+  } catch (error) {
+    res.status(500).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};

@@ -5,6 +5,7 @@ import {
     getAllProducts,
     getProductById,
     getProductsByCategory,
+    getRelatedProducts,
     products,
   
     searchProducts,
@@ -25,3 +26,4 @@ productRouter.put("/products/:id", uploadImages, updateProduct);
 productRouter.get("/products/filterProductsByRange", filterProductsByRange);
 productRouter.get("/products/search", searchProducts);
 productRouter.get("/products/:id", getProductById);
+productRouter.get("/related/:productId", getRelatedProducts);
