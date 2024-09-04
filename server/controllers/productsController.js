@@ -213,36 +213,31 @@ export const filterProductsByRange = async (req, res) => {
 
     const product = await $ProductModel.find({
       discount: {
-            $gte: min,
+        $gte: min,
         $lte: max,
-    
       },
     });
-
 
     if (product.length === 0) {
       res.status(200).send({
         process: true,
         message: `No products found within the price range ₹${min} - ₹${max}.`,
-        data:[]
-
-      })
+        data: [],
+      });
     }
 
     res.status(200).send({
       process: true,
       message: `Products within the price range ₹${min} - ₹${max}.`,
-      data:product
-  
-})
+      data: product,
+    });
   } catch (error) {
     res.status(201).send({
       process: true,
-      message:error.message
-    })
+      message: error.message,
+    });
   }
 };
-
 
 export const searchProducts = async (req, res) => {
   try {
@@ -251,7 +246,7 @@ export const searchProducts = async (req, res) => {
     if (!query) {
       return res.status(201).send({
         process: false,
-        message: "Please provide a search query"
+        message: "Please provide a search query",
       });
     }
 
@@ -260,32 +255,29 @@ export const searchProducts = async (req, res) => {
         { title: { $regex: `^${query}`, $options: "i" } },
         { category: { $regex: `^${query}`, $options: "i" } },
         { fields: { $regex: `^${query}`, $options: "i" } },
-      ]
+      ],
     });
 
     if (products.length === 0) {
       return res.status(200).send({
         process: true,
         message: `No products found for query: ${query}`,
-        data: []
+        data: [],
       });
     }
 
     return res.status(200).send({
       process: true,
       message: `Products found for query: ${query}`,
-      data: products
+      data: products,
     });
-
   } catch (error) {
     return res.status(201).send({
       process: false,
-      message: error.message
+      message: error.message,
     });
   }
-}
-
-
+};
 
 export const getProductById = async (req, res) => {
   try {
@@ -320,44 +312,73 @@ export const getProductById = async (req, res) => {
   }
 };
 
-
 export const getRelatedProducts = async (req, res) => {
   try {
     const { productId } = req.params;
+    if (!productId) throw new Error("Product Id is requried.");
 
-    if (!productId) {
-      return res.status(400).send({
-        process: false,
-        message: "Product ID is required.",
-      });
-    }
-
-    // Find the current product
     const product = await $ProductModel.findById(productId);
 
-    if (!product) {
-      return res.status(404).send({
-        process: false,
-        message: "Product not found.",
-      });
-    }
+    console.log(product)
+    if (!product) throw new Error("Product not found.");
 
+    const reletedProducts = await $ProductModel
+      .find({
+        fields: { $in: product.fields },
+        _id: { $ne: productId },
+      })
+      .limit(5);
 
-    const relatedProducts = await $ProductModel.find({
-      category: product.category,
-      fields: product.fields,
-      _id: { $ne: productId }, // Exclude the current product from the results
-    }).limit(5); // Limit the number of related products
-
+      console.log(reletedProducts)
     res.status(200).send({
       process: true,
       message: "Related products fetched successfully.",
-      data: relatedProducts,
+      data: reletedProducts,
     });
   } catch (error) {
-    res.status(500).send({
+    res.status(400).send({
       process: false,
       message: error.message,
     });
   }
 };
+
+// export const getRelatedProducts = async (req, res) => {
+//   try {
+//     const { productId } = req.params;
+
+//     if (!productId) {
+//       return res.status(400).send({
+//         process: false,
+//         message: "Product ID is required.",
+//       });
+//     }
+
+//     // Find the current product
+//     const product = await $ProductModel.findById(productId);
+
+//     if (!product) {
+//       return res.status(404).send({
+//         process: false,
+//         message: "Product not found.",
+//       });
+//     }
+
+//     const relatedProducts = await $ProductModel.find({
+//       category: product.category,
+//       fields: product.fields,
+//       _id: { $ne: productId }, // Exclude the current product from the results
+//     }).limit(5); // Limit the number of related products
+
+//     res.status(200).send({
+//       process: true,
+//       message: "Related products fetched successfully.",
+//       data: relatedProducts,
+//     });
+//   } catch (error) {
+//     res.status(500).send({
+//       process: false,
+//       message: error.message,
+//     });
+//   }
+// };

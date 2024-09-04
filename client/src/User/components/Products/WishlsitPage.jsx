@@ -4,6 +4,8 @@ import { MdDelete } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import {
+  getCartByUserId,
+  userAddToCart,
   userRemoveToWishlist,
   UserValidation,
 } from "../../../redux/user/UserThunk";
@@ -50,6 +52,32 @@ export default function WishlistPage() {
     );
 
     dispatch(UserValidation());
+  };
+
+  const handleAddToCart = async (productId) => {
+    if (!userData) {
+      toast.success("Please log in to add items to your cart.");
+      return;
+    }
+  
+  
+  
+    await dispatch( 
+      userAddToCart({
+        productId,
+        userId: userData._id,
+        toast
+       
+      })
+    );
+
+  
+   
+    dispatch(getCartByUserId(userData._id));
+  
+await dispatch(UserValidation());
+  
+ 
   };
 
   return (
@@ -115,7 +143,7 @@ export default function WishlistPage() {
                     </td>
                     <td>{product.qnt}</td>
                     <td className="w-[200px]">
-                      <button className="secondary1 flex gap-[10px] text-[18px] bg-green-400 w-[100%] p-[10px] rounded-[10px] hover:bg-green-500">
+                      <button className="secondary1 flex gap-[10px] text-[18px] bg-green-400 w-[100%] p-[10px] rounded-[10px] hover:bg-green-500"   onClick={() => handleAddToCart(product._id)}>
                         <IoCartOutline className="flex items-center text-[27px]" />
                         <span>Add To Cart</span>
                       </button>

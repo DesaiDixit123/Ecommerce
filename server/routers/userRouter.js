@@ -21,9 +21,14 @@ import {
   clearCart,
   removeProductFromCart,
 } from "../controllers/userController.js";
+// import { getAllCountries, getCitiesByState, getStatesByCountry } from "../controllers/OrderController.js";
 
 export const userRouter = Router();
 
+
+// userRouter.get("/countries", getAllCountries);
+// userRouter.get("/states/:countryCode", getStatesByCountry);
+// userRouter.get("/cities/:countryCode/:stateCode", getCitiesByState);
 userRouter.route("/").get(veriFicationUser, verifyUser);
 userRouter.route("/users").get(getUser);
 userRouter.route("/countrieswithphonecodes").get(getAllCountryWithPhoneCodes);

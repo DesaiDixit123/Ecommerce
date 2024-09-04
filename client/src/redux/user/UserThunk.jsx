@@ -487,17 +487,15 @@ export const userRemoveToWishlist = createAsyncThunk(
   }
 );
 
-
 export const userAddToCart = createAsyncThunk(
   "userAddToCart",
   async ({ productId, userId, quantity, subTotal, toast }) => {
     try {
-   
       const response = await axios.post("/api/addToCart", {
         productId,
         userId,
-        quantity,    
-        subTotal,    
+        quantity,
+        subTotal,
       });
 
       console.log("Response from addToCart:", response.data);
@@ -512,7 +510,6 @@ export const userAddToCart = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
-     
       toast.error(error.response?.data?.message || error.message, {
         position: "top-right",
         style: { marginTop: "50px", marginRight: "10px" },
@@ -521,7 +518,6 @@ export const userAddToCart = createAsyncThunk(
     }
   }
 );
-
 
 export const getCartByUserId = createAsyncThunk(
   "getCartByuserId",
@@ -571,6 +567,119 @@ export const removeProductFromCart = createAsyncThunk(
       return response.data;
     } catch (error) {
       return error.message;
+    }
+  }
+);
+
+export const fetchRelatedProducts = createAsyncThunk(
+  "relatedProducts/fetch",
+  async (productId) => {
+    try {
+      const response = await axios.get(`/api/related/${productId}`);
+      console.log("related products:", response.data.data);
+      return response.data.data;
+    } catch (error) {
+      console.error("API Error:", error.message); // Better error logging
+      throw new Error(error.message);
+    }
+  }
+);
+
+export const fetchAllCountries = createAsyncThunk("AllCountries", async () => {
+  try {
+    const response = await axios.get("/api/countries");
+    return response.data.data;
+  } catch (error) {
+    return error.message;
+  }
+});
+export const fetchAllStatesByCountry = createAsyncThunk(
+  "fetchAllStatesByCountry",
+  async (countryCode) => {
+    try {
+      const response = await axios.get(`/api/states/${countryCode}`);
+      return response.data.data;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+export const fetchAllCitiesByStateAndCountry = createAsyncThunk(
+  "fetchAllCitiesByStateAndCountry",
+  async ({ stateCode, countryCode }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/api/cities/${stateCode}/${countryCode}`
+      );
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+// export const fetchPlaceOrderApi = createAsyncThunk(
+//   "fetchPlaceOrderApi",
+//   async ({orderData,userData,dispatch,toast,navigate,setShowPopup}) => {
+//     try {
+//       const response = await axios.post("/api/placeOrder",orderData);
+//       console.log(response.data);
+
+//       const { success, message } = response.data;
+//       if (success) {
+
+        
+//         await dispatch(clearCart(userData._id));
+//         dispatch(getCartByUserId(userData._id))
+//         // toast.success("Order Placed successfully!");
+//         setShowPopup(true)
+        
+//         setTimeout(() => {
+
+//           // setShowPopup(false)
+//           navigate("/");
+//         }, 3000);
+//       } else {
+//         toast.success(message)
+//       }
+//       return response.data;
+//     } catch (error) {
+//       toast.error(error.message)
+//     }
+//   }
+// );
+
+
+
+
+export const fetchPlaceOrderApi = createAsyncThunk(
+  "fetchPlaceOrderApi",
+  async ({ orderData, userData, dispatch, toast, navigate, setShowPopup }) => {
+    try {
+      const response = await axios.post("/api/placeOrder", orderData);
+      console.log(response.data);
+
+      const { process, message,data } = response.data;
+      if (process) {
+        toast.success(message);
+        await dispatch(clearCart(userData._id));
+        dispatch(getCartByUserId(userData._id));
+        
+        setShowPopup(true);
+
+        setTimeout(() => {
+          setShowPopup(false);
+          navigate("/");
+        }, 3000);
+      } else {
+        toast.error(message || "An error occurred while placing the order.");
+      }
+      return data;
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message;
+      toast.error(errorMessage);
+      
     }
   }
 );

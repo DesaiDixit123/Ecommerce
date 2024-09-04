@@ -24,7 +24,7 @@ export default function UserContext({ children }) {
   useEffect(() => {
   dispatch(getCartByUserId(userData._id))
 },[dispatch])
-  console.log(userData);
+  // console.log(userData);
 
   return (
     <UserProvider.Provider value={userData}>{children}</UserProvider.Provider>

@@ -42,6 +42,9 @@ export default {
                 },
                 text: {
                     400:"#088178"
+                },
+                shippingbg: {
+                    400:"#f4f4f4;"
                 }
 
             },

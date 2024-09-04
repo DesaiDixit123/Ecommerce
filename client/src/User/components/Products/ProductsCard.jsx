@@ -25,10 +25,10 @@ export default function ProductCard({ product }) {
     navigate(`/viewProduct/${product._id}`);
   };
 
-  const { userData,addCart } = useSelector((state) => state.UserSliceProvider);
+  const { userData } = useSelector((state) => state.UserSliceProvider);
 
 
-  console.log(addCart)
+  // console.log(addCart)
   // console.log(userData)
   const truncatedTitle =
     product.title.split(" ").length > 5

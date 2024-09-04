@@ -1,4 +1,3 @@
-
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Pagination } from "@mui/material";
 import { MdDelete } from "react-icons/md";
@@ -8,11 +7,10 @@ import { toast } from "react-toastify";
 import {
   clearCart,
   getCartByUserId,
-
   removeProductFromCart,
-
   updateCart,
 } from "../../../redux/user/UserThunk";
+import { NavLink } from "react-router-dom";
 
 export default function CartsPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,8 +48,8 @@ export default function CartsPage() {
   };
 
   const totalAmount = calculateTotalAmount();
-  const shippingCost = userCart?.shippingCost || 0;
-  const grandTotal = totalAmount + shippingCost;
+  // const shippingCost = userCart?.shippingCost || 0;
+  const grandTotal = totalAmount;
 
   const formatPriceWithCommas = (price) => {
     if (price == null || isNaN(price)) return "0"; // Handle null, undefined, or non-numeric values
@@ -100,28 +98,26 @@ export default function CartsPage() {
   };
 
   const handleRemoveProductFromCart = async (productId) => {
-   
-    
-    const product = allProducts.find((p) => p._id.toString() === productId.toString());
-  
+    const product = allProducts.find(
+      (p) => p._id.toString() === productId.toString()
+    );
 
-  
     if (product) {
       try {
-     
         await dispatch(
-          removeProductFromCart({ userId: userData._id, productId: product._id })
+          removeProductFromCart({
+            userId: userData._id,
+            productId: product._id,
+          })
         );
-  
+
         dispatch(getCartByUserId(userData._id));
       } catch (error) {
         console.error("Error removing product from cart:", error);
       }
-    } 
+    }
   };
-  
-  
-  
+
   return (
     <div className="right-content w-100">
       <div className="card border-0 p-3 mt-4">
@@ -150,7 +146,7 @@ export default function CartsPage() {
                     ) || {};
                   return (
                     <tr key={item._id}>
-                      <td>#{indexOfFirstProduct +index + 1}</td>
+                      <td>#{indexOfFirstProduct + index + 1}</td>
                       <td>
                         <div className="d-flex align-items-center productBox gap-[20px]">
                           <div className="imageWrapper">
@@ -219,12 +215,14 @@ export default function CartsPage() {
                       </td>
                       <td>
                         <Button
-                        color="error"
+                          color="error"
                           className="error text-[22px]"
-                          onClick={() => handleRemoveProductFromCart(item.productId)}
-                      >
-                        <MdDelete />
-                      </Button>
+                          onClick={() =>
+                            handleRemoveProductFromCart(item.productId)
+                          }
+                        >
+                          <MdDelete />
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -252,14 +250,16 @@ export default function CartsPage() {
                   </tr>
                   <tr>
                     <td colSpan="6" className="text-right">
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        startIcon={<IoCartOutline />}
-                        style={{ marginLeft: "10px" }}
-                      >
-                        Continue Shopping
-                      </Button>
+                      <NavLink to={"/products"}>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          startIcon={<IoCartOutline />}
+                          style={{ marginLeft: "10px" }}
+                        >
+                          Continue Shopping
+                        </Button>
+                      </NavLink>
                     </td>
                   </tr>
                 </>
@@ -284,49 +284,41 @@ export default function CartsPage() {
           )}
         </div>
       </div>
-
-      <div className="border-2 border-gray-300 w-[40%] h-auto p-[30px] relative float-right mt-4 mb-[50px]">
-        <div className="">
-          <div className="table_responsive mt-3">
-            <table className="table table-bordered v-aligns">
-              <thead className="thead-dark">
-                <tr className="text-center">
-                  <th colSpan={2}>Cart Totals</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b text-center">
-                  <td className="py-2 ">Cart Subtotal</td>
-                  <td className="text-center font-semibold text-green-600">
-                    ₹{formatPriceWithCommas(totalAmount || 0)}
-                  </td>
-                </tr>
-                <tr className="border-b text-center">
-                  <td className="py-2">Shipping</td>
-                  <td className="text-center">{shippingCost || 0}</td>
-                </tr>
-                <tr className="border-b text-center">
-                  <td className="py-2">Total</td>
-                  <td className="text-center text-green-600 font-semibold">
-                    ₹{formatPriceWithCommas(grandTotal || 0)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <Button
-              color="success"
-              variant="contained"
-              className="w-full mt-2"
-              onClick={() =>
-                toast.info("Checkout functionality is not yet implemented")
-              }
-            >
-              Proceed to Checkout
-            </Button>
+      {items.length > 0 && (
+        <div className="border-2 border-gray-300 w-[40%] h-auto p-[30px] relative float-right mt-4 mb-[50px]">
+          <div className="">
+            <div className="table_responsive mt-3">
+              <table className="table table-bordered v-aligns">
+                <thead className="thead-dark">
+                  <tr className="text-center">
+                    <th colSpan={2}>Cart Totals</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b text-center">
+                    <td className="py-2">Total</td>
+                    <td className="text-center text-green-600 font-semibold">
+                      ₹{formatPriceWithCommas(grandTotal || 0)}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <NavLink
+                to={"/processToCheckout"}
+                state={{ grandTotal, totalAmount, currentProducts }}
+              >
+                <Button
+                  color="success"
+                  variant="contained"
+                  className="w-full mt-2"
+                >
+                  Proceed to Checkout
+                </Button>
+              </NavLink>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
-

@@ -3,6 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import {
   categoryByFieldsFetchApi,
+  fetchAllCitiesByStateAndCountry,
+  fetchAllCountries,
+  fetchAllStatesByCountry,
+
+  fetchPlaceOrderApi,
+
+  fetchRelatedProducts,
   filterProductsByCategory,
   filterProductsByRange,
   ForgetPasswords,
@@ -39,14 +46,17 @@ const initialState = {
   items: [],
   totalAmount: 0,
   shippingCost: 0,
+  relatedProducts: [],
+  country: [],
+  states: [],
+  allCity: [],
+  order: null,
 };
 
 const UserSlice = createSlice({
   name: "UserSlice",
   initialState,
-  reducers: {
-    
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
 
@@ -190,14 +200,13 @@ const UserSlice = createSlice({
         state.loading = false;
         state.action = action.payload;
       })
-    
+
       .addCase(userAddToCart.pending, (state) => {
         state.loading = true;
       })
       .addCase(userAddToCart.fulfilled, (state, action) => {
-   
-        console.log(action.payload)
-        state.addCart = action.payload
+        console.log(action.payload);
+        state.addCart = action.payload;
         state.loading = false;
       })
       .addCase(userAddToCart.rejected, (state, action) => {
@@ -208,22 +217,21 @@ const UserSlice = createSlice({
         state.loading = true;
       })
       .addCase(getCartByUserId.fulfilled, (state, action) => {
-        console.log('Fetched cart data:', action.payload); 
+        console.log("Fetched cart data:", action.payload);
         state.loading = false;
         state.userCart = action.payload;
       })
-      
+
       .addCase(getCartByUserId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-    
-    
+
       .addCase(updateCart.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(updateCart.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         // Update state with the new cart data
         state.items = action.payload.items;
         state.totalAmount = action.payload.totalAmount;
@@ -231,9 +239,81 @@ const UserSlice = createSlice({
         state.error = null;
       })
       .addCase(updateCart.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(fetchRelatedProducts.pending, (state) => {
+        state.loading = true;
+      });
+    builder
+      .addCase(fetchRelatedProducts.fulfilled, (state, action) => {
+        state.relatedProducts = action.payload;
+      })
+      .addCase(fetchRelatedProducts.rejected, (state, action) => {
+        console.error("Thunk Error:", action.error.message); // Better error logging
+      })
+
+      .addCase(fetchAllCountries.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(fetchAllCountries.fulfilled, (state, action) => {
+        state.country = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchAllCountries.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchAllStatesByCountry.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllStatesByCountry.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.states = action.payload;
+      })
+      .addCase(fetchAllStatesByCountry.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchAllCitiesByStateAndCountry.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(fetchAllCitiesByStateAndCountry.fulfilled, (state, action) => {
+        console.log("Action Payload (allCity):", action.payload); // Undefined batavse jo API call fail thai
+        state.loading = false;
+        state.allCity = action.payload; // Undefined store thai jase
+      })
+
+      .addCase(fetchAllCitiesByStateAndCountry.rejected, (state, action) => {
+        console.log("API call failed:", action.payload);
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchPlaceOrderApi.pending, (state) => {
+        state.loading = 'loading';
+      })
+      .addCase(fetchPlaceOrderApi.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        state.order = action.payload;
+      })
+      .addCase(fetchPlaceOrderApi.rejected, (state, action) => {
+        state.loading = 'failed';
         state.error = action.payload;
       });
+    
+    //   .addCase(fetchPlaceOrderApi.pending, (state) => {
+    //   state.loading=true
+    //   })
+    
+    //   .addCase(fetchPlaceOrderApi.rejected, (state, action) => {
+    //     state.loading = false
+    //     state.error=action.payload
+    // })
+    
   },
 });
 

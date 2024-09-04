@@ -9,11 +9,11 @@ import {
   getCartByUserId,
   UserValidation,
 } from "../../../redux/user/UserThunk";
+import RelatedProducts from "./ReletedProducts";
 export const Herosec = () => {
   const { id } = useParams();
   const [items, setItems] = useState(1);
   // const [cart, setCart] = useState(0);
-
   const shadowRef = useRef(null);
   const dispatch = useDispatch();
   const [product, setProduct] = useState(null);
@@ -26,7 +26,7 @@ export const Herosec = () => {
 
   useEffect(() => {
     const foundProduct = allProducts.find((product) => product._id === id);
-
+        
     setProduct(foundProduct);
     // console.log(foundProduct);
   }, [id, allProducts]);
@@ -183,6 +183,12 @@ await dispatch(UserValidation());
             )}
           </div>
         </div>
+      </div>
+
+
+    
+      <div className="mt-[50px]">
+        {product && <RelatedProducts productId={product._id} />}
       </div>
     </div>
   );
@@ -379,6 +385,7 @@ export const Sneakers = ({ imageTrack }) => {
   }
 
   return (
+    <>
     <div className="sneakers-div">
       <div className="sneakers-col sneakers-col1">
         <svg
@@ -495,5 +502,9 @@ export const Sneakers = ({ imageTrack }) => {
         )}
       </div>
     </div>
+
+
+   
+    </>
   );
 };

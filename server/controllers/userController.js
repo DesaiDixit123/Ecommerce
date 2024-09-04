@@ -571,7 +571,7 @@ export const addToCart = async (req, res) => {
         userId,
         items: [],
         totalAmount: 0,
-        shippingCost: 0,
+      
         discount: 0,
       });
     }
@@ -580,6 +580,8 @@ export const addToCart = async (req, res) => {
       (item) => item.productId.toString() === productId
     );
 
+    if (productIndex !== -1)
+      throw new Error("Product already added to cart.")
     const product = await $ProductModel.findById(productId).select("discount");
     if (!product) throw new Error("Product not found.");
 
@@ -602,9 +604,9 @@ export const addToCart = async (req, res) => {
       const itemSubtotal = Number(item.subTotal);
       return isNaN(itemSubtotal) ? acc : acc + itemSubtotal;
     }, 0);
-    userCart.shippingCost = subTotal >= 500 ? 50 : 0;
 
-    userCart.totalAmount = subTotal + userCart.shippingCost - userCart.discount;
+
+    userCart.totalAmount = subTotal  - userCart.discount;
 
     userCart.totalAmount = isNaN(userCart.totalAmount)
       ? 0
@@ -652,11 +654,6 @@ export const getCartByUserId = async (req, res) => {
   }
 };
 
-const calculateShippingCost = (subtotal) => {
-  // Example: shipping cost is 5% of the subtotal
-  return subtotal * 0.05;
-};
-
 export const updateCart = async (req, res) => {
   try {
     const { userId, items } = req.body;
@@ -690,13 +687,13 @@ export const updateCart = async (req, res) => {
       console.log("Item subtotal:", itemSubTotal);
     }
 
-    const shippingCost = calculateShippingCost(subtotal);
-    const grandTotal = subtotal + shippingCost;
+  
+    const grandTotal = subtotal ;
 
     // Update cart details
     cart.items = updatedItems;
     cart.subtotal = subtotal;
-    cart.shippingCost = shippingCost;
+    // cart.shippingCost = shippingCost;
     cart.totalAmount = grandTotal;
 
     // Debugging log
@@ -725,7 +722,7 @@ export const clearCart = async (req, res) => {
 
     cart.items = [];
     cart.totalAmount = 0;
-    cart.shippingCost = 0;
+    // cart.shippingCost = 0;
     cart.subtotal = 0;
 
     await cart.save();
@@ -755,7 +752,7 @@ export const removeProductFromCart = async (req, res) => {
     
     // Recalculate totals after removal
     cart.totalAmount = cart.items.reduce((acc, item) => acc + item.subTotal, 0);
-    cart.shippingCost = cart.items.length > 0 ? cart.shippingCost : 0;
+
     cart.subtotal = cart.totalAmount;
 
     await cart.save();

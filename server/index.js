@@ -8,6 +8,7 @@ import { productRouter } from "./routers/products.Router.js";
 import { adminRouter } from "./routers/AdminRouter/adminRouter.js";
 import { CategoryRouter } from "./routers/CategoryRouter.js";
 import bodyParser from 'body-parser';
+import { OrderRouetr } from "./routers/orderRouter.js";
 dotenv.config()
 const app = express()
 
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use("/api", userRouter)
 app.use("/api", productRouter)
+app.use("/api", OrderRouetr)
 app.use("/api", adminRouter)
 app.use("/api", CategoryRouter)
 

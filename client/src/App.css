@@ -220,6 +220,54 @@ body {
 .mySlides.active {
   display: block;
 }
+.shippinCheckout{
+  background-color: #f4f4f4;;
+  border: 1px solid gray;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.shippinCheckoutChangeColor{
+  border-radius: 10px;
+  border: 1px solid orange;
+  background-color: #f4f4f4;
+ 
+}
+.paymentCard{
+  background-color: #f4f4f4;;
+  border: 1px solid gray;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.paymentCardChangeColor{
+  border-radius: 10px;
+  border: 1px solid orange;
+  background-color: #f4f4f4;
+  cursor: pointer;
+
+}
+
+.popupBoxStyle {
+  position: fixed;
+  /* background-color: #39B4AC; */
+  left: 0;
+  top: 0; /* Added top: 0 to properly fix the position */
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popupContentStyle {  
+  background-color: #D8F4E2; /* Changed to white for better readability */
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
 .admin_nav .admin_nav_link {
   display: block;

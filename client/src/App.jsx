@@ -34,6 +34,8 @@ import SearchResults from "./User/components/Products/SearchResult";
 import WishlsitPage from "./User/components/Products/WishlsitPage";
 import CartsPage from "./User/components/Products/CartsPage";
 import ProcessToCheckoutPage from "./User/components/Products/ProcessToCheckoutPage";
+import RelatedProducts from "./User/components/Products/ReletedProducts";
+import OrderConfirmPopupBox from "./User/components/Products/OrderConfirmPopupBox";
 // import Herosec from "./User/components/Herosec";
 
 const Router = createBrowserRouter([
@@ -62,6 +64,8 @@ const Router = createBrowserRouter([
           { path: "/wishlsit", element: <WishlsitPage /> },
           { path: "/carts", element: <CartsPage /> },
           { path: "/processToCheckout", element: <ProcessToCheckoutPage /> },
+          { path: "/related/:productId", element: <RelatedProducts /> },
+          { path: "/oderConfirmMsg", element: <OrderConfirmPopupBox /> },
         ],
       },
       {
