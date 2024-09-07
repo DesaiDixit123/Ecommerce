@@ -7,7 +7,7 @@ import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosTimer } from "react-icons/io";
 import { HiDotsVertical } from "react-icons/hi";
 import Button from "@mui/material/Button";
@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   deleteProduct,
+  getAllOrdersShowByAdmin,
   getAllProductsFecthApi,
 } from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
@@ -61,11 +62,15 @@ export default function AdminDashbord() {
     setAnchorEl(null);
   };
 
-  const { allProducts } = useSelector((state) => state.UserSliceProvider);
+  const { allProducts,AllOrders } = useSelector((state) => state.UserSliceProvider);
 
   const { allUsers } = useSelector((state) => state.AdminSliceProvider);
 
-  console.log("All Users:", allUsers);
+  console.log("AllOrders from Redux Store:", AllOrders.length);
+
+  useEffect(() => {
+    dispatch(getAllOrdersShowByAdmin())
+  },[])
 
   const handeleProductClick = (id) => {
     navigate(`/admin/productsdetails/products/${id}`);
@@ -130,7 +135,8 @@ export default function AdminDashbord() {
                 icon={<FaShoppingCart />}
                 grow={<TrendingDownIcon />}
                 name={"Total Orders"}
-                total={23}
+                total={AllOrders.length}
+                onClick={() => navigate("/admin/allOrders")}
               />
               <DashboardBox
                 color={["#2c78e5", "#60aff5"]}

@@ -37,6 +37,7 @@ import ProcessToCheckoutPage from "./User/components/Products/ProcessToCheckoutP
 import RelatedProducts from "./User/components/Products/ReletedProducts";
 import OrderConfirmPopupBox from "./User/components/Products/OrderConfirmPopupBox";
 import UserOrders from "./User/components/orders/UserOrders";
+import AdminAllOrders from "./Admin/components/products/AdminAllOrders";
 // import Herosec from "./User/components/Herosec";
 
 const Router = createBrowserRouter([
@@ -85,6 +86,7 @@ const Router = createBrowserRouter([
           {path:"/admin/productManage",element:<AdminProductManage/>},
           {path:"/admin/allUsers",element:<AdminAllUsers/>},
           {path:"/admin/products/update/:id",element:<AdminProductsUpdateds/>},
+          {path:"/admin/allOrders",element:<AdminAllOrders/>},
         ],
       },
     ],

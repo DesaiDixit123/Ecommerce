@@ -660,7 +660,8 @@ export const fetchPlaceOrderApi = createAsyncThunk(
       if (process) {
         toast.success(message);
         await dispatch(clearCart(userData._id));
-        dispatch(getCartByUserId(userData._id));
+        await dispatch(getCartByUserId(userData._id));
+        dispatch(getAllOrdersShowByAdmin())
 
         setShowPopup(true);
 
@@ -709,26 +710,11 @@ export const getAllOrdersByUserId = createAsyncThunk(
   }
 );
 
-
-// export const userOrderCancellation = createAsyncThunk(
-//   "userorderCancellation",
-//   async ({userId,orderId,orderNumber,comment,reason}) => {
-//     try {
-//       const response=await axios.patch(`/api/order/cancel/${userId}/${orderId}/${orderNumber}`)
-
-//       return response.data
-//     } catch (error) {
-//       console.log(error.message)
-//     }
-//   }
-// )
-
-
 export const userOrderCancellation = createAsyncThunk(
   "userorderCancellation",
   async ({userId, orderId, orderNumber, reason, comment}, thunkAPI) => {
     try {
-      const response = await axios.patch(`/order/cancel/${userId}/${orderId}/${orderNumber}`, {
+      const response = await axios.patch(`/api/order/cancel/${userId}/${orderId}/${orderNumber}`, {
         reason,
         comment
       });
@@ -739,3 +725,17 @@ export const userOrderCancellation = createAsyncThunk(
     }
   }
 );
+
+
+export const getAllOrdersShowByAdmin = createAsyncThunk(
+  "getAllOrdersShowByAdmin",
+  async () => {
+    try {
+      const response = await axios.get("/api/orders")
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      return error.message
+    }
+  }
+)

@@ -17,6 +17,7 @@ import {
   // getAllCategories,
   getAllCountriesWithPhoneCodes,
   getAllOrdersByUserId,
+  getAllOrdersShowByAdmin,
   getAllProductsFecthApi,
   getCartByUserId,
   LoginUser,
@@ -52,7 +53,8 @@ const initialState = {
   states: [],
   allCity: [],
   order: null,
-  UserOrders:[]
+  UserOrders: [],
+  AllOrders:[]
 };
 
 const UserSlice = createSlice({
@@ -320,14 +322,20 @@ const UserSlice = createSlice({
         state.loading = "failled",
           state.UserOrders=action.payload
       })
-    //   .addCase(fetchPlaceOrderApi.pending, (state) => {
-    //   state.loading=true
-    //   })
+      .addCase(getAllOrdersShowByAdmin.pending, (state) => {
+        state.loading = true
+      })
     
-    //   .addCase(fetchPlaceOrderApi.rejected, (state, action) => {
-    //     state.loading = false
-    //     state.error=action.payload
-    // })
+      .addCase(getAllOrdersShowByAdmin.fulfilled, (state, action) => {
+        console.log(action.payload)
+        state.loading = false,
+          state.AllOrders = action.payload
+      })
+      .addCase(getAllOrdersShowByAdmin.rejected, (state, action) => {
+        state.loading = "failled",
+          state.AllOrders=action.payload
+      })
+  
     
   },
 });
