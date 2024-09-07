@@ -122,57 +122,90 @@ export const placeOrder = async (req, res) => {
       shippingPrice,
       totalPrice,
       paymentResult = {},
-      orderNumber
     } = req.body;
 
-    if (!orderItems || orderItems.length === 0)
-      throw new Error("No order items provided.");
+    if (!orderItems || orderItems.length === 0) {
+      return res.status(400).send({
+        process: false,
+        message: "No order items provided.",
+      });
+    }
 
-    const email = isEmail(shippingAddress.email);
-    if (!email) throw new Error("Invalid email format.");
+    if (!isEmail(shippingAddress.email)) {
+      return res.status(400).send({
+        process: false,
+        message: "Invalid email format.",
+      });
+    }
 
-    if (!shippingAddress || !shippingAddress.mobileNo)
-      throw new Error("Mobile number is requried in shipping address.");
+    if (!shippingAddress || !shippingAddress.mobileNo) {
+      return res.status(400).send({
+        process: false,
+        message: "Mobile number is required in shipping address.",
+      });
+    }
 
-    if (!/^\d{10}$/.test(shippingAddress.mobileNo))
-      throw new Error("Invalid mobile number. It should be 10 digit.");
+    if (!/^\d{10}$/.test(shippingAddress.mobileNo)) {
+      return res.status(400).send({
+        process: false,
+        message: "Invalid mobile number. It should be 10 digits.",
+      });
+    }
 
-    if (!/^\d{6}$/.test(shippingAddress.zipCode))
-      throw new Error("Invalid zipcode. It should be 6 digit.");
+    if (!/^\d{6}$/.test(shippingAddress.zipCode)) {
+      return res.status(400).send({
+        process: false,
+        message: "Invalid zipcode. It should be 6 digits.",
+      });
+    }
 
     const country = Country.getCountryByCode(shippingAddress.country);
-
-    if (!country) throw new Error("Invalid country selected.");
+    if (!country) {
+      return res.status(400).send({
+        process: false,
+        message: "Invalid country selected.",
+      });
+    }
 
     const state = State.getStateByCodeAndCountry(
       shippingAddress.state,
       shippingAddress.country
     );
+    if (!state) {
+      return res.status(400).send({
+        process: false,
+        message: "Invalid state selected.",
+      });
+    }
 
-    if (!state) throw new Error("Invalid state slected.");
     const cities = City.getCitiesOfState(
       shippingAddress.country,
       shippingAddress.state
     );
-
     const city = cities.find((c) => c.name === shippingAddress.city);
+    if (!city) {
+      return res.status(400).send({
+        process: false,
+        message: "Invalid city selected.",
+      });
+    }
 
-    if (!city) throw new Error("Invalid city selected.");
-
-  
-
-    if (typeof shippingPrice !== "number" || shippingPrice < 0)
-      throw new Error(
-        "Invalid shipping price. It should be a non-negative number."
-      );
-
+    if (typeof shippingPrice !== "number" || shippingPrice < 0) {
+      return res.status(400).send({
+        process: false,
+        message: "Invalid shipping price. It should be a non-negative number.",
+      });
+    }
 
     let isPaid = false;
     let paidAt = null;
 
     if (paymentMethod === "CreditCard/DebitCard") {
       if (!paymentResult || paymentResult.status !== "success") {
-        throw new Error("Payment failled or not completed.");
+        return res.status(400).send({
+          process: false,
+          message: "Payment failed or not completed.",
+        });
       }
       isPaid = true;
       paidAt = new Date(paymentResult.update_time);
@@ -183,8 +216,7 @@ export const placeOrder = async (req, res) => {
       paymentResult.email_address = shippingAddress.email;
     }
 
-
-    const OrderNumber=generateOrderNumber()
+    const OrderNumber = generateOrderNumber();
     const order = new Order({
       userId,
       orderItems,
@@ -195,7 +227,7 @@ export const placeOrder = async (req, res) => {
         city: city.name,
       },
       paymentMethod,
-      orderNumber:OrderNumber,
+      orderNumber: OrderNumber,
       paymentResult,
       taxPrice,
       shippingPrice,
@@ -206,10 +238,8 @@ export const placeOrder = async (req, res) => {
     });
 
     const createOrder = await order.save();
-
     await sendOrderConfirmationEmail(shippingAddress.email, createOrder);
 
-    console.log("Send maill success.");
     res.status(200).send({
       process: true,
       message: "Order placed successfully.",
@@ -219,9 +249,121 @@ export const placeOrder = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Error placing order:", error);
+    res.status(500).send({
+      process: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
+export const getAllOrdersByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const userOrder = await Order.find({ userId });
+
+    if (!userOrder) throw new Error("Order not found.");
+    res.status(200).send({
+      process: true,
+      message: "Orders fetch successfully.",
+      data: userOrder,
+    });
+  } catch (error) {
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+  }
+};
+const sendOrderCancellationEmail = async (userEmail, order) => {
+  try {
+    const mailOptions = {
+      from: process.env.Email_User,
+      to: userEmail,
+      subject: "Order Cancellation Confirmation",
+      text: `Dear ${order.shippingAddress.fname} ${order.shippingAddress.lname},
+
+We regret to inform you that your order with Order ID: ${order.orderNumber} has been cancelled.
+
+Cancellation Reason: ${order.cancellationReason}
+Cancellation Comment: ${order.cancellationComment}
+
+Order Items: ${order.orderItems
+        .map((item) => `${item.title} x ${item.quantity}`)
+        .join(", ")}
+Shipping Address: ${order.shippingAddress.addressLine1}, ${
+        order.shippingAddress.city
+      }, ${order.shippingAddress.state}, ${order.shippingAddress.city}, ${
+        order.shippingAddress.country
+      }, ${order.shippingAddress.zipCode}
+
+If you have any further questions or concerns, please feel free to reach out to us.
+
+Best Regards,
+Ecommerce Support Team`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Cancellation email sent successfully.");
+  } catch (error) {
+    console.log("Error sending cancellation email:", error);
+  }
+};
+
+export const orderCancel = async (req, res) => {
+  try {
+    const { userId, orderId, orderNumber } = req.params;
+    const { reason	, comment	 } = req.body;
+
+    const validReasons = [
+      "Found a better price elsewhere.",
+      "Change of mind.",
+      "Delivery took too long.",
+      "Order placed by mistake.",
+    ];
+
+    if (!validReasons.includes(reason))
+      throw new Error("Invalid cancellation reason provided.");
+
+    const order = await Order.findOne({ _id: orderId, userId, orderNumber });
+
+    if (!order)
+      throw new Error(
+        "Order not found or you do not have permission to cancel this order."
+      );
+
+    if (order.isCancelled) throw new Error("Order is already cancelled");
+
+    order.isCancelled = true;
+    order.cancelReason = reason;
+    order.cancelComment = comment;
+   
+    if (order.paymentResult) {
+      if (order.paymentResult.status === "success") {
+        order.paymentResult.status = "Cancelled";
+        order.paymentResult.cancelledAt = new Date();
+      } else if (order.paymentResult.status === "Pending") {
+        order.paymentResult.status = "Cancelled";
+        order.paymentResult.cancelledAt = new Date();
+      }
+    }
+
+    await order.save();
+    await sendOrderCancellationEmail(order.shippingAddress.email, order);
+    res.status(200).send({
+      process: true,
+      message: "Order cancelled successfully.",
+      data: order, // Return updated order with cancellation info
+    });
+  } catch (error) {
     res.status(400).send({
       process: false,
       message: error.message,
     });
   }
+};
+
+export const getAllOrders = async (req, res) => {
+  res.send(await Order.find({}));
 };

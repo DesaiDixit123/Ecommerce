@@ -23,7 +23,6 @@ const orderSchema = Schema(
         price: {
           type: Number,
         },
-
       },
     ],
     shippingAddress: {
@@ -46,6 +45,7 @@ const orderSchema = Schema(
       status: { type: String },
       update_time: { type: String },
       email_address: { type: String },
+      cancelledAt: { type: Date },
     },
     taxPrice: { type: Number },
     shippingPrice: { type: Number },
@@ -53,6 +53,9 @@ const orderSchema = Schema(
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
     isDelivered: { type: Boolean, default: false },
+    isCancelled: { type: Boolean, default: false },
+    cancelReason: { type: String,default:"" },
+    cancelComment: { type: String ,default:""},
     deliverdAt: { type: Date },
   },
   { timestamps: true }

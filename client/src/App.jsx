@@ -36,6 +36,7 @@ import CartsPage from "./User/components/Products/CartsPage";
 import ProcessToCheckoutPage from "./User/components/Products/ProcessToCheckoutPage";
 import RelatedProducts from "./User/components/Products/ReletedProducts";
 import OrderConfirmPopupBox from "./User/components/Products/OrderConfirmPopupBox";
+import UserOrders from "./User/components/orders/UserOrders";
 // import Herosec from "./User/components/Herosec";
 
 const Router = createBrowserRouter([
@@ -66,6 +67,7 @@ const Router = createBrowserRouter([
           { path: "/processToCheckout", element: <ProcessToCheckoutPage /> },
           { path: "/related/:productId", element: <RelatedProducts /> },
           { path: "/oderConfirmMsg", element: <OrderConfirmPopupBox /> },
+          { path: "/orders", element: <UserOrders /> },
         ],
       },
       {

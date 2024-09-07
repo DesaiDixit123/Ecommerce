@@ -9,6 +9,7 @@ import {
   FaTwitter,
   FaInstagramSquare,
   FaYoutube,
+  FaShoppingCart,
 } from "react-icons/fa";
 import {
   IoLocationSharp,
@@ -22,7 +23,11 @@ import { useContext, useEffect, useState } from "react";
 import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 import { UserProvider } from "../context/UserProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartByUserId, searchProducts, userLogoutFecthApi } from "../../redux/user/UserThunk";
+import {
+  getCartByUserId,
+  searchProducts,
+  userLogoutFecthApi,
+} from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import PersonAdd from "@mui/icons-material/PersonAdd";
@@ -61,11 +66,10 @@ const TopNav = () => {
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
 
-
-  const logoutButton = async() => {
+  const logoutButton = async () => {
     await dispatch(userLogoutFecthApi({ dispatch, toast, navigate }));
-    
-    navigate("/")
+
+    navigate("/");
   };
 
   const handeleOpenAccDrop = (event) => {
@@ -122,12 +126,21 @@ const TopNav = () => {
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
-               
                   <NavLink to={"/add/products"}>
-                    <ListItemIcon>
-                      <PersonAdd fontSize="small" />
-                    </ListItemIcon>
-                    Add Product
+                    <MenuItem onClick={handeleCloseMyDrop}>
+                      <ListItemIcon>
+                        <PersonAdd fontSize="small" />
+                      </ListItemIcon>
+                      Add Product
+                    </MenuItem>
+                  </NavLink>
+                  <NavLink to={"/orders"}>
+                    <MenuItem onClick={handeleCloseMyDrop}>
+                      <ListItemIcon>
+                      <FaShoppingCart />
+                      </ListItemIcon>
+                      Orders
+                    </MenuItem>
                   </NavLink>
                   <MenuItem onClick={handeleCloseMyDrop}>
                     <ListItemIcon>
@@ -135,6 +148,7 @@ const TopNav = () => {
                     </ListItemIcon>
                     Reset Password
                   </MenuItem>
+                 
 
                   <MenuItem onClick={logoutButton}>
                     <ListItemIcon>
@@ -186,11 +200,10 @@ export const SecondtopNav = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { categoriesData, userData,userCart } = useSelector(
+  const { categoriesData, userData, userCart } = useSelector(
     (state) => state.UserSliceProvider
   );
 
- 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
@@ -220,8 +233,6 @@ export const SecondtopNav = () => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
-
 
   const handleSearch = () => {
     if (searchQuery) {
@@ -296,29 +307,27 @@ export const SecondtopNav = () => {
         </div>
 
         {userData ? (
-           <div className="flex gap-[15px] text-[25px] font-bold relative pt-[20px]">
-           <NavLink to={"/wishlsit"}>
-             <FaRegHeart className="font-bold " />
-             <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 right-8">
-               <p>{wishlistLength}</p>
-             </div>
-           </NavLink>
-           <NavLink to={"/carts"}>
-             <IoCartOutline className="font-bold text-[28px]" />
-             <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 -right-3">
-               <p> {userCartLength} </p>
-             </div>  
-           </NavLink>
-           <div className="hidden max-[930px]:block cursor-pointer">
-             <GiHamburgerMenu
-               className="text-[28px]"
-               onClick={toggleResponsiveNavDrop}
-             />
-           </div>
-         </div>
-        ) : (
-            null
-       )}
+          <div className="flex gap-[15px] text-[25px] font-bold relative pt-[20px]">
+            <NavLink to={"/wishlsit"}>
+              <FaRegHeart className="font-bold " />
+              <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 right-8">
+                <p>{wishlistLength}</p>
+              </div>
+            </NavLink>
+            <NavLink to={"/carts"}>
+              <IoCartOutline className="font-bold text-[28px]" />
+              <div className="w-[25px] h-[25px] flex justify-center items-center rounded-[100%] text-white bg-topnavBorderBottom-400 font-bold absolute -top-1 -right-3">
+                <p> {userCartLength} </p>
+              </div>
+            </NavLink>
+            <div className="hidden max-[930px]:block cursor-pointer">
+              <GiHamburgerMenu
+                className="text-[28px]"
+                onClick={toggleResponsiveNavDrop}
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
 
       {responsiveNavDrop ? (

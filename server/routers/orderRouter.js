@@ -1,12 +1,14 @@
 import { Router } from "express";
-import { getAllCountries, getCitiesByState, getStatesByCountry, placeOrder } from "../controllers/OrderController.js";
-// import { placeOrder } from "../controllers/OrderController copy.js";
-// import { getStatesByCountry } from "../controllers/OrderController copy.js";
-// import { placeOrder } from "../controllers/OrderController.js";
+import { getAllCountries, getAllOrders, getAllOrdersByUserId, getCitiesByState, getStatesByCountry, orderCancel, placeOrder } from "../controllers/OrderController.js";
+import { veriFicationUser } from "../controllers/userController.js";
+
 
 export const OrderRouetr=Router()
 
-OrderRouetr.post("/placeOrder",placeOrder)
+OrderRouetr.post("/placeOrder",veriFicationUser,placeOrder)
 OrderRouetr.get("/countries",getAllCountries)
+OrderRouetr.get("/orders",getAllOrders)
 OrderRouetr.get("/states/:countryCode",getStatesByCountry)
 OrderRouetr.get("/cities/:stateCode/:countryCode",getCitiesByState)
+OrderRouetr.get("/order/:userId",veriFicationUser,getAllOrdersByUserId)
+OrderRouetr.patch("/order/cancel/:userId/:orderId/:orderNumber",veriFicationUser,orderCancel)

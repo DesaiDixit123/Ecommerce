@@ -629,12 +629,11 @@ export const fetchAllCitiesByStateAndCountry = createAsyncThunk(
 //       const { success, message } = response.data;
 //       if (success) {
 
-        
 //         await dispatch(clearCart(userData._id));
 //         dispatch(getCartByUserId(userData._id))
 //         // toast.success("Order Placed successfully!");
 //         setShowPopup(true)
-        
+
 //         setTimeout(() => {
 
 //           // setShowPopup(false)
@@ -650,9 +649,6 @@ export const fetchAllCitiesByStateAndCountry = createAsyncThunk(
 //   }
 // );
 
-
-
-
 export const fetchPlaceOrderApi = createAsyncThunk(
   "fetchPlaceOrderApi",
   async ({ orderData, userData, dispatch, toast, navigate, setShowPopup }) => {
@@ -660,12 +656,12 @@ export const fetchPlaceOrderApi = createAsyncThunk(
       const response = await axios.post("/api/placeOrder", orderData);
       console.log(response.data);
 
-      const { process, message,data } = response.data;
+      const { process, message, data } = response.data;
       if (process) {
         toast.success(message);
         await dispatch(clearCart(userData._id));
         dispatch(getCartByUserId(userData._id));
-        
+
         setShowPopup(true);
 
         setTimeout(() => {
@@ -679,7 +675,67 @@ export const fetchPlaceOrderApi = createAsyncThunk(
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message;
       toast.error(errorMessage);
-      
+    }
+  }
+);
+
+// export const getAllOrdersByUserId = createAsyncThunk(
+//   "getAllOrdersByUserId",
+//   async (userId) => {
+//     try {
+//       const response = await axios.get(`/order/${userId}`);
+
+//       console.log(response.data);
+//       return response.data.data;
+//     } catch (error) {
+//       return error.message;
+//     }
+//   }
+// );
+
+
+
+
+export const getAllOrdersByUserId = createAsyncThunk(
+  'user/getAllOrdersByUserId',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/order/${userId}`);
+      console.log("Usrrorders data response:",response.data.data)
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
+// export const userOrderCancellation = createAsyncThunk(
+//   "userorderCancellation",
+//   async ({userId,orderId,orderNumber,comment,reason}) => {
+//     try {
+//       const response=await axios.patch(`/api/order/cancel/${userId}/${orderId}/${orderNumber}`)
+
+//       return response.data
+//     } catch (error) {
+//       console.log(error.message)
+//     }
+//   }
+// )
+
+
+export const userOrderCancellation = createAsyncThunk(
+  "userorderCancellation",
+  async ({userId, orderId, orderNumber, reason, comment}, thunkAPI) => {
+    try {
+      const response = await axios.patch(`/order/cancel/${userId}/${orderId}/${orderNumber}`, {
+        reason,
+        comment
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error cancelling order:", error.response ? error.response.data : error.message);
+      return thunkAPI.rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
 );
