@@ -15,7 +15,7 @@ import {
 import { FaEye, FaPencil } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import HomeIcon from "@mui/icons-material/Home";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -46,8 +46,8 @@ export default function AdminProductManage() {
   const { allProducts, allUsers } = useSelector(
     (state) => state.UserSliceProvider
   );
-  // console.log(allProducts);
-  console.log(allUsers);
+  console.log("allProducts:",allProducts);
+  // console.log(allUsers);
 
   const handeleProductClick = (id) => {
     navigate(`/admin/productsdetails/products/${id}`);
@@ -66,10 +66,9 @@ export default function AdminProductManage() {
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = allProducts.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
+  const currentProducts = Array.isArray(allProducts) 
+  ? allProducts.slice(indexOfFirstProduct, indexOfLastProduct)
+  : [];
 
   const handeleChangePerPage = (e, value) => {
     setCurrentPage(value);
@@ -82,6 +81,10 @@ export default function AdminProductManage() {
   const addProduct = () => {
     navigate("/admin/addproducts");
   };
+
+  useEffect(() => {
+    dispatch(getAllProductsFecthApi())
+  },[])
   return (
     <>
       <div className="right-content w-100">

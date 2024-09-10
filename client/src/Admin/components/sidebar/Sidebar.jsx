@@ -118,14 +118,14 @@ export default function Sidebat() {
             </NavLink>
           </li>
           <li>
-            <Link>
+            <NavLink to={"/admin/notification"}>
               <Button className="w-100">
                 <span className="icon">
                   <FaBell />
                 </span>
                 Notifications
               </Button>
-            </Link>
+            </NavLink>
           </li>
           <li>
             <Link>

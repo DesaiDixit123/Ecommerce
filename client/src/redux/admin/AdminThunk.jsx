@@ -148,7 +148,7 @@ export const productAddFetchApi = createAsyncThunk(
 
 export const productUpdatedFetchApi = createAsyncThunk(
   "productUpdated",
-  async ({ formdata, productId ,toast}) => {
+  async ({ formdata, productId, toast }) => {
     try {
       const response = await axios.put(`/api/products/${productId}`, formdata, {
         headers: {
@@ -170,8 +170,7 @@ export const productUpdatedFetchApi = createAsyncThunk(
           position: "top-right",
           style: { marginTop: "50px", marginRight: "10px" },
         });
-
-            }
+      }
 
       return { success, message, data };
     } catch (error) {
@@ -226,3 +225,53 @@ export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
     throw error;
   }
 });
+
+export const userOrderStatusUpdated = createAsyncThunk(
+  "userOrderStatusUpdated",
+  async ({ orderId, orderStatus }, thunkAPI) => {
+    try {
+      const response = await axios.put(`/api/orderStatus/${orderId}`, {
+        orderStatus,
+      });
+
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error  order Status:",
+        error.response ? error.response.data : error.message
+      );
+      return thunkAPI.rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
+export const approvedProduct = createAsyncThunk(
+  "approvedProduct",
+  async ({ productId, notificationId }) => {
+    try {
+      const response = await axios.post(
+        `/api/approved/${productId}/${notificationId}`
+      );
+      return response.data;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+
+export const deleteNotification = createAsyncThunk(
+  "deleteNotification",
+  async (notificationId) => {
+    try {
+      const response = await axios.delete(`/api/deleteNotification/${notificationId}`)
+      
+      return response.data
+    } catch (error) {
+      return error.message
+    }
+  }
+)

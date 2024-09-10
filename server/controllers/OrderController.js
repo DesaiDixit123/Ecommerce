@@ -286,8 +286,8 @@ const sendOrderCancellationEmail = async (userEmail, order) => {
 
 We regret to inform you that your order with Order ID: ${order.orderNumber} has been cancelled.
 
-Cancellation Reason: ${order.cancellationReason}
-Cancellation Comment: ${order.cancellationComment}
+Cancellation Reason: ${order.cancelReason}
+Cancellation Comment: ${order.cancelComment}
 
 Order Items: ${order.orderItems
         .map((item) => `${item.title} x ${item.quantity}`)
@@ -367,3 +367,60 @@ export const orderCancel = async (req, res) => {
 export const getAllOrders = async (req, res) => {
   res.send(await Order.find({}));
 };
+
+
+export const orderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params
+    const { orderStatus } = req.body
+    const validStatus= ["Pending", "Processing", "Shipped", "Deliverd", "Canceled"]
+
+    if (!validStatus.includes(orderStatus))
+      throw new Error("Invalid status provided.")
+
+    const order=await Order.findById(orderId)
+    if(!order) throw new Error("Order not found.")
+
+    order.orderStatus = orderStatus
+
+
+    if (order.statusHistory.length > 0) {
+      const lastEntry=order.statusHistory[order.statusHistory.length-1]
+      lastEntry.status = orderStatus
+      lastEntry.date=new Date()
+    } else {
+      order.statusHistory.push({
+        status: orderStatus,
+        date:new Date()
+      })
+    }
+  
+    if (orderStatus === "Deliverd") {
+      order.isDelivered = true
+      order.deliverdAt=new Date()
+        
+    }
+    if (orderStatus === "Canceled") {
+      order.isCancelled = true
+      order.cancelledAt=new Date()
+        
+    }
+
+
+    await order.save()
+    res.status(200).send({
+      process: true,
+      message: "Order status updated successfully.",
+      data: order,
+    });
+      
+  } catch (error) {
+
+    console.error("Error updating order status:", error);
+    res.status(201).send({
+      process: false,
+      message: error.message,
+    });
+    
+  }
+}

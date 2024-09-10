@@ -12,6 +12,7 @@ import {
 import { TiTick } from "react-icons/ti";
 
 import { MdOutlineCancel } from "react-icons/md";
+import { userOrderStatusUpdated } from "../../../redux/admin/AdminThunk";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -37,12 +38,13 @@ export default function AdminAllOrders() {
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 5;
+  const [orderStatus, setOrderStatus] = useState("");
 
-  const {
-    AllOrders,
-    userData,
-   
-  } = useSelector((state) => state.UserSliceProvider);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const { AllOrders, userData } = useSelector(
+    (state) => state.UserSliceProvider
+  );
   console.log("All Orders: line:28", AllOrders);
 
   useEffect(() => {
@@ -76,16 +78,39 @@ export default function AdminAllOrders() {
   const getStatusClass = (status) => {
     switch (status) {
       case "Pending":
-        return "text-blue-700 ";
-      case "Cancelled":
+        return "text-blue-400 ";
+      case "Canceled":
         return "text-red-700 ";
-      case "Completed":
+      case "Deliverd":
         return "text-green-700 ";
+      case "Shipped":
+        return "text-blue-700 ";
       default:
         return " text-gray-500";
     }
   };
+  const handleOrderCancellation = async () => {
+    if (!selectedOrder || !orderStatus) {
+      toast.error("Please select a reason for cancellation");
+      return;
+    }
 
+    try {
+      await dispatch(
+        userOrderStatusUpdated({
+          orderId: selectedOrder._id,
+          orderStatus:orderStatus,
+        })
+      );
+
+
+      console.log("orderStatus:",orderStatus)
+      toast.success("Order Status Updated successfully");
+      dispatch(getAllOrdersByUserId(userData._id));
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <>
       <div className="right-content w-100">
@@ -142,7 +167,7 @@ export default function AdminAllOrders() {
                     Payment Method
                   </th>
                   <th style={{ whiteSpace: "nowrap" }} className="w-[150px]">
-                    Payment Status
+                    Order Status
                   </th>
                   <th className="w-[250px]" style={{ whiteSpace: "nowrap" }}>
                     Shipping Address
@@ -208,10 +233,10 @@ export default function AdminAllOrders() {
                         <td className={`w-[200px]  `}>
                           <p
                             className={`${getStatusClass(
-                              order.paymentResult.status
-                            )}`}
+                              order.orderStatus
+                            )} font-bold`}
                           >
-                            {order.paymentResult.status}
+                            {order.orderStatus}
                           </p>
                         </td>
                         <td>
@@ -221,13 +246,18 @@ export default function AdminAllOrders() {
                           {order.shippingAddress.city}
                         </td>
                         <td>
-                                {order.isCancelled ? (
-                                    <div className="flex justify-center items-center">
-
-                            <TiTick className="text-[30px] text-green-600 "/>
-                                    </div>
+                          {order.isCancelled ? (
+                            <div className="flex justify-center items-center">
+                              <TiTick className="text-[30px] text-green-600 " />
+                            </div>
                           ) : (
-                            <Button color="success" className="success">
+                            <Button
+                              color="success"
+                              className="success"
+                              data-toggle="modal"
+                              data-target="#cancelOrderModal"
+                              onClick={() => setSelectedOrder(order)}
+                            >
                               <FaPencil />
                             </Button>
                           )}
@@ -248,8 +278,8 @@ export default function AdminAllOrders() {
             {AllOrders.length > 0 && (
               <div className="d-flex tableFooter">
                 <p>
-                  Showing <b>{AllOrders.length}</b> of{" "}
-                  <b>{AllOrders.length}</b> results
+                  Showing <b>{AllOrders.length}</b> of <b>{AllOrders.length}</b>{" "}
+                  results
                 </p>
                 <Pagination
                   count={Math.ceil(AllOrders.length / ordersPerPage)}
@@ -262,6 +292,75 @@ export default function AdminAllOrders() {
                 />
               </div>
             )}
+          </div>
+        </div>
+
+        <div
+          className="modal fade"
+          id="cancelOrderModal"
+          aria-labelledby="cancelOrderModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header text-center text-[20px]">
+                <h5
+                  className="modal-title ml-auto text-red-700"
+                  id="cancelOrderModalLabel "
+                >
+                  Order Status
+                </h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div className="modal-body">
+                <form
+                  className="text-left p-[10px]"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleOrderCancellation();
+                  }}
+                >
+                  <div className="form-group text-[18px]">
+                    <label htmlFor="cancelReason">Order Status</label>
+                    <select
+                      className="form-control"
+                      id="orderStatus"
+                      name="orderStatus" 
+                      value={orderStatus}
+                      onChange={(e) => setOrderStatus(e.target.value)}
+                    >
+                      <option value="">Select Order Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Deliverd">Deliverd</option>
+                      <option value="Canceled">Canceled</option>
+                    </select>
+                  </div>
+
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="submit" className="btn btn-primary">
+                      Update Order
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>

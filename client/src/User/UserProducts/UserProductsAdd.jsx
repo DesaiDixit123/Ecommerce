@@ -1,8 +1,8 @@
 import { Breadcrumbs, Button, Chip, emphasize, styled } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { categoryByFieldsFetchApi, getAllProductsFecthApi } from "../../redux/user/UserThunk";
-import { productAddFetchApi } from "../../redux/admin/AdminThunk";
+import { categoryByFieldsFetchApi, getAllProductsFecthApi, usersCategoryByFieldsFetchApi, usersGetAllCategories2, usersGetAllProductsFecthApi, usersProductAddFetchApi } from "../../redux/user/UserThunk";
+
 import { toast } from "react-toastify";
 import HomeIcon from "@mui/icons-material/Home";
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -30,11 +30,11 @@ export default function UserProductsAdd() {
 
 
     const dispatch = useDispatch();
-    const { categoriesData, categoryFields, allUsers } = useSelector(
+    const { usersCategoriesData, usersCategoryFields, allUsers } = useSelector(
       (state) => state.UserSliceProvider
     );
-    console.log(categoriesData);
-    console.log(categoryFields);
+    console.log(usersCategoriesData);
+    console.log(usersCategoryFields);
   
     console.log(allUsers);
     const [formdata, setFormdata] = useState({
@@ -57,9 +57,12 @@ export default function UserProductsAdd() {
       discription: "",
     });
   
+  // useEffect(() => {
+  //   dispatch(usersGetAllCategories2())
+  // },[])
     useEffect(() => {
       if (formdata.category) {
-        dispatch(categoryByFieldsFetchApi(formdata.category));
+        dispatch(usersCategoryByFieldsFetchApi(formdata.category));
       }
     }, [formdata.category, dispatch]);
   
@@ -97,11 +100,11 @@ export default function UserProductsAdd() {
       });
   
       try {
-        const response = await dispatch(productAddFetchApi({formdata,setFormdata,toast}));
+        const response = await dispatch(usersProductAddFetchApi({formdata,setFormdata,toast}));
         console.log("Product added successfully:", response);
   
         // Fetch all products after successful addition
-        await dispatch(getAllProductsFecthApi());
+        await dispatch(usersGetAllProductsFecthApi());
       } catch (error) {
         console.error("Error adding product:", error);
       }
@@ -168,8 +171,8 @@ export default function UserProductsAdd() {
                         value={formdata.category}
                       >
                         <option value="">Select Category</option>
-                        {categoriesData &&
-                          categoriesData.map((category) => (
+                        {usersCategoriesData &&
+                          usersCategoriesData.map((category) => (
                             <option
                               key={category._id}
                               value={category.categoryname}
@@ -192,9 +195,9 @@ export default function UserProductsAdd() {
                         onChange={fielSelectHandeler}
                       >
                         <option value="">Select Field</option>
-                        {categoryFields &&
-                          Array.isArray(categoryFields.fields) &&
-                          categoryFields.fields.map((field, index) => (
+                        {usersCategoryFields &&
+                          Array.isArray(usersCategoryFields.fields) &&
+                          usersCategoryFields.fields.map((field, index) => (
                             <option key={index} value={field}>
                               {field}
                             </option>

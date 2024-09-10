@@ -55,7 +55,10 @@ header Button.rounded-circle:hover svg {
 #account-menu li {
   font-size: 15px !important;
 }
-
+.table_message{
+  width: 200px !important;
+  text-wrap: wrap !important;
+}
 #account-menu li svg {
   font-size: 20px !important;
 }

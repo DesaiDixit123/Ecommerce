@@ -9,6 +9,10 @@ import { adminRouter } from "./routers/AdminRouter/adminRouter.js";
 import { CategoryRouter } from "./routers/CategoryRouter.js";
 import bodyParser from 'body-parser';
 import { OrderRouetr } from "./routers/orderRouter.js";
+import { userProductsRouter } from "./routers/usersProductsRouter.js";
+import { usersCategoryRouter } from "./routers/usersCategoryRouter.js";
+import { pendingProductRouter } from "./routers/pendingProductRouter.js";
+import { notificationRouter } from "./routers/notificationRouter.js";
 dotenv.config()
 const app = express()
 
@@ -31,6 +35,10 @@ app.use("/api", productRouter)
 app.use("/api", OrderRouetr)
 app.use("/api", adminRouter)
 app.use("/api", CategoryRouter)
+app.use("/api", userProductsRouter)
+app.use("/api", usersCategoryRouter)
+app.use("/api", pendingProductRouter)
+app.use("/api", notificationRouter)
 
 const PORT = process.env.port
 

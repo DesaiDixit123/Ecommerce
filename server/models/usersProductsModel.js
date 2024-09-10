@@ -1,8 +1,8 @@
 import { model, Schema } from "mongoose";
 
-const productSchema = Schema({
+const usersProductsSchema = Schema({
     category: { type: String },
-    fields: [{ type: String }],
+    fields: { type: String },
     img1: { type: String },
     img2: { type: String },
     img3: { type: String },
@@ -19,4 +19,4 @@ const productSchema = Schema({
 }, { timestamps: true } )
 
 
-export const $ProductModel = model("product", productSchema)
+export const $UserProductModel = model("userProduct", usersProductsSchema)

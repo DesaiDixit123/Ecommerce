@@ -10,6 +10,7 @@ import fuature3 from "../../assets/feature-3.png"
 import fuature4 from "../../assets/feature-4.png"
 import fuature5 from "../../assets/feature-5.png"
 import fuature6 from "../../assets/feature-6.png"
+import OrderDetails4 from "./orders/TrackingOrders";
 
 export default function Home() {
 
@@ -22,7 +23,8 @@ export default function Home() {
 
       <Slider />
       <CustomerFacelity/>
-      <Products  limit={6} />
+        <Products limit={6} />
+        {/* <OrderDetails4/> */}
       </div>
     </>
   );

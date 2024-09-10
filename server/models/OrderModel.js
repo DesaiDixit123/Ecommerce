@@ -50,13 +50,27 @@ const orderSchema = Schema(
     taxPrice: { type: Number },
     shippingPrice: { type: Number },
     totalPrice: { type: Number },
+    orderStatus: {
+      type: String,
+      enum: ["Pending", "Processing", "Shipped", "Deliverd", "Canceled"],
+      default: "Pending",
+    },
+
+    statusHistory: [
+      {
+        status: { type: String },
+        date: { type: Date, default: Date.now },
+      },
+    ],
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
     isDelivered: { type: Boolean, default: false },
     isCancelled: { type: Boolean, default: false },
-    cancelReason: { type: String,default:"" },
-    cancelComment: { type: String ,default:""},
+    cancelReason: { type: String, default: "" },
+    cancelComment: { type: String, default: "" },
     deliverdAt: { type: Date },
+    cancelledAt: { type: Date },
+
   },
   { timestamps: true }
 );

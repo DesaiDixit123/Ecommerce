@@ -20,11 +20,16 @@ import {
   getAllOrdersShowByAdmin,
   getAllProductsFecthApi,
   getCartByUserId,
+  getNotification,
   LoginUser,
   searchProducts,
   updateCart,
   userAddToCart,
   userLogoutFecthApi,
+  usersCategoryByFieldsFetchApi,
+  usersGetAllCategories2,
+  // usersGetAllCategories2,
+  usersGetAllProductsFecthApi,
   UserValidation,
 } from "./UserThunk";
 
@@ -37,11 +42,16 @@ const initialState = {
   message: "",
   process: false,
   allProducts: [],
+  usersAllProducts: [],
   categoriesData: [],
+  usersCategoriesData:[],
   categoryFields: [],
+  usersCategoryFields: [],
   allUsers: [],
   filteredProducts: [],
+  usersFilteredProducts: [],
   filteredProducts1: [],
+  usersFilteredProducts1: [],
   searchResults: [],
   addCart: [],
   userCart: [],
@@ -54,7 +64,8 @@ const initialState = {
   allCity: [],
   order: null,
   UserOrders: [],
-  AllOrders:[]
+  AllOrders: [],
+  notifications:[]
 };
 
 const UserSlice = createSlice({
@@ -140,6 +151,15 @@ const UserSlice = createSlice({
         state.loading = false;
         state.allProducts = action.payload;
       })
+      // .addCase(usersGetAllCategories2.pending, (state) => {
+      //   state.loading = true;
+      // })
+
+      .addCase(usersGetAllProductsFecthApi.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.usersAllProducts = action.payload;
+      })
 
       .addCase(filterProductsByCategory.pending, (state) => {
         state.loading = true;
@@ -192,6 +212,20 @@ const UserSlice = createSlice({
       .addCase(getAllCategories2.rejected, (state, action) => {
         (state.loading = false), (state.error = action.payload);
       })
+      .addCase(usersGetAllCategories2.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(usersGetAllCategories2.fulfilled, (state, action) => {
+        console.log("resux store categoriesData:",action.payload)
+        state.loading = false;
+
+        state.usersCategoriesData = action.payload;
+      })
+
+      .addCase(usersGetAllCategories2.rejected, (state, action) => {
+        (state.loading = false), (state.error = action.payload);
+      })
 
       .addCase(categoryByFieldsFetchApi.pending, (state) => {
         state.loading = true;
@@ -201,6 +235,17 @@ const UserSlice = createSlice({
         state.loading = false;
       })
       .addCase(categoryByFieldsFetchApi.rejected, (state, action) => {
+        state.loading = false;
+        state.action = action.payload;
+      })
+      .addCase(usersCategoryByFieldsFetchApi.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(usersCategoryByFieldsFetchApi.fulfilled, (state, action) => {
+        state.usersCategoryFields = action.payload;
+        state.loading = false;
+      })
+      .addCase(usersCategoryByFieldsFetchApi.rejected, (state, action) => {
         state.loading = false;
         state.action = action.payload;
       })
@@ -335,7 +380,20 @@ const UserSlice = createSlice({
         state.loading = "failled",
           state.AllOrders=action.payload
       })
-  
+      .addCase(getNotification.pending, (state) => {
+    state.loading=true
+
+      })
+    
+      .addCase(getNotification.fulfilled, (state, action) => {
+        state.loading = false
+        state.notifications=action.payload
+
+      })
+      .addCase(getNotification.rejected, (state, action) => {
+        state.loading = false,
+        state.notifications=action.payload
+    })
     
   },
 });

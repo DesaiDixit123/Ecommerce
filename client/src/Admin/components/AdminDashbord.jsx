@@ -22,6 +22,7 @@ import {
   deleteProduct,
   getAllOrdersShowByAdmin,
   getAllProductsFecthApi,
+  getNotification,
 } from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
 import AdminAllUsers from "./AdminAllUsers";
@@ -62,14 +63,16 @@ export default function AdminDashbord() {
     setAnchorEl(null);
   };
 
-  const { allProducts,AllOrders } = useSelector((state) => state.UserSliceProvider);
+  const { allProducts,AllOrders ,notifications} = useSelector((state) => state.UserSliceProvider);
 
   const { allUsers } = useSelector((state) => state.AdminSliceProvider);
 
+  console.log("allProducts:",allProducts.length)
   console.log("AllOrders from Redux Store:", AllOrders.length);
 
+  console.log("notifications:",notifications)
   useEffect(() => {
-    dispatch(getAllOrdersShowByAdmin())
+    dispatch(getNotification())
   },[])
 
   const handeleProductClick = (id) => {
@@ -88,10 +91,9 @@ export default function AdminDashbord() {
   };
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = allProducts.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
+  const currentProducts = Array.isArray(allProducts) 
+  ? allProducts.slice(indexOfFirstProduct, indexOfLastProduct)
+  : [];
 
   const handeleChangePerPage = (e, value) => {
     setCurrentPage(value);

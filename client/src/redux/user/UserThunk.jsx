@@ -739,3 +739,330 @@ export const getAllOrdersShowByAdmin = createAsyncThunk(
     }
   }
 )
+
+
+
+// usersProducst
+
+
+
+export const usersGetAllProductsFecthApi = createAsyncThunk("usersGetAllProductsFecthApi", async () => {
+  const response = await axios.get("/api/users/products");
+  return response.data;
+});
+
+export const usersGetAllCategories2 = createAsyncThunk("usersGetAllCategories2", async () => {
+  const response = await axios.get("/api/users/get/category");
+  console.log(response.data)
+  return response.data;
+});
+
+export const usersCategoryByFieldsFetchApi = createAsyncThunk(
+  "usersCategoryByFieldsFetchApi",
+  async (categoryname) => {
+    const response = await axios.get(
+      `/api/users/get/category/fields/${categoryname}`
+    );
+
+    console.log("categopriesData:",response.data)
+    return response.data;
+  }
+);
+
+export const usersDeleteProduct = createAsyncThunk(
+  "usersDeleteProduct",
+  async ({ productId, toast }) => {
+    try {
+      const response = await axios.delete(`/api/users/products/${productId}`);
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return { success, message };
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+      return error.message;
+    }
+  }
+);
+export const usersDeleteCategory = createAsyncThunk(
+  "usersDeleteCategory",
+  async ({ categoryId, toast }) => {
+    try {
+      const response = await axios.delete(`/api/users/category/${categoryId}`);
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+      return error.message;
+    }
+  }
+);
+export const usersUpdateCategory = createAsyncThunk(
+  "usersUpdateCategory",
+  async ({ categoryId, categoryData, toast }) => {
+    try {
+      const response = await axios.put(
+        `/api/users/category/${categoryId}`,
+        categoryData
+      );
+
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      return error.message;
+    }
+  }
+);
+
+export const usersDeleteFieldFromCategory =
+  (categoryId, fieldToRemove, toast) => async () => {
+    try {
+      const response = await axios.delete(
+        `/api/users/category/deleteField/${categoryId}`,
+        {
+          data: { fieldToRemove },
+        }
+      );
+      const { success, message } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      // Return a rejected value
+      return error.message;
+    }
+  };
+
+
+  export const usersCategoryFetchApi = createAsyncThunk(
+    "usersCategoryFetchApi",
+    async ({ formdata, setFormdata, toast }) => {
+      try {
+        // Make sure formdata includes both categoryname and fields
+  
+        const response = await axios.post("/api/users/category", formdata);
+  
+        const { success, message, data } = response.data;
+  
+        if (success) {
+          toast.success(message, {
+            position: "top-right",
+            style: { marginTop: "50px", marginRight: "10px" },
+          });
+  
+          // Reset formdata
+        } else {
+          toast.success(message, {
+            position: "top-right",
+            style: { marginTop: "50px", marginRight: "10px" },
+          });
+  
+          setFormdata({
+            categoryname: "",
+            fields: [""],
+          });
+        }
+  
+        return { success, message, data };
+      } catch (error) {
+        // Handle errors
+        toast.error(error.response?.data?.message || error.message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+  
+        // Return a rejected value
+        return error.message;
+      }
+    }
+  );
+  
+  export const usersProductAddFetchApi = createAsyncThunk(
+    "usersProductAddFetchApi",
+    async ({ formdata, setFormdata, toast }) => {
+      try {
+        const response = await axios.post("/api/users/pending/products", formdata, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+  
+        const { success, message, data } = response.data;
+  
+        if (success) {
+          toast.success(message, {
+            position: "top-right",
+            style: { marginTop: "50px", marginRight: "10px" },
+          });
+  
+          // Reset formdata
+        } else {
+          toast.success(message, {
+            position: "top-right",
+            style: { marginTop: "50px", marginRight: "10px" },
+          });
+  
+          setFormdata({
+            category: "",
+            fields: "",
+            img1: null,
+            img1Preview: null,
+            img2: null,
+            img2Preview: null,
+            img3: null,
+            img3Preview: null,
+            img4: null,
+            img4Preview: null,
+            img5: null,
+            img5Preview: null,
+            title: "",
+            price: "",
+            discount: "",
+            qnt: "",
+            discription: "",
+          });
+        }
+  
+        return { success, message, data };
+      } catch (error) {
+        toast.error(error.response?.data?.message || error.message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+  
+        // Return a rejected value
+        return error.message;
+      }
+    }
+  );
+  
+  export const usersProductUpdatedFetchApi = createAsyncThunk(
+    "usersProductUpdatedFetchApi",
+    async ({ formdata, productId ,toast}) => {
+      try {
+        const response = await axios.put(`/api/users/products/${productId}`, formdata, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+  
+        const { success, message, data } = response.data;
+  
+        if (success) {
+          toast.success(message, {
+            position: "top-right",
+            style: { marginTop: "50px", marginRight: "10px" },
+          });
+  
+          // Reset formdata
+        } else {
+          toast.success(message, {
+            position: "top-right",
+            style: { marginTop: "50px", marginRight: "10px" },
+          });
+  
+              }
+  
+        return { success, message, data };
+      } catch (error) {
+        toast.error(error.response?.data?.message || error.message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+  
+        // Return a rejected value
+        return error.message;
+      }
+    }
+);
+  
+
+export const usersFilterProductsByCategory = createAsyncThunk(
+  "usersFilterProductsByCategory",
+  async (category) => {
+    try {
+      const response = await axios.get(`/api/products/category/${category}`);
+      console.log("API Response:", response.data); // Log the response
+      return response.data.data;
+    } catch (error) {
+      console.error("API Error:", error.message); // Log the error
+      throw new Error(error.message);
+    }
+  }
+);
+
+export const getNotification = createAsyncThunk(
+  "getNotification",
+  async () => {
+    try {
+      const response = await axios.get("/api/adminNotification")
+      console.log(response.data.data)
+      return response.data.data
+    } catch (error) {
+      return error.message
+    }
+  }
+)
