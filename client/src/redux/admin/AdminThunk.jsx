@@ -228,36 +228,95 @@ export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
 
 export const userOrderStatusUpdated = createAsyncThunk(
   "userOrderStatusUpdated",
-  async ({ orderId, orderStatus }, thunkAPI) => {
+  async ({ orderId, orderStatus,toast }) => {
     try {
       const response = await axios.put(`/api/orderStatus/${orderId}`, {
         orderStatus,
       });
 
-      console.log(response.data);
-      return response.data;
+      const { data, message, process } = response.data;
+      if (process) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+       
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return { process, message, data };
+
     } catch (error) {
-      console.error(
-        "Error  order Status:",
-        error.response ? error.response.data : error.message
-      );
-      return thunkAPI.rejectWithValue(
-        error.response ? error.response.data : error.message
-      );
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
     }
   }
 );
 
 export const approvedProduct = createAsyncThunk(
   "approvedProduct",
-  async ({ productId, notificationId }) => {
+  async ({ productId, notificationId,toast }) => {
     try {
       const response = await axios.post(
         `/api/approved/${productId}/${notificationId}`
       );
-      return response.data;
+      const { data, message, process } = response.data;
+      if (process) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return { process, message, data };
+
     } catch (error) {
-      return error.message;
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }
+  }
+);
+
+export const approvalCategory = createAsyncThunk(
+  "approvedProduct",
+  async ({ categoryId,toast }) => {
+    try {
+      const response = await axios.post(
+        `/api/pendingCategory/approval/${categoryId}`
+      );
+      const { data, message, process } = response.data;
+      if (process) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return { process, message, data };
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
     }
   }
 );
@@ -265,13 +324,100 @@ export const approvedProduct = createAsyncThunk(
 
 export const deleteNotification = createAsyncThunk(
   "deleteNotification",
-  async (notificationId) => {
+  async ({notificationId,productId,toast}) => {
     try {
-      const response = await axios.delete(`/api/deleteNotification/${notificationId}`)
-      
-      return response.data
+      const response = await axios.delete(`/api/deleteNotification/${notificationId}/${productId}`)
+      const { data, message, process } = response.data;
+      if (process) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return { process, message, data };
     } catch (error) {
-      return error.message
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
     }
   }
 )
+export const deleteCategoryNotification = createAsyncThunk(
+  "deleteCategoryNotification",
+  async ({categoryId,toast}) => {
+    try {
+      const response = await axios.delete(`/api/pendingCategoryUsers/${categoryId}`)
+      const { data, message, process } = response.data;
+      if (process) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+      } else {
+        toast.error(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+      return { process, message, data };
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+    }
+  }
+)
+
+
+
+export const UserSideCategoryFetchApi = createAsyncThunk(
+  "categoryFetchApi",
+  async ({ formdata, setFormdata, toast }) => {
+    try {
+      // Make sure formdata includes both categoryname and fields
+
+      const response = await axios.post("/api/pendingCategory", formdata);
+
+      const { success, message, data } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+        // Reset formdata
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+        setFormdata({
+          categoryname: "",
+          fields: [""],
+        });
+      }
+
+      return { success, message, data };
+    } catch (error) {
+      // Handle errors
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      // Return a rejected value
+      return error.message;
+    }
+  }
+);

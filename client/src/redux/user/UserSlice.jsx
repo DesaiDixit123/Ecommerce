@@ -21,6 +21,7 @@ import {
   getAllProductsFecthApi,
   getCartByUserId,
   getNotification,
+  getUsersCategoryAdded,
   LoginUser,
   searchProducts,
   updateCart,
@@ -65,7 +66,8 @@ const initialState = {
   order: null,
   UserOrders: [],
   AllOrders: [],
-  notifications:[]
+  notifications: [],
+  UsersCategory:[]
 };
 
 const UserSlice = createSlice({
@@ -393,7 +395,22 @@ const UserSlice = createSlice({
       .addCase(getNotification.rejected, (state, action) => {
         state.loading = false,
         state.notifications=action.payload
-    })
+      })
+    
+      .addCase(getUsersCategoryAdded.pending, (state) => {
+        state.loading=true
+    
+          })
+        
+          .addCase(getUsersCategoryAdded.fulfilled, (state, action) => {
+            state.loading = false
+            state.UsersCategory=action.payload
+    
+          })
+          .addCase(getUsersCategoryAdded.rejected, (state, action) => {
+            state.loading = false,
+            state.UsersCategory=action.payload
+        })
     
   },
 });

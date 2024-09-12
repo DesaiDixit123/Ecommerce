@@ -30,11 +30,11 @@ export default function UserProductsAdd() {
 
 
     const dispatch = useDispatch();
-    const { usersCategoriesData, usersCategoryFields, allUsers } = useSelector(
+    const { categoriesData, categoryFields, allUsers } = useSelector(
       (state) => state.UserSliceProvider
     );
-    console.log(usersCategoriesData);
-    console.log(usersCategoryFields);
+    console.log(categoriesData);
+    console.log(categoryFields);
   
     console.log(allUsers);
     const [formdata, setFormdata] = useState({
@@ -62,7 +62,7 @@ export default function UserProductsAdd() {
   // },[])
     useEffect(() => {
       if (formdata.category) {
-        dispatch(usersCategoryByFieldsFetchApi(formdata.category));
+        dispatch(categoryByFieldsFetchApi(formdata.category));
       }
     }, [formdata.category, dispatch]);
   
@@ -171,8 +171,8 @@ export default function UserProductsAdd() {
                         value={formdata.category}
                       >
                         <option value="">Select Category</option>
-                        {usersCategoriesData &&
-                          usersCategoriesData.map((category) => (
+                        {categoriesData &&
+                          categoriesData.map((category) => (
                             <option
                               key={category._id}
                               value={category.categoryname}
@@ -195,9 +195,9 @@ export default function UserProductsAdd() {
                         onChange={fielSelectHandeler}
                       >
                         <option value="">Select Field</option>
-                        {usersCategoryFields &&
-                          Array.isArray(usersCategoryFields.fields) &&
-                          usersCategoryFields.fields.map((field, index) => (
+                        {categoryFields &&
+                          Array.isArray(categoryFields.fields) &&
+                          categoryFields.fields.map((field, index) => (
                             <option key={index} value={field}>
                               {field}
                             </option>

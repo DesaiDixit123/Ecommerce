@@ -42,7 +42,7 @@ export default function AdminAllOrders() {
 
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const { AllOrders, userData } = useSelector(
+  const { AllOrders=[], userData } = useSelector(
     (state) => state.UserSliceProvider
   );
   console.log("All Orders: line:28", AllOrders);
@@ -53,7 +53,9 @@ export default function AdminAllOrders() {
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = AllOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = Array.isArray(AllOrders)
+  ? AllOrders.slice(indexOfFirstOrder, indexOfLastOrder)
+  : [];
   useEffect(() => {
     if (userData?._id) {
       dispatch(getAllOrdersByUserId(userData._id));
@@ -106,6 +108,7 @@ export default function AdminAllOrders() {
 
       console.log("orderStatus:",orderStatus)
       toast.success("Order Status Updated successfully");
+    await  dispatch(getAllOrdersShowByAdmin())
       dispatch(getAllOrdersByUserId(userData._id));
     } catch (error) {
       toast.error(error.message);
@@ -246,7 +249,7 @@ export default function AdminAllOrders() {
                           {order.shippingAddress.city}
                         </td>
                         <td>
-                          {order.isCancelled ? (
+                          {order.isDelivered ? (
                             <div className="flex justify-center items-center">
                               <TiTick className="text-[30px] text-green-600 " />
                             </div>

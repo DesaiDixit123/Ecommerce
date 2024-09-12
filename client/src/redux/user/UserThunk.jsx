@@ -1066,3 +1066,17 @@ export const getNotification = createAsyncThunk(
     }
   }
 )
+
+
+export const getUsersCategoryAdded = createAsyncThunk(
+  "getUsersCategoryAdded",
+  async () => {
+    try {
+      const response = await axios.get("/api/pendingCategoryUsers")
+      console.log(response.data.data)
+      return response.data.data
+    } catch (error) {
+      return error.message
+    }
+  }
+)

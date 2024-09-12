@@ -14,6 +14,7 @@ const initialState = {
   message: "",
   isAdmin: false,
   allUsers: [],
+
 };
 
 const AdminSlice = createSlice({
@@ -76,7 +77,8 @@ const AdminSlice = createSlice({
         console.log("Action Error:", action.error.message); // Error Logging
         state.loading = false;
         state.error = action.error.message;
-      });
+      })
+   
   },
 });
 

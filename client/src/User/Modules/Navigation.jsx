@@ -24,7 +24,7 @@ import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 import { UserProvider } from "../context/UserProvider";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getCartByUserId,
+
   searchProducts,
   userLogoutFecthApi,
 } from "../../redux/user/UserThunk";
@@ -32,7 +32,8 @@ import { toast } from "react-toastify";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
-
+import { RiAdminFill } from "react-icons/ri";
+import { MdCategory } from "react-icons/md";
 const texts = [
   "Great deals 50% off",
   "Unbeatable offers",
@@ -126,6 +127,14 @@ const TopNav = () => {
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
+                  <NavLink to={"/category/add"}>
+                    <MenuItem onClick={handeleCloseMyDrop}>
+                      <ListItemIcon>
+                        <MdCategory fontSize="small" />
+                      </ListItemIcon>
+                      Add Category
+                    </MenuItem>
+                  </NavLink>
                   <NavLink to={"/add/products"}>
                     <MenuItem onClick={handeleCloseMyDrop}>
                       <ListItemIcon>
@@ -156,6 +165,15 @@ const TopNav = () => {
                     </ListItemIcon>
                     Logout
                   </MenuItem>
+
+                  <NavLink to={"/admin"}>
+                    <MenuItem onClick={handeleCloseMyDrop}>
+                      <ListItemIcon>
+                      <RiAdminFill  />
+                      </ListItemIcon>
+                      Admin
+                    </MenuItem>
+                  </NavLink>
                 </Menu>
               </div>
             </div>
