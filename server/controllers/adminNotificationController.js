@@ -42,7 +42,6 @@ export const approvedProduct = async (req, res) => {
     const user = await User.findById(product.addedBy);
     if (!user) throw new Error("User not found.");
 
-    // Create notification for the user
     // const userNotification = new Notification({
     //   userId: user._id,
     //   title: "Product Approved",
@@ -89,7 +88,7 @@ export const approvedProduct = async (req, res) => {
     await Notification.findByIdAndDelete(notificationId);
   // Prepare the email content
   const mailOptions = {
-    from: 'your-email@gmail.com', // Sender email
+    from: process.env.Email_User, // Sender email
     to: user.email, // Recipient email (user who added the product)
     subject: 'Product Approved: ' + product.title,
     text: `Dear ${user.fname},\n\nWe are pleased to inform you that your product titled "${product.title}" has been approved and is now live on our website.\n\nYou can view your product here: [Link to Product Page].\n\nThank you for contributiFng to our platform!\n\nBest Regards,\nThe Team`,
@@ -118,21 +117,47 @@ export const approvedProduct = async (req, res) => {
 
 export const deleteNotification = async (req, res) => {
   try {
-    const { notificationId } = req.params
-    const deleteNotification=await Notification.findByIdAndDelete(notificationId)
+    const { notificationId, productId } = req.params; // You need productId as a parameter
 
-    if(!deleteNotification)
-      throw new Error("Notification not found")
+    // Fetch the product from PendingProductModel
+    const product = await PendingProductModel.findById(productId);
+    if (!product) throw new Error("Product not found.");
+
+    // Fetch the user who added the product
+    const user = await User.findById(product.addedBy);
+    if (!user) throw new Error("User not found.");
+
+    // Delete the notification
+    const deleteNotification = await Notification.findByIdAndDelete(notificationId);
+    if (!deleteNotification) throw new Error("Notification not found");
+
+    // Prepare the email content for the declined product
+    const mailOptions = {
+      from: process.env.Email_User, // Sender email
+      to: user.email, // Recipient email (user who added the product)
+      subject: 'Product Declined: ' + product.title,
+      text: `Dear ${user.fname},\n\nWe regret to inform you that your product titled "${product.title}" has been declined and will not be added to our catalog.\n\nFor further information, you can contact us.\n\nBest Regards,\nThe Team`,
+      html: `
+        <h3>Dear ${user.fname},</h3>
+        <p>We regret to inform you that your product titled <strong>"${product.title}"</strong> has been declined and will not be added to our catalog.</p>
+        <p>If you have any questions, feel free to <a href="mailto:support@yourwebsite.com">contact us</a>.</p>
+        <p>Best Regards,<br>Ecommerce Web</p>
+      `,
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent");
 
     res.status(200).send({
       process: true,
-      message:"Delete the notification."
-    })
-    
+      message: "Notification deleted, product declined, and user notified via email.",
+    });
+
   } catch (error) {
     res.status(400).send({
       process: false,
-      message:error.message
-    })
+      message: error.message,
+    });
   }
-}
+};

@@ -661,7 +661,7 @@ export const fetchPlaceOrderApi = createAsyncThunk(
         toast.success(message);
         await dispatch(clearCart(userData._id));
         await dispatch(getCartByUserId(userData._id));
-        dispatch(getAllOrdersShowByAdmin())
+        dispatch(getAllOrdersShowByAdmin());
 
         setShowPopup(true);
 
@@ -694,15 +694,12 @@ export const fetchPlaceOrderApi = createAsyncThunk(
 //   }
 // );
 
-
-
-
 export const getAllOrdersByUserId = createAsyncThunk(
-  'user/getAllOrdersByUserId',
+  "user/getAllOrdersByUserId",
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/order/${userId}`);
-      console.log("Usrrorders data response:",response.data.data)
+      console.log("Usrrorders data response:", response.data.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -712,50 +709,59 @@ export const getAllOrdersByUserId = createAsyncThunk(
 
 export const userOrderCancellation = createAsyncThunk(
   "userorderCancellation",
-  async ({userId, orderId, orderNumber, reason, comment}, thunkAPI) => {
+  async ({ userId, orderId, orderNumber, reason, comment }, thunkAPI) => {
     try {
-      const response = await axios.patch(`/api/order/cancel/${userId}/${orderId}/${orderNumber}`, {
-        reason,
-        comment
-      });
+      const response = await axios.patch(
+        `/api/order/cancel/${userId}/${orderId}/${orderNumber}`,
+        {
+          reason,
+          comment,
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error("Error cancelling order:", error.response ? error.response.data : error.message);
-      return thunkAPI.rejectWithValue(error.response ? error.response.data : error.message);
+      console.error(
+        "Error cancelling order:",
+        error.response ? error.response.data : error.message
+      );
+      return thunkAPI.rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
     }
   }
 );
-
 
 export const getAllOrdersShowByAdmin = createAsyncThunk(
   "getAllOrdersShowByAdmin",
   async () => {
     try {
-      const response = await axios.get("/api/orders")
-      console.log(response.data)
-      return response.data
+      const response = await axios.get("/api/orders");
+      console.log(response.data);
+      return response.data;
     } catch (error) {
-      return error.message
+      return error.message;
     }
   }
-)
-
-
+);
 
 // usersProducst
 
+export const usersGetAllProductsFecthApi = createAsyncThunk(
+  "usersGetAllProductsFecthApi",
+  async () => {
+    const response = await axios.get("/api/users/products");
+    return response.data;
+  }
+);
 
-
-export const usersGetAllProductsFecthApi = createAsyncThunk("usersGetAllProductsFecthApi", async () => {
-  const response = await axios.get("/api/users/products");
-  return response.data;
-});
-
-export const usersGetAllCategories2 = createAsyncThunk("usersGetAllCategories2", async () => {
-  const response = await axios.get("/api/users/get/category");
-  console.log(response.data)
-  return response.data;
-});
+export const usersGetAllCategories2 = createAsyncThunk(
+  "usersGetAllCategories2",
+  async () => {
+    const response = await axios.get("/api/users/get/category");
+    console.log(response.data);
+    return response.data;
+  }
+);
 
 export const usersCategoryByFieldsFetchApi = createAsyncThunk(
   "usersCategoryByFieldsFetchApi",
@@ -764,7 +770,7 @@ export const usersCategoryByFieldsFetchApi = createAsyncThunk(
       `/api/users/get/category/fields/${categoryname}`
     );
 
-    console.log("categopriesData:",response.data)
+    console.log("categopriesData:", response.data);
     return response.data;
   }
 );
@@ -896,149 +902,154 @@ export const usersDeleteFieldFromCategory =
     }
   };
 
+export const usersCategoryFetchApi = createAsyncThunk(
+  "usersCategoryFetchApi",
+  async ({ formdata, setFormdata, toast }) => {
+    try {
+      // Make sure formdata includes both categoryname and fields
 
-  export const usersCategoryFetchApi = createAsyncThunk(
-    "usersCategoryFetchApi",
-    async ({ formdata, setFormdata, toast }) => {
-      try {
-        // Make sure formdata includes both categoryname and fields
-  
-        const response = await axios.post("/api/users/category", formdata);
-  
-        const { success, message, data } = response.data;
-  
-        if (success) {
-          toast.success(message, {
-            position: "top-right",
-            style: { marginTop: "50px", marginRight: "10px" },
-          });
-  
-          // Reset formdata
-        } else {
-          toast.success(message, {
-            position: "top-right",
-            style: { marginTop: "50px", marginRight: "10px" },
-          });
-  
-          setFormdata({
-            categoryname: "",
-            fields: [""],
-          });
-        }
-  
-        return { success, message, data };
-      } catch (error) {
-        // Handle errors
-        toast.error(error.response?.data?.message || error.message, {
+      const response = await axios.post("/api/users/category", formdata);
+
+      const { success, message, data } = response.data;
+
+      if (success) {
+        toast.success(message, {
           position: "top-right",
           style: { marginTop: "50px", marginRight: "10px" },
         });
-  
-        // Return a rejected value
-        return error.message;
-      }
-    }
-  );
-  
-  export const usersProductAddFetchApi = createAsyncThunk(
-    "usersProductAddFetchApi",
-    async ({ formdata, setFormdata, toast }) => {
-      try {
-        const response = await axios.post("/api/users/pending/products", formdata, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-  
-        const { success, message, data } = response.data;
-  
-        if (success) {
-          toast.success(message, {
-            position: "top-right",
-            style: { marginTop: "50px", marginRight: "10px" },
-          });
-  
-          // Reset formdata
-        } else {
-          toast.success(message, {
-            position: "top-right",
-            style: { marginTop: "50px", marginRight: "10px" },
-          });
-  
-          setFormdata({
-            category: "",
-            fields: "",
-            img1: null,
-            img1Preview: null,
-            img2: null,
-            img2Preview: null,
-            img3: null,
-            img3Preview: null,
-            img4: null,
-            img4Preview: null,
-            img5: null,
-            img5Preview: null,
-            title: "",
-            price: "",
-            discount: "",
-            qnt: "",
-            discription: "",
-          });
-        }
-  
-        return { success, message, data };
-      } catch (error) {
-        toast.error(error.response?.data?.message || error.message, {
+
+        // Reset formdata
+      } else {
+        toast.success(message, {
           position: "top-right",
           style: { marginTop: "50px", marginRight: "10px" },
         });
-  
-        // Return a rejected value
-        return error.message;
-      }
-    }
-  );
-  
-  export const usersProductUpdatedFetchApi = createAsyncThunk(
-    "usersProductUpdatedFetchApi",
-    async ({ formdata, productId ,toast}) => {
-      try {
-        const response = await axios.put(`/api/users/products/${productId}`, formdata, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+
+        setFormdata({
+          categoryname: "",
+          fields: [""],
         });
-  
-        const { success, message, data } = response.data;
-  
-        if (success) {
-          toast.success(message, {
-            position: "top-right",
-            style: { marginTop: "50px", marginRight: "10px" },
-          });
-  
-          // Reset formdata
-        } else {
-          toast.success(message, {
-            position: "top-right",
-            style: { marginTop: "50px", marginRight: "10px" },
-          });
-  
-              }
-  
-        return { success, message, data };
-      } catch (error) {
-        toast.error(error.response?.data?.message || error.message, {
-          position: "top-right",
-          style: { marginTop: "50px", marginRight: "10px" },
-        });
-  
-        // Return a rejected value
-        return error.message;
       }
+
+      return { success, message, data };
+    } catch (error) {
+      // Handle errors
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      // Return a rejected value
+      return error.message;
     }
+  }
 );
-  
+
+export const usersProductAddFetchApi = createAsyncThunk(
+  "usersProductAddFetchApi",
+  async ({ formdata, setFormdata, toast }) => {
+    try {
+      const response = await axios.post(
+        "/api/users/pending/products",
+        formdata,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const { success, message, data } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+        // Reset formdata
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+        setFormdata({
+          category: "",
+          fields: "",
+          img1: null,
+          img1Preview: null,
+          img2: null,
+          img2Preview: null,
+          img3: null,
+          img3Preview: null,
+          img4: null,
+          img4Preview: null,
+          img5: null,
+          img5Preview: null,
+          title: "",
+          price: "",
+          discount: "",
+          qnt: "",
+          discription: "",
+        });
+      }
+
+      return { success, message, data };
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      // Return a rejected value
+      return error.message;
+    }
+  }
+);
+
+export const usersProductUpdatedFetchApi = createAsyncThunk(
+  "usersProductUpdatedFetchApi",
+  async ({ formdata, productId, toast }) => {
+    try {
+      const response = await axios.put(
+        `/api/users/products/${productId}`,
+        formdata,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const { success, message, data } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+        // Reset formdata
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return { success, message, data };
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+        style: { marginTop: "50px", marginRight: "10px" },
+      });
+
+      // Return a rejected value
+      return error.message;
+    }
+  }
+);
 
 export const usersFilterProductsByCategory = createAsyncThunk(
   "usersFilterProductsByCategory",
@@ -1054,29 +1065,87 @@ export const usersFilterProductsByCategory = createAsyncThunk(
   }
 );
 
-export const getNotification = createAsyncThunk(
-  "getNotification",
-  async () => {
-    try {
-      const response = await axios.get("/api/adminNotification")
-      console.log(response.data.data)
-      return response.data.data
-    } catch (error) {
-      return error.message
-    }
+export const getNotification = createAsyncThunk("getNotification", async () => {
+  try {
+    const response = await axios.get("/api/adminNotification");
+    console.log(response.data.data);
+    return response.data.data;
+  } catch (error) {
+    return error.message;
   }
-)
-
+});
 
 export const getUsersCategoryAdded = createAsyncThunk(
   "getUsersCategoryAdded",
   async () => {
     try {
-      const response = await axios.get("/api/pendingCategoryUsers")
-      console.log(response.data.data)
-      return response.data.data
+      const response = await axios.get("/api/pendingCategoryUsers");
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+export const contactUsFetchApi = createAsyncThunk(
+  "contact",
+  async ({ formdata, setFormdata, toast }) => {
+    try {
+      const response = await axios.post("/api/contact", formdata);
+
+      const { success, message, data } = response.data;
+
+      if (success) {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+
+        // Reset formdata to blank (empty object)
+        setFormdata({
+          name: "",
+          ConatctNo: "",
+          email: "",
+          message: "",
+        });
+      } else {
+        toast.success(message, {
+          position: "top-right",
+          style: { marginTop: "50px", marginRight: "10px" },
+        });
+      }
+
+      return { success, message, data };
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+export const getContactsFetchApi = createAsyncThunk(
+  'contacts/getContactsFetchApi',
+  async (sort = 'latest') => {
+    try {
+      const response = await axios.get('/api/get/contact', {
+        params: { sort }
+      });
+      return response.data;
+    } catch (error) {
+      return Promise.reject(error.message);
+    }
+  }
+);
+
+export const deleteContactFetchApi = createAsyncThunk(
+  "deleteContact",
+  async (contactId) => {
+    try {
+      const response=await axios.delete(`/api/contact/${contactId}`)
+      return response.data
     } catch (error) {
       return error.message
+      
     }
   }
 )

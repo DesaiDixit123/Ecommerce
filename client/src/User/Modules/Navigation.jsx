@@ -595,7 +595,7 @@ export const NavlinkNavigation = () => {
               <NavLink>About Us</NavLink>
             </li>
             <li>
-              <NavLink>Contact Us</NavLink>
+              <NavLink to={"/contact"}>Contact Us</NavLink>
             </li>
           </ul>
         </div>

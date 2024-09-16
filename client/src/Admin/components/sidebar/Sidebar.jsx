@@ -7,7 +7,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useContext, useState } from "react";
 import { IoMdLogOut } from "react-icons/io";
 import { AdminProvider } from "../../context/AdminContext";
-
+import { GrContact } from "react-icons/gr";
 export default function Sidebat() {
   const [activeTab, setActiveTab] = useState(0);
   const [isToggleSubmenu, setIsToggleSubmenu] = useState(false);
@@ -114,6 +114,16 @@ export default function Sidebat() {
                   <FaShoppingCart />
                 </span>
                 Orders
+              </Button>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={"/admin/contacts"}>
+              <Button className="w-100">
+                <span className="icon">
+                  <GrContact />
+                </span>
+                Contact Messages
               </Button>
             </NavLink>
           </li>

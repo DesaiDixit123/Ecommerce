@@ -5,4 +5,4 @@ import { adminVerification } from "../controllers/admin/adminController.js";
 export const notificationRouter=Router()
 notificationRouter.get("/adminNotification",adminVerification,getNotifications)
 notificationRouter.post("/approved/:productId/:notificationId",approvedProduct)
-notificationRouter.delete("/deleteNotification/:notificationId",deleteNotification)
+notificationRouter.delete("/deleteNotification/:notificationId/:productId",deleteNotification)

@@ -41,6 +41,8 @@ import AdminAllOrders from "./Admin/components/products/AdminAllOrders";
 import AdminNotification from "./Admin/components/products/AdminNotification";
 import AdminProductsDetailsPage from "./Admin/components/products/AdminProductsDetailsPage";
 import UserCategoryAdd from "./User/UserProducts/UserCategoryAdd";
+import ContactUs from "./User/components/ContectUs";
+import AdminContacts from "./Admin/components/AdminContacts";
 // import Herosec from "./User/components/Herosec";
 
 const Router = createBrowserRouter([
@@ -73,6 +75,7 @@ const Router = createBrowserRouter([
           { path: "/oderConfirmMsg", element: <OrderConfirmPopupBox /> },
           { path: "/orders", element: <UserOrders /> },
           { path: "/category/add", element: <UserCategoryAdd /> },
+          { path: "/contact", element: <ContactUs /> },
           // { path: "/orders", element: <OrdersT /> },
         ],
       },
@@ -94,6 +97,7 @@ const Router = createBrowserRouter([
           {path:"/admin/products/update/:id",element:<AdminProductsUpdateds/>},
           { path: "/admin/allOrders", element: <AdminAllOrders /> },
           { path: "/admin/productsdetailspage/products/:id", element: <AdminProductsDetailsPage /> },
+          { path: "/admin/contacts", element: <AdminContacts /> },
         ],
       },
     ],

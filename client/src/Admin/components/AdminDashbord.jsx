@@ -22,6 +22,7 @@ import {
   deleteProduct,
   getAllOrdersShowByAdmin,
   getAllProductsFecthApi,
+  getContactsFetchApi,
   getNotification,
 } from "../../redux/user/UserThunk";
 import { toast } from "react-toastify";
@@ -63,17 +64,18 @@ export default function AdminDashbord() {
     setAnchorEl(null);
   };
 
-  const { allProducts,AllOrders ,notifications} = useSelector((state) => state.UserSliceProvider);
+  const { allProducts,AllOrders } = useSelector((state) => state.UserSliceProvider);
 
   const { allUsers } = useSelector((state) => state.AdminSliceProvider);
 
-  console.log("allProducts:",allProducts.length)
-  console.log("AllOrders from Redux Store:", AllOrders.length);
+  // console.log("allProducts:",allProducts.length)
+  // console.log("AllOrders from Redux Store:", AllOrders.length);
 
-  console.log("notifications:",notifications)
-  useEffect(() => {
-    dispatch(getNotification())
-  },[])
+  // console.log("notifications:",notifications)
+  // console.log("getAllContacts:",getAllContacts)
+  // useEffect(() => {
+  //   dispatch(getContactsFetchApi())
+  // },[])
 
   const handeleProductClick = (id) => {
     navigate(`/admin/productsdetails/products/${id}`);

@@ -11,7 +11,7 @@ const userSchema = Schema({
   contactno: { type: String },
   token: { type: String, default: "" },
   isAdmin: { type: Boolean, default: false },
-  resetPasswordOTP: { type: String }, // OTP for password reset
+  resetPasswordOTP: { type: String },
   resetPasswordExpires: { type: Date },
   cart: { type: Array, default: [] },
   wishlist: { type: Array, default: [] },

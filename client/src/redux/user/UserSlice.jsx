@@ -20,6 +20,7 @@ import {
   getAllOrdersShowByAdmin,
   getAllProductsFecthApi,
   getCartByUserId,
+  getContactsFetchApi,
   getNotification,
   getUsersCategoryAdded,
   LoginUser,
@@ -67,7 +68,8 @@ const initialState = {
   UserOrders: [],
   AllOrders: [],
   notifications: [],
-  UsersCategory:[]
+  UsersCategory: [],
+  getAllContacts:[]
 };
 
 const UserSlice = createSlice({
@@ -410,7 +412,21 @@ const UserSlice = createSlice({
           .addCase(getUsersCategoryAdded.rejected, (state, action) => {
             state.loading = false,
             state.UsersCategory=action.payload
-        })
+          })
+    
+      .addCase(getContactsFetchApi.pending, (state) => {
+      state.loading=true
+
+      })
+      .addCase(getContactsFetchApi.fulfilled, (state, action) => {
+        state.loading = false,
+        state.getAllContacts=action.payload
+
+      })
+      .addCase(getContactsFetchApi.rejected, (state, action) => {
+        state.loading = false,
+        state.getAllContacts=action.payload
+    })
     
   },
 });
