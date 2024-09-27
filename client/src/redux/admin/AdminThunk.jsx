@@ -217,7 +217,7 @@ export const adminLogoutFetchApi = createAsyncThunk(
 
 export const getAllUsersFetchApi = createAsyncThunk("allUsers", async () => {
   try {
-    const response = await axios.get("/api/users");
+    const response = await axios.get("https://ecommerce-5-cqr9.onrender.com/api/users");
     console.log("API Response Data:", response.data); // Check API Response
     return response.data.data;
   } catch (error) {

@@ -27,8 +27,13 @@ const allowdDomains =
     ? [process.env.REMOTE_CLIENT_APP, process.env.REMOTE_SERVER_API] // Corrected here
     : [process.env.LOCAL_CLIENT_APP, process.env.LOCAL_SERVER_API];
 
-app.use(cors({origin:"*"}));
-
+    app.use(cors({
+      origin: process.env.NODE_ENV === "production" 
+          ? process.env.REMOTE_CLIENT_APP 
+          : process.env.LOCAL_CLIENT_APP,
+      credentials: true // Optional: If you want to include cookies in requests
+  }));
+  
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));

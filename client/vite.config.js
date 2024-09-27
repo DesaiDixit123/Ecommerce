@@ -66,13 +66,11 @@ export default defineConfig(({ mode }) => {
         server: {
             proxy: {
                 "/api": {
-                    target: mode === "production"
-                        ? "https://ecommerce-5-cqr9.onrender.com" // production URL
-                        : "http://localhost:4000", // development URL
-                    secure: mode === "production", // production માટે `true`, development માટે `false`
+                    target: "https://ecommerce-5-cqr9.onrender.com",
                     changeOrigin: true,
                 },
             },
         },
+        
     };
 });
