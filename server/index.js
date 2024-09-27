@@ -15,7 +15,7 @@ import { pendingProductRouter } from "./routers/pendingProductRouter.js";
 import { notificationRouter } from "./routers/notificationRouter.js";
 import { pendingCategoryRouter } from "./routers/pendingCategoryRouter.js";
 import { ContactRouter } from "./routers/contactRouter.js";
-``
+
 dotenv.config();
 const app = express();
 
@@ -24,10 +24,19 @@ const local_client_app = process.env.LOCAL_CLIENT_APP;
 const remote_client_app = process.env.REMOTE_CLIENT_APP;
 const allowdDomains =
   process.env.NODE_ENV === "production"
-    ? [process.env.REMOTE_CLIENT_APP, REMOTE_SERVER_API]
+    ? [process.env.REMOTE_CLIENT_APP, process.env.REMOTE_SERVER_API] // Corrected here
     : [process.env.LOCAL_CLIENT_APP, process.env.LOCAL_SERVER_API];
 
-app.use(cors({origin:allowdDomains}));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowdDomains.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, // If using cookies/sessions
+}));
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
@@ -45,10 +54,7 @@ app.use("/api", notificationRouter);
 app.use("/api", pendingCategoryRouter);
 app.use("/api", ContactRouter);
 
+// Correct PORT usage
+const PORT = process.env.PORT || 3000; // Fallback to 3000 locally
 
-// app.get("/", (req, res) => {
-//     return res.send("Hello World")
-// })
-const PORT = process.env.port;
-
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));

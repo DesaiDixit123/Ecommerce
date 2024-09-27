@@ -20,7 +20,7 @@ export const adminLogin = async(req, res) => {
 
         if (checkPassword) {
             const createToken = jwt.sign({ id: findAdmin._id },
-                process.env.secureToken, { expiresIn: "30m" }
+                process.env.secureTokenAdmin, { expiresIn: "30m" }
             );
 
             await User.findByIdAndUpdate(findAdmin._id, {
@@ -55,7 +55,7 @@ export const adminVerification = async(req, res, next) => {
         const token = req.cookies.adminCookie
         if (!token) throw new Error("Token not found.")
 
-        const tokenVerify = jwt.verify(token, process.env.secureToken)
+        const tokenVerify = jwt.verify(token, process.env.secureTokenAdmin)
         if (!tokenVerify) throw new Error("Token is invalid.")
 
         req.tokenVerifyId = tokenVerify.id

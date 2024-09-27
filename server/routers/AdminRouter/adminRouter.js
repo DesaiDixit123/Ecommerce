@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { adminLogin, adminLogout, adminVerification, verifyAdmin } from "../../controllers/admin/adminController.js";
+import { adminLogin, adminLogout, adminVerification, verifyAdmin } from "../../controllers/Admin/adminController.js";
 
 export const adminRouter = Router()
 
