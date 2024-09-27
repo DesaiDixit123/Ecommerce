@@ -27,16 +27,7 @@ const allowdDomains =
     ? [process.env.REMOTE_CLIENT_APP, process.env.REMOTE_SERVER_API] // Corrected here
     : [process.env.LOCAL_CLIENT_APP, process.env.LOCAL_SERVER_API];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (allowdDomains.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true, // If using cookies/sessions
-}));
+app.use(cors({origin:"*"}));
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
