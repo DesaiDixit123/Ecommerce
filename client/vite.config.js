@@ -1,19 +1,19 @@
-// import { defineConfig } from "vite";
-// import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// // https://vitejs.dev/config/
-// export default defineConfig({
-//     plugins: [react()],
-//     server: {
-//         proxy: {
-//             "/api": {
-//                 target: "http://localhost:4000",
-//                 secure: false,
-//                 changeOrigin: true,
-//             },
-//         },
-//     },
-// });
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [react()],
+    server: {
+        proxy: {
+            "/api": {
+                target: "https://ecommerce-5-cqr9.onrender.com",
+                secure: false,
+                changeOrigin: true,
+            },
+        },
+    },
+});
 
 
 
@@ -57,22 +57,22 @@
 
 
 
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+// import { defineConfig } from "vite";
+// import react from "@vitejs/plugin-react";
 
-export default defineConfig(({ mode }) => {
-    return {
-        plugins: [react()],
-        server: {
-            proxy: {
-                "/api": {
-                    target: mode === "production"
-                        ? "https://demo.cybernetitsolution.co.in/" // production URL
-                        : "http://localhost:4000", // development URL
-                    secure: mode === "production", // production માટે `true`, development માટે `false`
-                    changeOrigin: true,
-                },
-            },
-        },
-    };
-});
+// export default defineConfig(({ mode }) => {
+//     return {
+//         plugins: [react()],
+//         server: {
+//             proxy: {
+//                 "/api": {
+//                     target: mode === "production"
+//                         ? "https://demo.cybernetitsolution.co.in/" // production URL
+//                         : "http://localhost:4000", // development URL
+//                     secure: mode === "production", // production માટે `true`, development માટે `false`
+//                     changeOrigin: true,
+//                 },
+//             },
+//         },
+//     };
+// });
