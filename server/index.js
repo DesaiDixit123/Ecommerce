@@ -55,6 +55,6 @@ app.use("/api", pendingCategoryRouter);
 app.use("/api", ContactRouter);
 
 // Correct PORT usage
-const PORT = process.env.PORT || 3000; // Fallback to 3000 locally
+const PORT = process.env.port || 3000; // Fallback to 3000 locally
 
 app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
