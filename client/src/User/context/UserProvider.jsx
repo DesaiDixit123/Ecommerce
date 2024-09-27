@@ -15,7 +15,7 @@ export default function UserContext({ children }) {
   }, []);
 
   useEffect(() => {
-    // dispatch(UserValidation());
+    dispatch(UserValidation());
   }, [dispatch]);
 
 
