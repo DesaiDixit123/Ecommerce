@@ -9,23 +9,23 @@ export const UserProvider = createContext();
 
 export default function UserContext({ children }) {
   const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.UserSliceProvider);
+  // const { userData } = useSelector((state) => state.UserSliceProvider);
   useEffect(() => {
-    dispatch(getAllUsersFetchApi());
+    // dispatch(getAllUsersFetchApi());
   }, []);
 
   useEffect(() => {
-    dispatch(UserValidation());
+    // dispatch(UserValidation());
   }, [dispatch]);
 
 
 
   useEffect(() => {
-  dispatch(getCartByUserId(userData._id))
+  // dispatch(getCartByUserId(userData._id))
 },[dispatch])
   // console.log(userData);
 
   return (
-    <UserProvider.Provider value={userData}>{children}</UserProvider.Provider>
+    <UserProvider.Provider value={""}>{children}</UserProvider.Provider>
   );
 }
